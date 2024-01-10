@@ -1,23 +1,13 @@
 {
-  "compilerOptions": {
-    "jsx": "react",
-    "lib": ["es6", "dom"],
-    "rootDir": "src",
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es5",
-    "sourceMap": true,
-    "moduleResolution": "node",
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true
-  },
-  "include": [
-    "./src"
-  ],
-  "exclude": [
-    "node_modules",
-    "build"
-  ]
+    "compilerOptions": {
+        "jsx": "react",
+        "allowJs": true,
+        "target": "ES6",
+        "outDir": "./dist",
+        "moduleResolution": "Node",
+        "lib": ["ES2015", "DOM", "DOM.Iterable"],
+        "esModuleInterop": true
+    },
+    "include": ["./src/**/*"],
+    "exclude": ["node_modules", "dist"]
 }
