@@ -21,7 +21,6 @@ export default function Home() {
             console.error(e);
         }
     }
-    createPost();
 
     return (
         <div className="home__container">

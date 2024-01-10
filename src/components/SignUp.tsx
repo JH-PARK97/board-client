@@ -1,8 +1,7 @@
-import * as React from 'react';
+import React, { useMemo } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
@@ -12,6 +11,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { FormInputText } from './shared/Form/FormInput';
+import { useForm } from 'react-hook-form';
 
 function Copyright(props: any) {
     return (
@@ -29,13 +30,17 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const defaultValues = useMemo(() => {
+        return {
+            email: '',
+            userId: '',
+            userPw: '',
+        };
+    }, []);
+    const { control, watch } = useForm({ defaultValues });
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        console.log(watch());
     };
 
     return (
@@ -56,49 +61,19 @@ export default function SignUp() {
                     <Typography component="h1" variant="h5">
                         Sign up
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+
+                    <form onSubmit={handleSubmit} style={{ marginTop: 30 }}>
+                        {/* <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}> */}
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    autoComplete="given-name"
-                                    name="firstName"
-                                    required
-                                    fullWidth
-                                    id="firstName"
-                                    label="First Name"
-                                    autoFocus
-                                />
+                            <Grid item xs={12}>
+                                <FormInputText fullWidth name="email" control={control} label="Email" required />
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="lastName"
-                                    label="Last Name"
-                                    name="lastName"
-                                    autoComplete="family-name"
-                                />
+
+                            <Grid item xs={12}>
+                                <FormInputText fullWidth name="userId" control={control} label="ID" required />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    autoComplete="email"
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="new-password"
-                                />
+                                <FormInputText fullWidth name="userPw" control={control} label="Password" required />
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
@@ -117,7 +92,8 @@ export default function SignUp() {
                                 </Link>
                             </Grid>
                         </Grid>
-                    </Box>
+                        {/* </Box> */}
+                    </form>
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
             </Container>

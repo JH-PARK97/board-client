@@ -3,13 +3,14 @@ import { useMemo } from 'react';
 import Home from './components/Home';
 import SignUp from './components/SignUp';
 import React from 'react';
+import Blog from './components/blog/Blog';
 
 export default function App() {
     const router = useMemo(() => {
         return createBrowserRouter([
             {
                 path: '/',
-                element: <div>root</div>,
+                element: <Blog />,
             },
             {
                 path: '/home',
