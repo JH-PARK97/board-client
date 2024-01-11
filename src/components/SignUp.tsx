@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
+
+// Components
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
@@ -9,10 +10,16 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { FormInputText } from './shared/Form/FormInput';
-import { useForm } from 'react-hook-form';
+import { Container } from '@mui/system';
+import { CssBaseline, FormHelperText } from '@mui/material';
+
+// form & type
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { schema as SignUpSchema } from '../validate/signup.validate';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SignUpBodySchema } from '../validate/signup.validate';
 
 function Copyright(props: any) {
     return (
@@ -20,7 +27,7 @@ function Copyright(props: any) {
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
                 Your Website
-            </Link>{' '}
+            </Link>
             {new Date().getFullYear()}
             {'.'}
         </Typography>
@@ -35,13 +42,22 @@ export default function SignUp() {
             email: '',
             userId: '',
             userPw: '',
+            userPwConfirm: '',
         };
     }, []);
-    const { control, watch } = useForm({ defaultValues });
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log(watch());
+    const {
+        handleSubmit,
+        control,
+        watch,
+        formState: { errors },
+    } = useForm<SignUpBodySchema>({
+        defaultValues,
+        resolver: zodResolver(SignUpSchema),
+    });
+    const onSubmit: SubmitHandler<SignUpBodySchema> = (data) => {
+        console.log(data);
     };
+    console.log('errors : ', errors);
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -62,18 +78,38 @@ export default function SignUp() {
                         Sign up
                     </Typography>
 
-                    <form onSubmit={handleSubmit} style={{ marginTop: 30 }}>
-                        {/* <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}> */}
+                    <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormInputText fullWidth name="email" control={control} label="Email" required />
+                                <FormInputText fullWidth name="email" control={control} label="Email" />
+                                <FormHelperText error>{errors.email && <p>{errors.email.message}</p>}</FormHelperText>
                             </Grid>
 
                             <Grid item xs={12}>
-                                <FormInputText fullWidth name="userId" control={control} label="ID" required />
+                                <FormInputText fullWidth name="userId" control={control} label="ID" />
+                                <FormHelperText error>{errors.userId && <p>{errors.userId.message}</p>}</FormHelperText>
                             </Grid>
                             <Grid item xs={12}>
-                                <FormInputText fullWidth name="userPw" control={control} label="Password" required />
+                                <FormInputText
+                                    fullWidth
+                                    name="userPw"
+                                    control={control}
+                                    label="Password"
+                                    type={'password'}
+                                />
+                                <FormHelperText error>{errors.userPw && <p>{errors.userPw.message}</p>}</FormHelperText>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <FormInputText
+                                    fullWidth
+                                    name="userPwConfirm"
+                                    control={control}
+                                    label="Password Confirm"
+                                    type={'password'}
+                                />
+                                <FormHelperText error>
+                                    {errors.userPwConfirm && <p>{errors.userPwConfirm.message}</p>}
+                                </FormHelperText>
                             </Grid>
                             <Grid item xs={12}>
                                 <FormControlLabel
@@ -87,12 +123,11 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="#" variant="body2">
+                                <Link href="/Home" variant="body2">
                                     Already have an account? Sign in
                                 </Link>
                             </Grid>
                         </Grid>
-                        {/* </Box> */}
                     </form>
                 </Box>
                 <Copyright sx={{ mt: 5 }} />
