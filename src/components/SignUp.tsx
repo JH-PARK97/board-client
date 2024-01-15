@@ -20,6 +20,8 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { schema as SignUpSchema } from '../validate/signup.validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SignUpBodySchema } from '../validate/signup.validate';
+import createUserAPI from '../api/user/create/user';
+import { AxiosError } from 'axios';
 
 function Copyright(props: any) {
     return (
@@ -40,9 +42,11 @@ export default function SignUp() {
     const defaultValues = useMemo(() => {
         return {
             email: '',
-            userId: '',
-            userPw: '',
-            userPwConfirm: '',
+            password: '',
+            passwordConfirm: '',
+            age: '',
+            gender: '',
+            phoneNumber: '',
         };
     }, []);
     const {
@@ -54,10 +58,14 @@ export default function SignUp() {
         defaultValues,
         resolver: zodResolver(SignUpSchema),
     });
-    const onSubmit: SubmitHandler<SignUpBodySchema> = (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
+        try {
+            const res = await createUserAPI(data);
+            console.log('res : ', res);
+        } catch (e) {
+            console.error(e as Error);
+        }
     };
-    console.log('errors : ', errors);
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -75,56 +83,62 @@ export default function SignUp() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign up
+                        회원 가입
                     </Typography>
 
                     <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormInputText fullWidth name="email" control={control} label="Email" />
-                                <FormHelperText error>{errors.email && <p>{errors.email.message}</p>}</FormHelperText>
+                                <FormInputText fullWidth name="email" control={control} label="이메일" />
+                                {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}
                             </Grid>
 
                             <Grid item xs={12}>
-                                <FormInputText fullWidth name="userId" control={control} label="ID" />
-                                <FormHelperText error>{errors.userId && <p>{errors.userId.message}</p>}</FormHelperText>
+                                <FormInputText
+                                    fullWidth
+                                    name="password"
+                                    control={control}
+                                    label="비밀번호"
+                                    type={'password'}
+                                />
+                                {errors.password && <FormHelperText error>{errors?.password?.message}</FormHelperText>}
                             </Grid>
+
                             <Grid item xs={12}>
                                 <FormInputText
                                     fullWidth
-                                    name="userPw"
+                                    name="passwordConfirm"
                                     control={control}
-                                    label="Password"
+                                    label="비밀번호 확인 "
                                     type={'password'}
                                 />
-                                <FormHelperText error>{errors.userPw && <p>{errors.userPw.message}</p>}</FormHelperText>
+                                {errors.passwordConfirm && (
+                                    <FormHelperText error>{errors?.passwordConfirm?.message}</FormHelperText>
+                                )}
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <FormInputText name="age" control={control} label="나이" />
+                                {errors.age && <FormHelperText error>{errors?.age?.message}</FormHelperText>}
+                            </Grid>
+                            <Grid item xs={6}>
+                                <FormInputText name="gender" control={control} label="성별" />
+                                {errors.gender && <FormHelperText error>{errors?.gender?.message}</FormHelperText>}
                             </Grid>
                             <Grid item xs={12}>
-                                <FormInputText
-                                    fullWidth
-                                    name="userPwConfirm"
-                                    control={control}
-                                    label="Password Confirm"
-                                    type={'password'}
-                                />
-                                <FormHelperText error>
-                                    {errors.userPwConfirm && <p>{errors.userPwConfirm.message}</p>}
-                                </FormHelperText>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormControlLabel
-                                    control={<Checkbox value="allowExtraEmails" color="primary" />}
-                                    label="I want to receive inspiration, marketing promotions and updates via email."
-                                />
+                                <FormInputText fullWidth name="phoneNumber" control={control} label="전화번호" />
+                                {errors.phoneNumber && (
+                                    <FormHelperText error>{errors?.phoneNumber?.message}</FormHelperText>
+                                )}
                             </Grid>
                         </Grid>
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                            Sign Up
+                            회원가입
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
                                 <Link href="/Home" variant="body2">
-                                    Already have an account? Sign in
+                                    이미 계정이 있으신가요?
                                 </Link>
                             </Grid>
                         </Grid>

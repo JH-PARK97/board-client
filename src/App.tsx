@@ -9,6 +9,10 @@ export default function App() {
     const router = useMemo(() => {
         return createBrowserRouter([
             {
+                path: '*',
+                element: <p>Not Found</p>,
+            },
+            {
                 path: '/',
                 element: <Blog />,
             },
