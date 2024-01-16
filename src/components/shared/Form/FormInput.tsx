@@ -11,5 +11,5 @@ export function FormInputText<T extends FieldValues>({ control, name, rules, ...
         field: { value, onChange },
         fieldState: { isDirty, isTouched, invalid, error },
     } = useController({ name, rules, control });
-    return <TextField value={value} onChange={onChange} {...props} />;
+    return <TextField name={name} value={value} onChange={onChange} {...props} />;
 }

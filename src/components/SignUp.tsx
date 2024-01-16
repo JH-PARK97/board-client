@@ -3,8 +3,6 @@ import React, { useMemo } from 'react';
 // Components
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -21,7 +19,7 @@ import { schema as SignUpSchema } from '../validate/signup.validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SignUpBodySchema } from '../validate/signup.validate';
 import createUserAPI from '../api/user/create/user';
-import { AxiosError } from 'axios';
+import { FormRadioGroup } from './shared/Form/FormRadioGroup';
 
 function Copyright(props: any) {
     return (
@@ -67,6 +65,7 @@ export default function SignUp() {
         }
     };
 
+    console.log(watch());
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">
@@ -122,7 +121,16 @@ export default function SignUp() {
                                 {errors.age && <FormHelperText error>{errors?.age?.message}</FormHelperText>}
                             </Grid>
                             <Grid item xs={6}>
-                                <FormInputText name="gender" control={control} label="성별" />
+                                <FormRadioGroup
+                                    control={control}
+                                    name={'gender'}
+                                    group={[
+                                        { value: 'male', label: '남자' },
+                                        { value: 'female', label: '여자' },
+                                    ]}
+                                    groupLabel={'성별'}
+                                />
+
                                 {errors.gender && <FormHelperText error>{errors?.gender?.message}</FormHelperText>}
                             </Grid>
                             <Grid item xs={12}>
