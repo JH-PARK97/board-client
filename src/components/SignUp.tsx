@@ -9,9 +9,9 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { FormInputText } from './shared/Form/FormInput';
 import { Container } from '@mui/system';
 import { CssBaseline, FormHelperText } from '@mui/material';
+import { FormInput, FormRadioGroup, FormSelect } from './shared/Form';
 
 // form & type
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -19,7 +19,6 @@ import { schema as SignUpSchema } from '../validate/signup.validate';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { SignUpBodySchema } from '../validate/signup.validate';
 import createUserAPI from '../api/user/create/user';
-import { FormRadioGroup } from './shared/Form/FormRadioGroup';
 
 function Copyright(props: any) {
     return (
@@ -64,6 +63,10 @@ export default function SignUp() {
             console.error(e as Error);
         }
     };
+    const ageOptions = Array.from({ length: 100 }, (_, index) => ({
+        value: (index + 1).toString(),
+        label: (index + 1).toString(),
+    }));
 
     console.log(watch());
     return (
@@ -88,12 +91,12 @@ export default function SignUp() {
                     <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormInputText fullWidth name="email" control={control} label="이메일" />
+                                <FormInput fullWidth name="email" control={control} label="이메일" />
                                 {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}
                             </Grid>
 
                             <Grid item xs={12}>
-                                <FormInputText
+                                <FormInput
                                     fullWidth
                                     name="password"
                                     control={control}
@@ -104,7 +107,7 @@ export default function SignUp() {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <FormInputText
+                                <FormInput
                                     fullWidth
                                     name="passwordConfirm"
                                     control={control}
@@ -117,7 +120,16 @@ export default function SignUp() {
                             </Grid>
 
                             <Grid item xs={6}>
-                                <FormInputText name="age" control={control} label="나이" />
+                                <FormSelect
+                                    formControlProps={{ fullWidth: true }}
+                                    inputLabel="나이"
+                                    control={control}
+                                    name={'age'}
+                                    selectItem={ageOptions.map((option) => ({
+                                        value: option.value,
+                                        children: option.label,
+                                    }))}
+                                />
                                 {errors.age && <FormHelperText error>{errors?.age?.message}</FormHelperText>}
                             </Grid>
                             <Grid item xs={6}>
@@ -134,7 +146,7 @@ export default function SignUp() {
                                 {errors.gender && <FormHelperText error>{errors?.gender?.message}</FormHelperText>}
                             </Grid>
                             <Grid item xs={12}>
-                                <FormInputText fullWidth name="phoneNumber" control={control} label="전화번호" />
+                                <FormInput fullWidth name="phoneNumber" control={control} label="전화번호" />
                                 {errors.phoneNumber && (
                                     <FormHelperText error>{errors?.phoneNumber?.message}</FormHelperText>
                                 )}

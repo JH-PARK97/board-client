@@ -12,18 +12,18 @@ import { FieldValues, useController } from 'react-hook-form';
 
 import { TControl } from '../type';
 
-export type TRadioGroup = Omit<FormControlLabelProps, 'control'>;
+type TRadioGroupProps = Omit<FormControlLabelProps, 'control'>;
 
 interface CustomRadioGroupProps {
     groupLabel: string;
-    group: TRadioGroup[];
+    group: TRadioGroupProps[];
     size?: 'medium' | 'small';
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 type TProps<T extends FieldValues> = Omit<RadioGroupProps, 'onChange'> & CustomRadioGroupProps & TControl<T>;
 
-export function FormRadioGroup<T extends FieldValues>({
+export default function FormRadioGroup<T extends FieldValues>({
     groupLabel,
     control,
     name,
@@ -31,22 +31,23 @@ export function FormRadioGroup<T extends FieldValues>({
     group,
     onChange: propsOnChange,
 }: TProps<T>) {
+    const {
+        field: { value, onChange },
+    } = useController({ name, control });
+
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         onChange(event);
         if (propsOnChange) {
             propsOnChange(event);
         }
     };
-    const {
-        field: { value, onChange },
-    } = useController({ name, control });
     return (
         <FormControl>
             <FormLabel id={`${name}-radio-buttons-group-label`}>{groupLabel}</FormLabel>
             <RadioGroup row name={name} value={value} onChange={handleChange}>
                 {group.map(({ value: radioValue, disabled, label }, index) => (
                     <FormControlLabel
-                        key={index}
+                        key={`radio-button-${index}`}
                         value={radioValue}
                         label={label}
                         control={<Radio size={size} value={radioValue} disabled={disabled} />}

@@ -12,7 +12,7 @@ export const schema = z
             .min(1, '나이를 입력해 주세요.')
             .regex(/^[0-9]+$/, '숫자만 입력 가능합니다.'),
         gender: z.string().min(1, '성별을 선택해 주세요.'),
-        phoneNumber: z.string({ required_error: '전화번호를 입력해 주세요' }),
+        phoneNumber: z.string().min(1, '전화번호를 입력해 주세요'),
     })
     .superRefine(({ password, passwordConfirm }, ctx) => {
         if (password !== passwordConfirm) {

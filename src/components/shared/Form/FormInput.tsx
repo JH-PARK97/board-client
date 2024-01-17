@@ -6,7 +6,7 @@ import { TControl } from '../type';
 
 type FormInputTextProps<T extends FieldValues> = TextFieldProps & TControl<T>;
 
-export function FormInputText<T extends FieldValues>({ control, name, rules, ...props }: FormInputTextProps<T>) {
+export default function FormInputText<T extends FieldValues>({ control, name, rules, ...props }: FormInputTextProps<T>) {
     const {
         field: { value, onChange },
         fieldState: { isDirty, isTouched, invalid, error },
