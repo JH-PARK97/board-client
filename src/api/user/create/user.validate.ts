@@ -9,7 +9,7 @@ export const schema = z
         passwordConfirm: z.string(),
         age: z
             .string()
-            .min(1, '나이를 입력해 주세요.')
+            .min(1, '나이를 선택해 주세요.')
             .regex(/^[0-9]+$/, '숫자만 입력 가능합니다.'),
         gender: z.string().min(1, '성별을 선택해 주세요.'),
         phoneNumber: z.string().min(1, '전화번호를 입력해 주세요'),

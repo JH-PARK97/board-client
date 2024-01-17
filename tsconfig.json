@@ -1,5 +1,9 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/api/*":["src/api/*"],
+        },
         "jsx": "react",
         "allowJs": true,
         "target": "ES6",

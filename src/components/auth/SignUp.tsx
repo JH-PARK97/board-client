@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-// Components
+// components
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
@@ -11,14 +11,17 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Container } from '@mui/system';
 import { CssBaseline, FormHelperText } from '@mui/material';
-import { FormInput, FormRadioGroup, FormSelect } from './shared/Form';
+import { FormInput, FormRadioGroup, FormSelect } from '../shared/Form/index';
 
 // form & type
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { schema as SignUpSchema } from '../validate/signup.validate';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { SignUpBodySchema } from '../validate/signup.validate';
-import createUserAPI from '../api/user/create/user';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { schema as SignUpSchema } from '@/api/user/create/user.validate';
+import type { SignUpBodySchema } from '@/api/user/create/user.validate';
+
+// fetch
+import createUserAPI from '@/api/user/create/user.api';
+import { AxiosError } from 'axios';
 
 function Copyright(props: any) {
     return (
@@ -36,6 +39,10 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+    const ageOptions = Array.from({ length: 100 }, (_, index) => ({
+        value: (index + 1).toString(),
+        label: (index + 1).toString(),
+    }));
     const defaultValues = useMemo(() => {
         return {
             email: '',
@@ -50,6 +57,7 @@ export default function SignUp() {
         handleSubmit,
         control,
         watch,
+        setError,
         formState: { errors },
     } = useForm<SignUpBodySchema>({
         defaultValues,
@@ -57,18 +65,18 @@ export default function SignUp() {
     });
     const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
         try {
-            const res = await createUserAPI(data);
-            console.log('res : ', res);
-        } catch (e) {
-            console.error(e as Error);
+            await createUserAPI(data);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                if (error.request.status === 409) {
+                    setError('email', { message: '중복된 이메일입니다.' }, { shouldFocus: true });
+                }
+            } else {
+                console.error(error);
+            }
         }
     };
-    const ageOptions = Array.from({ length: 100 }, (_, index) => ({
-        value: (index + 1).toString(),
-        label: (index + 1).toString(),
-    }));
 
-    console.log(watch());
     return (
         <ThemeProvider theme={defaultTheme}>
             <Container component="main" maxWidth="xs">

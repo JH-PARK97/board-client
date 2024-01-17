@@ -1,9 +1,10 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { useMemo } from 'react';
 import Home from './components/Home';
-import SignUp from './components/SignUp';
+import SignUp from './components/auth/SignUp';
 import React from 'react';
 import Blog from './components/blog/Blog';
+import SignIn from './components/auth/SignIn';
 
 export default function App() {
     const router = useMemo(() => {
@@ -23,6 +24,10 @@ export default function App() {
             {
                 path: '/signup',
                 element: <SignUp />,
+            },
+            {
+                path: '/signin',
+                element: <SignIn />,
             },
         ]);
     }, []);
