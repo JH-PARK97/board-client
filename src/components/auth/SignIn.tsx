@@ -4,9 +4,6 @@ import React, { useMemo } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,15 +11,19 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { SignInBodySchema } from '../../api/auth/login.validate';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { schema as SignInSchema } from '../../api/auth/login.validate';
-import loginAPI from '../../api/auth/login.api';
-import { AxiosError } from 'axios';
 import { FormInput } from '../shared/Form';
 import { FormHelperText } from '@mui/material';
+
+// validation
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SignInBodySchema } from 'src/api/auth/login.validate';
+import { schema as SignInSchema } from 'src/api/auth/login.validate';
+
+// api
+import loginAPI from 'src/api/auth/login.api';
+import { AxiosError } from 'axios';
+import { instance } from '../../api/client';
 
 function Copyright(props: any) {
     return (
@@ -30,9 +31,8 @@ function Copyright(props: any) {
             {'Copyright © '}
             <Link color="inherit" href="https://mui.com/">
                 Your Website
-            </Link>{' '}
+            </Link>
             {new Date().getFullYear()}
-            {'.'}
         </Typography>
     );
 }
@@ -57,16 +57,17 @@ export default function SignIn() {
         resolver: zodResolver(SignInSchema),
         defaultValues,
     });
-    console.log(errors);
 
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
         try {
-            console.log(data);
-            await loginAPI(data);
+            const resp = await loginAPI(data);
+            console.log(resp);
+
+            // console.log(resp?.data);
         } catch (error) {
             if (error instanceof AxiosError) {
             } else {
-                console.error(error);
+                console.error('error : ', error);
             }
         }
     };
@@ -108,19 +109,19 @@ export default function SignIn() {
                                 {errors.password && <FormHelperText error>{errors?.password?.message}</FormHelperText>}
                             </Grid>
                         </Grid>
-                        <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
+                        {/* <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="아이디 기억하기" /> */}
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                            Sign In
+                            로그인
                         </Button>
                         <Grid container>
                             <Grid item xs>
                                 <Link href="#" variant="body2">
-                                    Forgot password?
+                                    비밀번호를 잊으셨나요?
                                 </Link>
                             </Grid>
                             <Grid item>
-                                <Link href="#" variant="body2">
-                                    {"Don't have an account? Sign Up"}
+                                <Link href="/signup" variant="body2">
+                                    계정이 없으신가요?
                                 </Link>
                             </Grid>
                         </Grid>

@@ -1,10 +1,10 @@
-import axios from 'axios';
+import { instance } from '../client';
 
 export default async function loginAPI(body: any) {
     const { email, password } = body;
-    console.log('body : ',body);
-    await axios.post('http://localhost:8080/api/v1/post/login', {
+    const { data } = await instance.post('/login', {
         email,
         password,
     });
+    return data;
 }

@@ -65,7 +65,8 @@ export default function SignUp() {
     });
     const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
         try {
-            await createUserAPI(data);
+            const resp = await createUserAPI(data);
+            console.log(resp);
         } catch (error) {
             if (error instanceof AxiosError) {
                 if (error.request.status === 409) {
