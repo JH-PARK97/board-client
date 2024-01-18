@@ -16,11 +16,11 @@ import { FormInput, FormRadioGroup, FormSelect } from '../shared/Form/index';
 // form & type
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { schema as SignUpSchema } from '@/api/user/create/user.validate';
-import type { SignUpBodySchema } from '@/api/user/create/user.validate';
+import { schema as SignUpSchema } from '../../api/user/create/user.validate';
+import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 
 // fetch
-import createUserAPI from '@/api/user/create/user.api';
+import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
 
 function Copyright(props: any) {
@@ -165,7 +165,7 @@ export default function SignUp() {
                         </Button>
                         <Grid container justifyContent="flex-end">
                             <Grid item>
-                                <Link href="/Home" variant="body2">
+                                <Link href="/signin" variant="body2">
                                     이미 계정이 있으신가요?
                                 </Link>
                             </Grid>

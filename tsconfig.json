@@ -1,9 +1,9 @@
 {
     "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@/api/*":["src/api/*"],
-        },
+        // "baseUrl": ".",
+        // "paths": {
+        //     "@/*": ["src/*"]
+        // },
         "jsx": "react",
         "allowJs": true,
         "target": "ES6",
@@ -13,6 +13,6 @@
         "esModuleInterop": true,
         "strict": true
     },
-    "include": ["./src/**/*"],
+    "include": ["src"],
     "exclude": ["node_modules", "dist"]
 }

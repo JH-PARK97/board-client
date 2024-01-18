@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 
 // components
 import Avatar from '@mui/material/Avatar';
@@ -14,6 +14,15 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { SignInBodySchema } from '../../api/auth/login.validate';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { schema as SignInSchema } from '../../api/auth/login.validate';
+import loginAPI from '../../api/auth/login.api';
+import { AxiosError } from 'axios';
+import { FormInput } from '../shared/Form';
+import { FormHelperText } from '@mui/material';
 
 function Copyright(props: any) {
     return (
@@ -31,13 +40,35 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
+    const defaultValues = useMemo(() => {
+        return {
+            email: '',
+            password: '',
+        };
+    }, []);
+
+    const {
+        handleSubmit,
+        control,
+        watch,
+        setError,
+        formState: { errors },
+    } = useForm<SignInBodySchema>({
+        resolver: zodResolver(SignInSchema),
+        defaultValues,
+    });
+    console.log(errors);
+
+    const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
+        try {
+            console.log(data);
+            await loginAPI(data);
+        } catch (error) {
+            if (error instanceof AxiosError) {
+            } else {
+                console.error(error);
+            }
+        }
     };
 
     return (
@@ -56,29 +87,27 @@ export default function SignIn() {
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Sign in
+                        로그인
                     </Typography>
-                    <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            id="email"
-                            label="Email Address"
-                            name="email"
-                            autoComplete="email"
-                            autoFocus
-                        />
-                        <TextField
-                            margin="normal"
-                            required
-                            fullWidth
-                            name="password"
-                            label="Password"
-                            type="password"
-                            id="password"
-                            autoComplete="current-password"
-                        />
+
+                    <form className="login-form" onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <FormInput fullWidth name="email" control={control} label="이메일" />
+                                {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}
+                            </Grid>
+
+                            <Grid item xs={12}>
+                                <FormInput
+                                    fullWidth
+                                    name="password"
+                                    control={control}
+                                    label="비밀번호"
+                                    type={'password'}
+                                />
+                                {errors.password && <FormHelperText error>{errors?.password?.message}</FormHelperText>}
+                            </Grid>
+                        </Grid>
                         <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                             Sign In
@@ -95,8 +124,9 @@ export default function SignIn() {
                                 </Link>
                             </Grid>
                         </Grid>
-                    </Box>
+                    </form>
                 </Box>
+
                 <Copyright sx={{ mt: 8, mb: 4 }} />
             </Container>
         </ThemeProvider>
