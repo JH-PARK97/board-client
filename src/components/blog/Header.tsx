@@ -19,8 +19,8 @@ export default function Header(props: HeaderProps) {
     const { sections, title } = props;
     const navigate = useNavigate();
 
-    const handleSignupButton = () => {
-        navigate('/signup');
+    const handleSigninButton = () => {
+        navigate('/signin');
     };
 
     return (
@@ -33,8 +33,8 @@ export default function Header(props: HeaderProps) {
                 <IconButton>
                     <SearchIcon />
                 </IconButton>
-                <Button onClick={handleSignupButton} variant="outlined" size="small">
-                    Sign up
+                <Button onClick={handleSigninButton} variant="outlined" size="small">
+                    Sign in
                 </Button>
             </Toolbar>
             <Toolbar component="nav" variant="dense" sx={{ justifyContent: 'space-between', overflowX: 'auto' }}>

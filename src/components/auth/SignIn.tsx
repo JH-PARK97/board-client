@@ -23,7 +23,6 @@ import { schema as SignInSchema } from 'src/api/auth/login.validate';
 // api
 import loginAPI from 'src/api/auth/login.api';
 import { AxiosError } from 'axios';
-import { instance } from '../../api/client';
 
 function Copyright(props: any) {
     return (
@@ -50,7 +49,6 @@ export default function SignIn() {
     const {
         handleSubmit,
         control,
-        watch,
         setError,
         formState: { errors },
     } = useForm<SignInBodySchema>({
@@ -61,9 +59,8 @@ export default function SignIn() {
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
         try {
             const resp = await loginAPI(data);
-            console.log(resp);
 
-            // console.log(resp?.data);
+            console.log(resp?.data);
         } catch (error) {
             if (error instanceof AxiosError) {
             } else {
