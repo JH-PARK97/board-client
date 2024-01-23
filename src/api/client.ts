@@ -18,8 +18,8 @@ export interface APIResponse<T = any, D = any> {
 export interface CommonResponse<T> {
     data: T;
     resultCd: number;
+    token?: string;
 }
-
 
 export const client = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
@@ -34,6 +34,7 @@ const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConf
     // console.log(config);
     // const token = getCookie(COOKIE_KEY.LOGIN_TOKEN);
     // config.headers.Authorization = `Bearer ${token}`;
+    config.headers['Authorization'] = localStorage.getItem('accessToken');
     return config;
 };
 

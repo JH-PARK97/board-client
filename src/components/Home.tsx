@@ -1,5 +1,4 @@
-import axios from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { client } from '../api/client';
 
@@ -14,8 +13,8 @@ export default function Home() {
     async function createPost() {
         try {
             const res = await client.post('/post', {
-                title: '제목~',
-                content: '내용~',
+                title: '제목',
+                content: '내용',
                 userId: 8,
             });
             console.log(res);
@@ -23,7 +22,9 @@ export default function Home() {
             console.error(e);
         }
     }
-    createPost();
+    useEffect(() => {
+        createPost();
+    }, []);
 
     return (
         <div className="home__container">

@@ -64,7 +64,10 @@ export default function SignIn() {
         try {
             const resp = await loginAPI(data);
             console.log(resp);
+            if (!resp.token) return null;
+            const { token } = resp;
             if (resp.resultCd === 200) {
+                localStorage.setItem('accessToken', token);
                 navigator('/');
             }
         } catch (error) {
