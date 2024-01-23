@@ -1,4 +1,10 @@
-import axios, { AxiosRequestConfig, AxiosResponse, AxiosResponseHeaders, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+    AxiosError,
+    AxiosRequestConfig,
+    AxiosResponse,
+    AxiosResponseHeaders,
+    InternalAxiosRequestConfig,
+} from 'axios';
 
 export interface APIResponse<T = any, D = any> {
     resultCd: number;
@@ -14,6 +20,7 @@ export interface CommonResponse<T> {
     resultCd: number;
 }
 
+
 export const client = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
     headers: { 'Content-Type': 'application/json' },
@@ -24,6 +31,7 @@ const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConf
     // console.log(`🛫 [API - REQUEST] ${method?.toUpperCase()} ${url}`);
     // console.log(config);
 
+    // console.log(config);
     // const token = getCookie(COOKIE_KEY.LOGIN_TOKEN);
     // config.headers.Authorization = `Bearer ${token}`;
     return config;
@@ -32,7 +40,7 @@ const onRequest = (config: InternalAxiosRequestConfig): InternalAxiosRequestConf
 const onResponse = (res: AxiosResponse): AxiosResponse => {
     const { resultCd, data } = res.data;
     // console.log(method, url, code, message);
-    console.log('resultCd : ', resultCd, data);
+    // console.log('resultCd : ', resultCd, data);
     // if (code === 'SUCCESS') {
     //     console.log(`🛬 [API - RESPONSE] ${method?.toUpperCase()} ${url} | ${code} : ${message}`);
     // } else {
@@ -42,7 +50,12 @@ const onResponse = (res: AxiosResponse): AxiosResponse => {
     return res;
 };
 
-client.interceptors.request.use(onRequest);
+const onErrorRequest = (error: AxiosError<AxiosRequestConfig>) => {
+    console.log('error : ', error);
+    return error;
+};
+
+client.interceptors.request.use(onRequest, onErrorRequest);
 client.interceptors.response.use(onResponse);
 
 export const Get = async <T>(url: string, config?: AxiosRequestConfig): Promise<AxiosResponse<CommonResponse<T>>> => {

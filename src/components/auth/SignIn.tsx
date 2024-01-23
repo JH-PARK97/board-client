@@ -24,6 +24,9 @@ import { schema as SignInSchema } from 'src/api/auth/login.validate';
 import loginAPI from 'src/api/auth/login.api';
 import { AxiosError } from 'axios';
 
+// utils
+import { useNavigate } from 'react-router-dom';
+
 function Copyright(props: any) {
     return (
         <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -39,6 +42,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+    const navigator = useNavigate();
     const defaultValues = useMemo(() => {
         return {
             email: '',
@@ -59,12 +63,20 @@ export default function SignIn() {
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
         try {
             const resp = await loginAPI(data);
-
-            console.log(resp?.data);
+            console.log(resp);
+            if (resp.resultCd === 200) {
+                navigator('/');
+            }
         } catch (error) {
             if (error instanceof AxiosError) {
+                // console.log(error.isAxiosError)
+                const errorCd = error?.response?.data?.error?.resultCd;
+                const errorMsg = error?.response?.data?.error?.resultMsg;
+                if (errorCd === 401) {
+                    setError('password', { message: errorMsg });
+                }
             } else {
-                console.error('error : ', error);
+                console.log(error);
             }
         }
     };

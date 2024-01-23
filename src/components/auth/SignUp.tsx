@@ -22,6 +22,7 @@ import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 // fetch
 import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function Copyright(props: any) {
     return (
@@ -39,6 +40,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+    const navigator = useNavigate();
     const ageOptions = Array.from({ length: 100 }, (_, index) => ({
         value: (index + 1).toString(),
         label: (index + 1).toString(),
@@ -66,7 +68,9 @@ export default function SignUp() {
     const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
         try {
             const resp = await createUserAPI(data);
-            console.log(resp);
+            if ((resp.resultCd = 200)) {
+                navigator('/signin');
+            }
         } catch (error) {
             if (error instanceof AxiosError) {
                 if (error.request.status === 409) {

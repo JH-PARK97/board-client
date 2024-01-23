@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { client } from '../api/client';
 
 export default function Home() {
     const githubConfig = {
@@ -12,15 +13,17 @@ export default function Home() {
 
     async function createPost() {
         try {
-            const res = await axios.post('http://localhost:8080/api/v1/post/create', {
-                title: '2번째 제목',
-                content: '2번째 내용',
+            const res = await client.post('/post', {
+                title: '제목~',
+                content: '내용~',
+                userId: 8,
             });
             console.log(res);
         } catch (e) {
             console.error(e);
         }
     }
+    createPost();
 
     return (
         <div className="home__container">
