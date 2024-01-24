@@ -5,8 +5,11 @@ import SignUp from './components/auth/SignUp';
 import React from 'react';
 import Blog from './components/blog/Blog';
 import SignIn from './components/auth/SignIn';
+import { useAuthStore } from './store/auth';
 
 export default function App() {
+    const authStore = useAuthStore();
+    console.log(authStore);
     const router = useMemo(() => {
         return createBrowserRouter([
             {

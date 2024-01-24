@@ -24,8 +24,9 @@ import { schema as SignInSchema } from 'src/api/auth/login.validate';
 import loginAPI from 'src/api/auth/login.api';
 import { AxiosError } from 'axios';
 
-// utils
+// hooks
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../store/auth';
 
 function Copyright(props: any) {
     return (
@@ -42,6 +43,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
+    const { login, isLogin } = useAuthStore();
     const navigator = useNavigate();
     const defaultValues = useMemo(() => {
         return {
@@ -63,11 +65,11 @@ export default function SignIn() {
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
         try {
             const resp = await loginAPI(data);
-            console.log(resp);
             if (!resp.token) return null;
             const { token } = resp;
             if (resp.resultCd === 200) {
                 localStorage.setItem('accessToken', token);
+                login(resp.data);
                 navigator('/');
             }
         } catch (error) {
