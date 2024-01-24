@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '../../store/auth';
 
 interface HeaderProps {
     sections: ReadonlyArray<{
@@ -18,9 +19,13 @@ interface HeaderProps {
 export default function Header(props: HeaderProps) {
     const { sections, title } = props;
     const navigate = useNavigate();
-
+    const { isLogin, logout } = useAuthStore();
     const handleSigninButton = () => {
-        navigate('/signin');
+        if (isLogin) {
+            logout();
+        } else {
+            navigate('/signin');
+        }
     };
 
     return (
@@ -34,7 +39,7 @@ export default function Header(props: HeaderProps) {
                     <SearchIcon />
                 </IconButton>
                 <Button onClick={handleSigninButton} variant="outlined" size="small">
-                    Sign in
+                    {isLogin ? '로그아웃' : '로그인'}
                 </Button>
             </Toolbar>
             <Toolbar component="nav" variant="dense" sx={{ justifyContent: 'space-between', overflowX: 'auto' }}>

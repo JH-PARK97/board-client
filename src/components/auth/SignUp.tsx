@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 
 // components
 import Avatar from '@mui/material/Avatar';
@@ -23,6 +23,7 @@ import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
+import InputFileUpload from '../shared/Form/FormFileUpload';
 
 function Copyright(props: any) {
     return (
@@ -40,6 +41,7 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
+    const [profileImage, setProfileImage] = useState('/default-image.jpg');
     const navigator = useNavigate();
     const ageOptions = Array.from({ length: 100 }, (_, index) => ({
         value: (index + 1).toString(),
@@ -94,15 +96,31 @@ export default function SignUp() {
                         alignItems: 'center',
                     }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
                     <Typography component="h1" variant="h5">
                         회원 가입
                     </Typography>
 
                     <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
                         <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <div
+                                    className="profile-image-wrapper"
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        justifyItems: 'center',
+                                        flexDirection: 'column-reverse',
+                                    }}
+                                >
+                                    <InputFileUpload content="업로드" />
+                                    <img
+                                        alt="profileImg"
+                                        src={profileImage ?? ''}
+                                        style={{ width: 180, height: 180, borderRadius: 50 }}
+                                    />
+                                </div>
+                            </Grid>
                             <Grid item xs={12}>
                                 <FormInput fullWidth name="email" control={control} label="이메일" />
                                 {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}
@@ -145,6 +163,7 @@ export default function SignUp() {
                                 />
                                 {errors.age && <FormHelperText error>{errors?.age?.message}</FormHelperText>}
                             </Grid>
+
                             <Grid item xs={6}>
                                 <FormRadioGroup
                                     control={control}
@@ -158,6 +177,7 @@ export default function SignUp() {
 
                                 {errors.gender && <FormHelperText error>{errors?.gender?.message}</FormHelperText>}
                             </Grid>
+
                             <Grid item xs={12}>
                                 <FormInput fullWidth name="phoneNumber" control={control} label="전화번호" />
                                 {errors.phoneNumber && (

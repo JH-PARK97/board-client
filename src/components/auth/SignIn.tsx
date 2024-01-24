@@ -74,7 +74,6 @@ export default function SignIn() {
             }
         } catch (error) {
             if (error instanceof AxiosError) {
-                // console.log(error.isAxiosError)
                 const errorCd = error?.response?.data?.error?.resultCd;
                 const errorMsg = error?.response?.data?.error?.resultMsg;
                 if (errorCd === 401) {
