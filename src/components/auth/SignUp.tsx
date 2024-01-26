@@ -100,7 +100,12 @@ export default function SignUp() {
                         회원 가입
                     </Typography>
 
-                    <form onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
+                    <form
+                        method="post"
+                        onSubmit={handleSubmit(onSubmit)}
+                        style={{ marginTop: 30 }}
+                        encType="multipart/form-data"
+                    >
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <div

@@ -1,28 +1,44 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import React, { useRef } from 'react';
 import { Button, ButtonProps } from '@mui/material';
-
-const VisuallyHiddenInput = styled('input')({
-    clip: 'rect(0 0 0 0)',
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-});
+import fileUploadAPI from '../../../api/file/upload.api';
 
 interface customButtonProps extends ButtonProps {
     content: string;
 }
 
 export default function InputFileUpload({ size, content }: customButtonProps) {
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
+    const handleUploadButtonClick = () => {
+        if (fileInputRef.current) {
+            fileInputRef.current.click();
+        }
+    };
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return null;
+        const file = e?.target?.files[0];
+
+        if (file) {
+            const resp = await fileUploadAPI(file);
+            console.log('resp : ', resp);
+        }
+    };
+
     return (
-        <Button size={size}>
+        <Button onClick={handleUploadButtonClick}>
             {content}
-            <VisuallyHiddenInput type="file" />
+            <input
+                id="fileUpload"
+                ref={fileInputRef}
+                type="file"
+                className="fileUpload"
+                hidden
+                accept="image/*"
+                onChange={(e) => {
+                    handleFileChange(e);
+                }}
+            />
         </Button>
     );
 }
