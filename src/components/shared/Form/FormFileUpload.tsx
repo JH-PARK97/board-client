@@ -4,9 +4,10 @@ import fileUploadAPI from '../../../api/file/upload.api';
 
 interface customButtonProps extends ButtonProps {
     content: string;
+    onUpload: (url: string) => void;
 }
 
-export default function InputFileUpload({ size, content }: customButtonProps) {
+export default function FormFileUpload({ content, onUpload }: customButtonProps) {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleUploadButtonClick = () => {
@@ -20,8 +21,16 @@ export default function InputFileUpload({ size, content }: customButtonProps) {
         const file = e?.target?.files[0];
 
         if (file) {
+            const reader = new FileReader();
             const resp = await fileUploadAPI(file);
-            console.log('resp : ', resp);
+
+            reader.readAsDataURL(file);
+
+            reader.onloadend = () => {
+                if (reader.result) {
+                    onUpload(reader.result?.toString());
+                }
+            };
         }
     };
 

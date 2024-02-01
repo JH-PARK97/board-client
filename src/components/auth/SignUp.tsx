@@ -1,17 +1,16 @@
 import React, { useMemo, useState } from 'react';
 
 // components
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Container } from '@mui/system';
 import { CssBaseline, FormHelperText } from '@mui/material';
-import { FormInput, FormRadioGroup, FormSelect } from '../shared/Form/index';
+import { FormFileUpload, FormInput, FormRadioGroup, FormSelect } from '../shared/Form/index';
+import ImagePreview from '../shared/ImagePreview';
 
 // form & type
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,7 +22,7 @@ import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import InputFileUpload from '../shared/Form/FormFileUpload';
+import SignUpProfileUpload from '../SignUpProfileUpload';
 
 function Copyright(props: any) {
     return (
@@ -118,12 +117,10 @@ export default function SignUp() {
                                         flexDirection: 'column-reverse',
                                     }}
                                 >
-                                    <InputFileUpload content="업로드" />
-                                    <img
-                                        alt="profileImg"
-                                        src={profileImage ?? ''}
-                                        style={{ width: 180, height: 180, borderRadius: 50 }}
-                                    />
+                                    {/* <FormFileUpload content="업로드" />
+                                    <ImagePreview height={100} width={100} imageUrl={profileImage} />
+                                     */}
+                                    <SignUpProfileUpload />
                                 </div>
                             </Grid>
                             <Grid item xs={12}>
