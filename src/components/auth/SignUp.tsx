@@ -10,11 +10,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Container } from '@mui/system';
 import { CssBaseline, FormHelperText } from '@mui/material';
 import { FormFileUpload, FormInput, FormRadioGroup, FormSelect } from '../shared/Form/index';
-import ImagePreview from '../shared/ImagePreview';
 
 // form & type
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
+import type { SubmitHandler } from 'react-hook-form';
 import { schema as SignUpSchema } from '../../api/user/create/user.validate';
 import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 
@@ -22,7 +22,7 @@ import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
-import SignUpProfileUpload from '../SignUpProfileUpload';
+import ImagePreview from '../shared/ImagePreview';
 
 function Copyright(props: any) {
     return (
@@ -40,13 +40,13 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignUp() {
-    const [profileImage, setProfileImage] = useState('/default-image.jpg');
+    const [imageUrl, setImageUrl] = useState<string>('');
     const navigator = useNavigate();
     const ageOptions = Array.from({ length: 100 }, (_, index) => ({
         value: (index + 1).toString(),
         label: (index + 1).toString(),
     }));
-    const defaultValues = useMemo(() => {
+    const defaultValues: SignUpBodySchema = useMemo(() => {
         return {
             email: '',
             password: '',
@@ -54,23 +54,28 @@ export default function SignUp() {
             age: '',
             gender: '',
             phoneNumber: '',
+            profile: undefined,
         };
     }, []);
+    const methods = useForm<SignUpBodySchema>({
+        mode: 'onChange',
+        resolver: zodResolver(SignUpSchema),
+        defaultValues,
+    });
+
     const {
-        handleSubmit,
         control,
         watch,
         setError,
         formState: { errors },
-    } = useForm<SignUpBodySchema>({
-        defaultValues,
-        resolver: zodResolver(SignUpSchema),
-    });
+        handleSubmit,
+    } = methods;
+
     const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
         try {
             const resp = await createUserAPI(data);
             if ((resp.resultCd = 200)) {
-                navigator('/signin');
+                // navigator('/signin');
             }
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -83,124 +88,130 @@ export default function SignUp() {
         }
     };
 
+    const handleFileUpload = (url: string) => {
+        setImageUrl(url);
+    };
+
+    console.log(watch());
     return (
-        <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs">
-                <CssBaseline />
-                <Box
-                    sx={{
-                        marginTop: 8,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                    }}
-                >
-                    <Typography component="h1" variant="h5">
-                        회원 가입
-                    </Typography>
-
-                    <form
-                        method="post"
-                        onSubmit={handleSubmit(onSubmit)}
-                        style={{ marginTop: 30 }}
-                        encType="multipart/form-data"
+        <FormProvider {...methods}>
+            <ThemeProvider theme={defaultTheme}>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline />
+                    <Box
+                        sx={{
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
                     >
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <div
-                                    className="profile-image-wrapper"
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        justifyItems: 'center',
-                                        flexDirection: 'column-reverse',
-                                    }}
-                                >
-                                    {/* <FormFileUpload content="업로드" />
-                                    <ImagePreview height={100} width={100} imageUrl={profileImage} />
-                                     */}
-                                    <SignUpProfileUpload />
-                                </div>
-                            </Grid>
-                            <Grid item xs={12}>
-                                <FormInput fullWidth name="email" control={control} label="이메일" />
-                                {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}
-                            </Grid>
+                        <Typography component="h1" variant="h5">
+                            회원 가입
+                        </Typography>
+                        <form
+                            method="post"
+                            onSubmit={handleSubmit(onSubmit)}
+                            style={{ marginTop: 30 }}
+                            encType="multipart/form-data"
+                        >
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <div
+                                        className="profile-image-wrapper"
+                                        style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            justifyItems: 'center',
+                                            flexDirection: 'column-reverse',
+                                        }}
+                                    >
+                                        <FormFileUpload content="업로드" onUpload={handleFileUpload} />
+                                        <ImagePreview height={100} width={100} imageUrl={imageUrl} />
+                                    </div>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <FormInput fullWidth name="email" control={control} label="이메일" />
+                                    {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}
+                                </Grid>
 
-                            <Grid item xs={12}>
-                                <FormInput
-                                    fullWidth
-                                    name="password"
-                                    control={control}
-                                    label="비밀번호"
-                                    type={'password'}
-                                />
-                                {errors.password && <FormHelperText error>{errors?.password?.message}</FormHelperText>}
-                            </Grid>
+                                <Grid item xs={12}>
+                                    <FormInput
+                                        fullWidth
+                                        name="password"
+                                        control={control}
+                                        label="비밀번호"
+                                        type={'password'}
+                                    />
+                                    {errors.password && (
+                                        <FormHelperText error>{errors?.password?.message}</FormHelperText>
+                                    )}
+                                </Grid>
 
-                            <Grid item xs={12}>
-                                <FormInput
-                                    fullWidth
-                                    name="passwordConfirm"
-                                    control={control}
-                                    label="비밀번호 확인 "
-                                    type={'password'}
-                                />
-                                {errors.passwordConfirm && (
-                                    <FormHelperText error>{errors?.passwordConfirm?.message}</FormHelperText>
-                                )}
-                            </Grid>
+                                <Grid item xs={12}>
+                                    <FormInput
+                                        fullWidth
+                                        name="passwordConfirm"
+                                        control={control}
+                                        label="비밀번호 확인 "
+                                        type={'password'}
+                                    />
+                                    {errors.passwordConfirm && (
+                                        <FormHelperText error>{errors?.passwordConfirm?.message}</FormHelperText>
+                                    )}
+                                </Grid>
 
-                            <Grid item xs={6}>
-                                <FormSelect
-                                    formControlProps={{ fullWidth: true }}
-                                    inputLabel="나이"
-                                    control={control}
-                                    name={'age'}
-                                    selectItem={ageOptions.map((option) => ({
-                                        value: option.value,
-                                        children: option.label,
-                                    }))}
-                                />
-                                {errors.age && <FormHelperText error>{errors?.age?.message}</FormHelperText>}
-                            </Grid>
+                                <Grid item xs={6}>
+                                    <FormSelect
+                                        formControlProps={{ fullWidth: true }}
+                                        inputLabel="나이"
+                                        control={control}
+                                        name={'age'}
+                                        selectItem={ageOptions.map((option) => ({
+                                            value: option.value,
+                                            children: option.label,
+                                        }))}
+                                    />
+                                    {errors.age && <FormHelperText error>{errors?.age?.message}</FormHelperText>}
+                                </Grid>
 
-                            <Grid item xs={6}>
-                                <FormRadioGroup
-                                    control={control}
-                                    name={'gender'}
-                                    group={[
-                                        { value: 'male', label: '남자' },
-                                        { value: 'female', label: '여자' },
-                                    ]}
-                                    groupLabel={'성별'}
-                                />
+                                <Grid item xs={6}>
+                                    <FormRadioGroup
+                                        control={control}
+                                        name={'gender'}
+                                        group={[
+                                            { value: 'male', label: '남자' },
+                                            { value: 'female', label: '여자' },
+                                        ]}
+                                        groupLabel={'성별'}
+                                    />
 
-                                {errors.gender && <FormHelperText error>{errors?.gender?.message}</FormHelperText>}
-                            </Grid>
+                                    {errors.gender && <FormHelperText error>{errors?.gender?.message}</FormHelperText>}
+                                </Grid>
 
-                            <Grid item xs={12}>
-                                <FormInput fullWidth name="phoneNumber" control={control} label="전화번호" />
-                                {errors.phoneNumber && (
-                                    <FormHelperText error>{errors?.phoneNumber?.message}</FormHelperText>
-                                )}
+                                <Grid item xs={12}>
+                                    <FormInput fullWidth name="phoneNumber" control={control} label="전화번호" />
+                                    {errors.phoneNumber && (
+                                        <FormHelperText error>{errors?.phoneNumber?.message}</FormHelperText>
+                                    )}
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-                            회원가입
-                        </Button>
-                        <Grid container justifyContent="flex-end">
-                            <Grid item>
-                                <Link href="/signin" variant="body2">
-                                    이미 계정이 있으신가요?
-                                </Link>
+                            <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+                                회원가입
+                            </Button>
+                            <Grid container justifyContent="flex-end">
+                                <Grid item>
+                                    <Link href="/signin" variant="body2">
+                                        이미 계정이 있으신가요?
+                                    </Link>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </form>
-                </Box>
-                <Copyright sx={{ mt: 5 }} />
-            </Container>
-        </ThemeProvider>
+                        </form>
+                    </Box>
+                    <Copyright sx={{ mt: 5 }} />
+                </Container>
+            </ThemeProvider>
+        </FormProvider>
     );
 }

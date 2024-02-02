@@ -17,7 +17,6 @@ export default function Home() {
                 content: '내용',
                 userId: 8,
             });
-            console.log(res);
         } catch (e) {
             console.error(e);
         }
