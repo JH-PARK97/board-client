@@ -74,8 +74,9 @@ export default function SignUp() {
     const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
         try {
             const resp = await createUserAPI(data);
-            if ((resp.resultCd = 200)) {
-                // navigator('/signin');
+            if (!resp) return null;
+            if (resp.resultCd === 200) {
+                navigator('/signin');
             }
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -92,7 +93,6 @@ export default function SignUp() {
         setImageUrl(url);
     };
 
-    console.log(watch());
     return (
         <FormProvider {...methods}>
             <ThemeProvider theme={defaultTheme}>
