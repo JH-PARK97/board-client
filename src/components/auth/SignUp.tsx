@@ -79,12 +79,13 @@ export default function SignUp() {
                 navigator('/signin');
             }
         } catch (error) {
+            console.log(error);
             if (error instanceof AxiosError) {
                 if (error.request.status === 409) {
                     setError('email', { message: '중복된 이메일입니다.' }, { shouldFocus: true });
                 }
             } else {
-                console.error(error);
+                console.error('error : ', error);
             }
         }
     };

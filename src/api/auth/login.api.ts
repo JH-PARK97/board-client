@@ -3,9 +3,6 @@ import { SignInBodySchema } from './login.validate';
 import { UserItem } from './login.type';
 
 export default async function loginAPI(body: SignInBodySchema) {
-    const { email, password } = body;
-
-    const { data } = await Post<UserItem>('login', { email, password });
-
+    const { data } = await Post<UserItem>('login', body);
     return data;
 }
