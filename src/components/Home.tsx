@@ -6,30 +6,31 @@ export default function Home() {
     const githubConfig = {
         gitClientId: process.env.REACT_APP_GITHUB_CLIENT_ID,
         gitRedirUrl: process.env.REACT_APP_GITHUB_CALLBACK_URL,
-        gitAuthUrl: 'https://github.com/login/oauth/authorize',
+        gitAuthUrl: process.env.REACT_APP_GITHUB_AUTH_URL,
     };
     const { gitAuthUrl, gitClientId, gitRedirUrl } = githubConfig;
 
     async function createPost() {
-        try {
-            const res = await client.post('/post', {
-                title: '제목',
-                content: '내용',
-                userId: 8,
-            });
-        } catch (e) {
-            console.error(e);
-        }
+        //     try {
+        //         const res = await client.post('/post', {
+        //             title: '제목',
+        //             content: '내용',
+        //             userId: 8,
+        //         });
+        //     } catch (e) {
+        //         console.error(e);
+        //     }
+        // }
+        // useEffect(() => {
+        //     createPost();
+        // }, []);
     }
-    useEffect(() => {
-        createPost();
-    }, []);
 
     return (
         <div className="home__container">
             <h2 className="home__header">Login</h2>
 
-            <Link to={`${gitAuthUrl}?client_id=${gitClientId}&redirect_uri=${gitRedirUrl}`}>Github Login</Link>
+            <Link to={`${gitAuthUrl}?client_id=${gitClientId}&redirect_uri=${gitRedirUrl}&scope=user:email`}>Github Login</Link>
         </div>
     );
 }
