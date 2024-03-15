@@ -14,9 +14,10 @@ export default function Github() {
         console.log(res);
         if (res.data.resultCd === 200) {
             localStorage.setItem('accessToken', res.data.token);
-            login(res.data.data);
+            login(res.data, false);
             navigator('/');
         }
+        return;
     };
     useEffect(() => {
         loginGithub();

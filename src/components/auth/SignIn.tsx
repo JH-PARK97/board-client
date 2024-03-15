@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // components
 import Avatar from '@mui/material/Avatar';
@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { FormInput } from '../shared/Form';
-import { FormHelperText } from '@mui/material';
+import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
 
 // validation
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -43,14 +43,12 @@ function Copyright(props: any) {
 const defaultTheme = createTheme();
 
 export default function SignIn() {
-    const { login, isLogin } = useAuthStore();
+    const { login } = useAuthStore();
+
+    // 아이디 기억 체크박스
+    const [idSave, setIdSave] = useState<boolean>(false);
+
     const navigator = useNavigate();
-    const defaultValues = useMemo(() => {
-        return {
-            email: '',
-            password: '',
-        };
-    }, []);
 
     const {
         handleSubmit,
@@ -59,7 +57,24 @@ export default function SignIn() {
         formState: { errors },
     } = useForm<SignInBodySchema>({
         resolver: zodResolver(SignInSchema),
-        defaultValues,
+        defaultValues: useMemo(() => {
+            const storedAuthInfo = localStorage.getItem('auth-storage');
+            let email = '';
+            if (storedAuthInfo) {
+                const authInfo = JSON.parse(storedAuthInfo);
+                if (authInfo.state.isSaved) {
+                    email = authInfo.state.email;
+                } else {
+                    email = '';
+                }
+
+                setIdSave(authInfo.state.isSaved);
+            }
+            return {
+                email: email,
+                password: '',
+            };
+        }, []),
     });
 
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
@@ -69,7 +84,7 @@ export default function SignIn() {
             const { token } = resp;
             if (resp.resultCd === 200) {
                 localStorage.setItem('accessToken', token);
-                login(resp.data);
+                login(resp.data, idSave);
                 navigator('/');
             }
         } catch (error) {
@@ -83,6 +98,10 @@ export default function SignIn() {
                 console.log(error);
             }
         }
+    };
+
+    const handleIdSave = () => {
+        setIdSave((prev) => !prev);
     };
 
     return (
@@ -122,7 +141,10 @@ export default function SignIn() {
                                 {errors.password && <FormHelperText error>{errors?.password?.message}</FormHelperText>}
                             </Grid>
                         </Grid>
-                        {/* <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="아이디 기억하기" /> */}
+                        <FormControlLabel
+                            control={<Checkbox color="primary" checked={idSave} onChange={handleIdSave} />}
+                            label="아이디 기억하기"
+                        />
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                             로그인
                         </Button>
