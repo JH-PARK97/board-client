@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 // components
 import Avatar from '@mui/material/Avatar';
@@ -13,6 +13,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { FormInput } from '../shared/Form';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
+import GitSignInButton from './GitSignInButton';
 
 // validation
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -71,7 +72,7 @@ export default function SignIn() {
                 setIdSave(authInfo.state.isSaved);
             }
             return {
-                email: email,
+                email: email || '',
                 password: '',
             };
         }, []),
@@ -148,12 +149,8 @@ export default function SignIn() {
                         <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                             로그인
                         </Button>
+                        <GitSignInButton />
                         <Grid container>
-                            <Grid item xs>
-                                <Link href="#" variant="body2">
-                                    비밀번호를 잊으셨나요?
-                                </Link>
-                            </Grid>
                             <Grid item>
                                 <Link href="/signup" variant="body2">
                                     계정이 없으신가요?

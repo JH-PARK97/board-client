@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
@@ -20,9 +20,21 @@ export default function Header(props: HeaderProps) {
     const { sections, title } = props;
     const navigate = useNavigate();
     const { isLogin, logout } = useAuthStore();
+    const [isSaved, setIsSaved] = useState<boolean>(false);
+    const [email, setEmail] = useState<string>('');
+
+    useEffect(() => {
+        const authStorage = localStorage.getItem('auth-storage');
+        if (authStorage) {
+            const authInfo = JSON.parse(authStorage);
+            setIsSaved(authInfo.state.isSaved);
+            setEmail(authInfo?.state?.user?.email);
+        }
+    }, []);
+
     const handleSigninButton = () => {
         if (isLogin) {
-            logout();
+            logout(isSaved, email);
         } else {
             navigate('/signin');
         }
