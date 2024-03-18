@@ -6,7 +6,7 @@ import { useAuthStore } from '../../store/auth';
 export default function Github() {
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
-    const { login, isLogin } = useAuthStore();
+    const { login } = useAuthStore();
     const code = searchParams.get('code');
     const [isSaved, setIsSaved] = useState<boolean>();
 
@@ -23,7 +23,7 @@ export default function Github() {
         if (res.data.resultCd === 200) {
             localStorage.setItem('accessToken', res.data.token);
             login(res.data.data, isSaved ?? false);
-            navigator('/');
+            navigator('/home', { replace: true });
         }
         return;
     };

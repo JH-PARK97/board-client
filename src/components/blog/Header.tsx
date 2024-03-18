@@ -3,6 +3,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
+import CreateIcon from '@mui/icons-material/Create';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
@@ -47,8 +48,8 @@ export default function Header(props: HeaderProps) {
                 <Typography component="h2" variant="h5" color="inherit" align="center" noWrap sx={{ flex: 1 }}>
                     {title}
                 </Typography>
-                <IconButton>
-                    <SearchIcon />
+                <IconButton onClick={}>
+                    <CreateIcon />
                 </IconButton>
                 <Button onClick={handleSigninButton} variant="outlined" size="small">
                     {isLogin ? '로그아웃' : '로그인'}

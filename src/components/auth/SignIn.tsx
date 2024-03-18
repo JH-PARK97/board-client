@@ -86,7 +86,7 @@ export default function SignIn() {
             if (resp.resultCd === 200) {
                 localStorage.setItem('accessToken', token);
                 login(resp.data, idSave);
-                navigator('/');
+                navigator('/home');
             }
         } catch (error) {
             if (error instanceof AxiosError) {
