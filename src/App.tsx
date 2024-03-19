@@ -6,6 +6,7 @@ import Blog from './components/blog/Blog';
 import SignIn from './components/auth/SignIn';
 import Github from './components/Oauth/Github';
 import NotFound from './components/NotFound/NotFound';
+import CreatePost from './components/post/CreatePost';
 
 export default function App() {
     const router = useMemo(() => {
@@ -35,6 +36,10 @@ export default function App() {
             {
                 path: '/callback/github',
                 element: <Github />,
+            },
+            {
+                path: '/post/create',
+                element: <CreatePost />,
             },
         ]);
     }, []);

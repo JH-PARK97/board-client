@@ -41,6 +41,9 @@ export default function Header(props: HeaderProps) {
         }
     };
 
+    const handleCreatePostButton = () => {
+        navigate('/post/create');
+    };
     return (
         <React.Fragment>
             <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -48,7 +51,7 @@ export default function Header(props: HeaderProps) {
                 <Typography component="h2" variant="h5" color="inherit" align="center" noWrap sx={{ flex: 1 }}>
                     {title}
                 </Typography>
-                <IconButton onClick={}>
+                <IconButton onClick={handleCreatePostButton}>
                     <CreateIcon />
                 </IconButton>
                 <Button onClick={handleSigninButton} variant="outlined" size="small">
