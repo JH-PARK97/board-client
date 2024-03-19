@@ -1,9 +1,10 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 
 export default function Github() {
+    const iscall = useRef(false);
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
     const { login } = useAuthStore();
@@ -23,13 +24,26 @@ export default function Github() {
         if (res.data.resultCd === 200) {
             localStorage.setItem('accessToken', res.data.token);
             login(res.data.data, isSaved ?? false);
-            navigator('/home', { replace: true });
+            return true
         }
-        return;
+        return false;
     };
     useEffect(() => {
-        loginGithub();
-    }, []);
+        async function call() {
+            if (!iscall.current) {
+                iscall.current = true;
+                const ok = await loginGithub();
+                if (ok) {
+                    navigator('/home', { replace: true });
+                    iscall.current = false;
+
+                }
+            }
+        }
+        if (code) {
+            call();
+        }
+    }, [code]);
 
     return <div>hello</div>;
 }
