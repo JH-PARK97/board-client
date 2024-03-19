@@ -2,8 +2,9 @@ import { useEditor, EditorContent, EditorProvider } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React from 'react';
 import EditorToolBar from './EditorToolBar';
+import Underline from '@tiptap/extension-underline';
 
-const extensions = [StarterKit];
+const extensions = [StarterKit, Underline];
 
 const content = '<p>Hello World!</p>';
 

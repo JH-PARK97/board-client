@@ -3,7 +3,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Footer from '../blog/Footer';
 import Header from '../blog/Header';
-import Tiptap from '../shared/Editor';
+import Tiptap from '../shared/Editor/Editor';
 import { FormInput } from '../shared/Form';
 
 const sections = [
@@ -34,7 +34,7 @@ export default function CreatePost() {
                 >
                     <input name="title" />
                     <div className="editor-wrapper" style={{ width: '100%', height: '60vh', borderColor: 'black' }}>
-                        <Tiptap  />
+                        <Tiptap />
                     </div>
                 </div>
             </Container>

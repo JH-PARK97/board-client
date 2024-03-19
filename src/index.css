@@ -46,3 +46,47 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 32px;
+
+    margin-right: 2px;
+    padding: 0 8px;
+
+    border: 0;
+    border-radius: 4px;
+    background: transparent;
+    color: currentColor;
+
+    font-family: inherit;
+    font-size: inherit;
+    line-height: 1;
+    font-weight: inherit;
+
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.button:hover,
+.button.is-active,
+.menu-button:hover,
+.menu-button.is-active {
+    background-color: #edf1f6;
+    color: black;
+}
+
+code {
+    padding: 4px;
+
+    border-radius: 4px;
+    background-color: #f7f9fb;
+    color: #3b424b;
+
+    box-decoration-break: clone;
+
+    font-size: 14px;
+}
