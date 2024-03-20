@@ -1,23 +1,35 @@
-import { useEditor, EditorContent, EditorProvider } from '@tiptap/react';
+import { EditorProvider } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React from 'react';
 import EditorToolBar from './EditorToolBar';
 import Underline from '@tiptap/extension-underline';
+import Placeholder from '@tiptap/extension-placeholder';
 
-const extensions = [StarterKit, Underline];
+const extensions = [
+    StarterKit,
+    Underline,
+    Placeholder.configure({
+        emptyEditorClass: 'is-editor-empty',
+        placeholder: 'Write something...',
+    }),
+];
 
-const content = '<p>Hello World!</p>';
+const content = '';
 
 const Tiptap = () => {
-    const editor = useEditor({
-        extensions,
-        content,
-    });
-
     return (
         <>
-            <EditorProvider extensions={extensions} slotBefore={<EditorToolBar />} content={content}>
-                {''}
+            <EditorProvider
+                editorProps={{
+                    attributes: {
+                        class: 'focus:outline-none',
+                    },
+                }}
+                extensions={extensions}
+                slotBefore={<EditorToolBar />}
+                content={content}
+            >
+                <></>
             </EditorProvider>
         </>
     );
