@@ -3,6 +3,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 
+// let isCall = false;
+
 export default function Github() {
     const iscall = useRef(false);
     const [searchParams] = useSearchParams();
@@ -19,15 +21,8 @@ export default function Github() {
         }
     }, []);
 
-    const loginGithub = async () => {
-        const res = await axios.get(`http://localhost:8080/callback/github?code=${code}`);
-        if (res.data.resultCd === 200) {
-            localStorage.setItem('accessToken', res.data.token);
-            login(res.data.data, isSaved ?? false);
-            return true
-        }
-        return false;
-    };
+    // react의 strictMode에서 useEffect가 2번 실행되기 때문에 
+    // github Oauth API에서 401 error가 발생하는 이슈 해결 코드
     useEffect(() => {
         async function call() {
             if (!iscall.current) {
@@ -36,7 +31,6 @@ export default function Github() {
                 if (ok) {
                     navigator('/home', { replace: true });
                     iscall.current = false;
-
                 }
             }
         }
@@ -44,6 +38,31 @@ export default function Github() {
             call();
         }
     }, [code]);
+
+    // useEffect(() => {
+    //     async function call() {
+    //         if (!isCall) {
+    //             isCall = true;
+    //             const ok = await loginGithub();
+    //             if (ok) {
+    //                 navigator('/home', { replace: true });
+    //             }
+    //         }
+    //     }
+    //     if (code) {
+    //         call();
+    //     }
+    // }, [code]);
+
+    const loginGithub = async () => {
+        const res = await axios.get(`http://localhost:8080/callback/github?code=${code}`);
+        if (res.data.resultCd === 200) {
+            localStorage.setItem('accessToken', res.data.token);
+            login(res.data.data, isSaved ?? false);
+            return true;
+        }
+        return false;
+    };
 
     return <div>hello</div>;
 }

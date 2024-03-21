@@ -59,10 +59,10 @@ export default function SignIn() {
     } = useForm<SignInBodySchema>({
         resolver: zodResolver(SignInSchema),
         defaultValues: useMemo(() => {
-            const storedAuthInfo = localStorage.getItem('auth-storage');
             let email = '';
-            if (storedAuthInfo) {
-                const authInfo = JSON.parse(storedAuthInfo);
+            const authStorage = localStorage.getItem('auth-storage');
+            if (authStorage) {
+                const authInfo = JSON.parse(authStorage);
                 if (authInfo.state.isSaved) {
                     email = authInfo.state.email;
                 } else {

@@ -1,9 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import { Link, useNavigate } from 'react-router-dom';
 
 export default function GitSignInButton() {
-    // const navigate = useNavigate();
     const githubConfig = {
         gitClientId: process.env.REACT_APP_GITHUB_CLIENT_ID,
         gitRedirUrl: process.env.REACT_APP_GITHUB_CALLBACK_URL,
@@ -25,7 +23,6 @@ export default function GitSignInButton() {
             onClick={handleGitLoginButton}
         >
             깃허브 로그인
-
         </Button>
     );
 }
