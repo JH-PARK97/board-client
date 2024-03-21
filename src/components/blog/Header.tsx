@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import SearchIcon from '@mui/icons-material/Search';
 import CreateIcon from '@mui/icons-material/Create';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
@@ -20,7 +19,7 @@ interface HeaderProps {
 export default function Header(props: HeaderProps) {
     const { sections, title } = props;
     const navigate = useNavigate();
-    const { isLogin, logout } = useAuthStore();
+    const { isLogin, logout, subscribeAccessToken } = useAuthStore();
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
 
@@ -30,8 +29,9 @@ export default function Header(props: HeaderProps) {
             const authInfo = JSON.parse(authStorage);
             setIsSaved(authInfo.state.isSaved);
             setEmail(authInfo?.state?.user?.email);
+            subscribeAccessToken(isSaved, email);
         }
-    }, []);
+    }, [email, isSaved, subscribeAccessToken]);
 
     const handleSigninButton = () => {
         if (isLogin) {

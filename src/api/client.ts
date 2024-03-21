@@ -22,15 +22,25 @@ export const client = axios.create({
 
 client.interceptors.request.use(
     (config) => {
+        // 로그인, 회원가입 페이지에선 header에 token 추가하지 않는다.
+    
         const accessToken = localStorage.getItem('accessToken');
+        const pathname = window.location.pathname;
+        const isAuthPage = pathname.includes('/signin') || pathname.includes('signup');
 
+        if (isAuthPage) return config;
+
+        // 그 외의 경우에는 토큰을 추가하고 토큰이 없을 시 로그인 페이지로 redirect
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
+        } else {
+            window.location.href = '/signin';
         }
 
         return config;
     },
     (error) => {
+        console.log(error);
         return Promise.reject(error);
     }
 );

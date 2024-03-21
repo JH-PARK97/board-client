@@ -12,12 +12,13 @@ interface AuthStore {
     login: (user: CustomUserItem, isSaved: boolean) => void;
     logout: (isSaved: boolean, email: string | null) => void;
     id?: string;
+    subscribeAccessToken: (isSaved: boolean, email: string | null) => void;
 }
 
 export const useAuthStore = create(
     persist<AuthStore>(
         (set, get) => ({
-            isLogin: localStorage.getItem('accessToken') !== null,
+            isLogin: !!localStorage.getItem('accessToken'),
             user: null,
             isSaved: false,
             login: (user: CustomUserItem, isSaved: boolean) => {
@@ -26,6 +27,12 @@ export const useAuthStore = create(
             logout: (isSaved: boolean, email: string | null) => {
                 localStorage.removeItem('accessToken');
                 set({ isLogin: false, user: null, email: email, isSaved: isSaved });
+            },
+            // localStorage에서 accessToken의 값의 변화에 반응
+            subscribeAccessToken: (isSaved: boolean, email: string | null) => {
+                window.addEventListener('storage', () => {
+                    set({ isLogin: !!localStorage.getItem('accessToken'), user: null, email: email, isSaved: isSaved });
+                });
             },
         }),
 
