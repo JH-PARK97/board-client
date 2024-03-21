@@ -9,3 +9,13 @@ export const fileReader = (file: File | Blob) => {
         reader.readAsDataURL(file);
     });
 };
+
+export const getUserEmail = () => {
+    const authStorage = localStorage.getItem('auth-storage');
+    if (authStorage) {
+        const authInfo = JSON.parse(authStorage);
+        return authInfo.state.user.email;
+    } else {
+        return null;
+    }
+};
