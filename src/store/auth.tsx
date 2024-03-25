@@ -32,7 +32,7 @@ export const useAuthStore = create(
             subscribeAccessToken: (isSaved: boolean, email: string | null) => {
                 window.addEventListener('storage', () => {
                     console.log(!!localStorage.getItem('accessToken'));
-                    // set({ isLogin: !!localStorage.getItem('accessToken'), user: null, email: email, isSaved: isSaved });
+                    set({ isLogin: !!localStorage.getItem('accessToken'), user: null, email: email, isSaved: isSaved });
                 });
             },
         }),

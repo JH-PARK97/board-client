@@ -1,3 +1,5 @@
+import { CircularProgress, Container } from '@mui/material';
+import { Box } from '@mui/system';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -9,11 +11,13 @@ export default function Github() {
     const iscall = useRef(false);
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
-    const { login } = useAuthStore();
+    const { login, isLogin } = useAuthStore();
     const code = searchParams.get('code');
     const [isSaved, setIsSaved] = useState<boolean>();
 
     useEffect(() => {
+        if (!code) return navigator(-1);
+
         const authStorage = localStorage.getItem('auth-storage');
         if (authStorage) {
             const authInfo = JSON.parse(authStorage);
@@ -21,7 +25,7 @@ export default function Github() {
         }
     }, []);
 
-    // react의 strictMode에서 useEffect가 2번 실행되기 때문에 
+    // react의 strictMode에서 useEffect가 2번 실행되기 때문에
     // github Oauth API에서 401 error가 발생하는 이슈 해결 코드
     useEffect(() => {
         async function call() {
@@ -55,14 +59,36 @@ export default function Github() {
     // }, [code]);
 
     const loginGithub = async () => {
-        const res = await axios.get(`http://localhost:8080/callback/github?code=${code}`);
-        if (res.data.resultCd === 200) {
-            localStorage.setItem('accessToken', res.data.token);
-            login(res.data.data, isSaved ?? false);
-            return true;
+        try {
+            const res = await axios.get(`http://localhost:8080/callback/github?code=${code}`);
+            if (res.data.resultCd === 200) {
+                localStorage.setItem('accessToken', res.data.token);
+                login(res.data.data, isSaved ?? false);
+                return true;
+            }
+            return false;
+        } catch (error) {
+            if (isLogin) {
+                navigator('/home');
+            } else {
+                navigator('/signin');
+            }
         }
-        return false;
     };
 
-    return <div>hello</div>;
+    return (
+        <Container>
+            <Box
+                sx={{
+                    height: '100vh',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                }}
+            >
+                <CircularProgress />
+            </Box>
+        </Container>
+    );
 }

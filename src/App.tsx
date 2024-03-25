@@ -1,4 +1,4 @@
-import { createBrowserRouter, LoaderFunctionArgs, redirect, RouterProvider, useRouteError } from 'react-router-dom';
+import { createBrowserRouter, LoaderFunctionArgs, redirect, RouterProvider } from 'react-router-dom';
 import { useMemo } from 'react';
 import SignUp from './components/auth/SignUp';
 import React from 'react';
