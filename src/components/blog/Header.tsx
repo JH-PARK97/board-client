@@ -36,6 +36,8 @@ export default function Header(props: HeaderProps) {
     const handleSigninButton = () => {
         if (isLogin) {
             logout(isSaved, email);
+            // navigate로 route를 해줘야 react-router-dom의 loader가 실행되기 때문에 사용
+            navigate('/home');
         } else {
             navigate('/signin');
         }

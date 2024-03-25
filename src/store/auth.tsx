@@ -31,7 +31,8 @@ export const useAuthStore = create(
             // localStorage에서 accessToken의 값의 변화에 반응
             subscribeAccessToken: (isSaved: boolean, email: string | null) => {
                 window.addEventListener('storage', () => {
-                    set({ isLogin: !!localStorage.getItem('accessToken'), user: null, email: email, isSaved: isSaved });
+                    console.log(!!localStorage.getItem('accessToken'));
+                    // set({ isLogin: !!localStorage.getItem('accessToken'), user: null, email: email, isSaved: isSaved });
                 });
             },
         }),
