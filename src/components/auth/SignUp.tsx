@@ -21,8 +21,13 @@ import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 // fetch
 import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ImagePreview from '../shared/ImagePreview';
+
+const ageOptions = Array.from({ length: 100 }, (_, index) => ({
+    value: (index + 1).toString(),
+    label: (index + 1).toString(),
+}));
 
 function Copyright(props: any) {
     return (
@@ -42,13 +47,12 @@ const defaultTheme = createTheme();
 export default function SignUp() {
     const [imageUrl, setImageUrl] = useState<string>('');
     const navigator = useNavigate();
-    const ageOptions = Array.from({ length: 100 }, (_, index) => ({
-        value: (index + 1).toString(),
-        label: (index + 1).toString(),
-    }));
+    const location = useLocation();
+    const email = location?.state?.email;
+
     const defaultValues: SignUpBodySchema = useMemo(() => {
         return {
-            email: '',
+            email: email ? email : '',
             password: '',
             passwordConfirm: '',
             age: '',
@@ -56,7 +60,7 @@ export default function SignUp() {
             phoneNumber: '',
             profile: undefined,
         };
-    }, []);
+    }, [email]);
     const methods = useForm<SignUpBodySchema>({
         mode: 'onChange',
         resolver: zodResolver(SignUpSchema),
@@ -133,7 +137,13 @@ export default function SignUp() {
                                     </div>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <FormInput fullWidth name="email" control={control} label="이메일" />
+                                    <FormInput
+                                        fullWidth
+                                        name="email"
+                                        control={control}
+                                        label="이메일"
+                                        disabled={!!email}
+                                    />
                                     {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}
                                 </Grid>
 

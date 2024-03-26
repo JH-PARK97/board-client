@@ -9,11 +9,11 @@ import { useAuthStore } from '../../store/auth';
 
 export default function Github() {
     const iscall = useRef(false);
+    const { login, isLogin } = useAuthStore();
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
-    const { login, isLogin } = useAuthStore();
-    const code = searchParams.get('code');
     const [isSaved, setIsSaved] = useState<boolean>();
+    const code = searchParams.get('code');
 
     useEffect(() => {
         if (!code) return navigator(-1);
@@ -63,8 +63,11 @@ export default function Github() {
             const res = await axios.get(`http://localhost:8080/callback/github?code=${code}`);
             if (res.data.resultCd === 200) {
                 localStorage.setItem('accessToken', res.data.token);
-                login(res.data.data, isSaved ?? false);
+                login(res.data, isSaved ?? false);
                 return true;
+            } else if (res.data.resultCd === 401) {
+                const email = res.data.email;
+                return navigator('/signup', { state: { email } });
             }
             return false;
         } catch (error) {
