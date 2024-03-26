@@ -4,15 +4,22 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
+import { useModalStore } from '../../store/modal';
+import Modal from '../shared/Modal/Modal';
+import ModalPortal from '../shared/Modal/MordalPortal';
 
 // let isCall = false;
 
 export default function Github() {
     const iscall = useRef(false);
+
     const { login, isLogin } = useAuthStore();
+    const { isModalOpen, openModal, closeModal } = useModalStore();
+
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
     const [isSaved, setIsSaved] = useState<boolean>();
+    const [email, setEmail] = useState<string | null>(null);
     const code = searchParams.get('code');
 
     useEffect(() => {
@@ -67,7 +74,8 @@ export default function Github() {
                 return true;
             } else if (res.data.resultCd === 401) {
                 const email = res.data.email;
-                return navigator('/signup', { state: { email } });
+                setEmail(email);
+                openModal();
             }
             return false;
         } catch (error) {
@@ -77,6 +85,10 @@ export default function Github() {
                 navigator('/signin');
             }
         }
+    };
+
+    const onConfirm = () => {
+        navigator('/signup', { state: { email } });
     };
 
     return (
@@ -90,6 +102,21 @@ export default function Github() {
                     justifyContent: 'center',
                 }}
             >
+                {isModalOpen && (
+                    <ModalPortal>
+                        <Modal
+                            title="알림"
+                            content={
+                                <div>
+                                    <p>계정이 존재하지 않습니다.</p>
+                                    <p> 회원가입 페이지로 이동합니다.</p>
+                                </div>
+                            }
+                            onClose={closeModal}
+                            onConfirm={onConfirm}
+                        />
+                    </ModalPortal>
+                )}
                 <CircularProgress />
             </Box>
         </Container>
