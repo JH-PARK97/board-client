@@ -31,7 +31,12 @@ async function checkLogin(ctx: LoaderFunctionArgs) {
         return redirect('/home');
     }
     if (!protectPage && !isLogin) {
+        if (pathname === '' || '/') {
+            return redirect('/home');
+        }
+
         console.log('로그인 상태에만 진입 가능한 페이지');
+
         return redirect('/signup');
     }
     return null;
@@ -41,7 +46,11 @@ export default function App() {
     const router = useMemo(() => {
         return createBrowserRouter([
             {
-                path: '',
+                path: '*',
+                element: <NotFound />,
+            },
+            {
+                path: '/',
                 children: [
                     {
                         path: '/',
@@ -71,10 +80,6 @@ export default function App() {
                         loader: checkLogin,
                     },
                 ],
-            },
-            {
-                path: '*',
-                element: <NotFound />,
             },
         ]);
     }, []);
