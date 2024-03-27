@@ -15,7 +15,7 @@ export default function Github() {
     const iscall = useRef(false);
 
     const { login, isLogin } = useAuthStore();
-    const { isModalOpen, openModal, closeModal } = useModalStore();
+    const { toggleModal } = useModalStore();
 
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
@@ -79,7 +79,7 @@ export default function Github() {
             } else if (res.data.resultCd === 401) {
                 const email = res.data.email;
                 setEmail(email);
-                openModal();
+                toggleModal();
             }
             return false;
         } catch (error) {
@@ -91,7 +91,8 @@ export default function Github() {
         }
     };
 
-    const onConfirm = () => {
+    const handleConfirmButton = () => {
+        toggleModal();
         navigator('/signup', { state: { email } });
     };
 
@@ -106,19 +107,19 @@ export default function Github() {
                     justifyContent: 'center',
                 }}
             >
-                {isModalOpen && (
-                    <ModalPortal>
-                        <Modal>
-                            <Modal.Title>알림</Modal.Title>
-                            <Modal.Content>
-                                <p>경고</p>
-                                <p>경고</p>
-                            </Modal.Content>
-                            <Modal.Footer>확인</Modal.Footer>
-                        </Modal>
-                    </ModalPortal>
-                )}
                 {loading && <CircularProgress />}
+                <ModalPortal>
+                    <Modal>
+                        <Modal.Title hiddenCloseButton={true}>알림</Modal.Title>
+                        <Modal.Content>
+                            <p>계정이 존재하지 않습니다.</p>
+                            <p>회원가입 페이지로 이동합니다.</p>
+                        </Modal.Content>
+                        <Modal.Footer>
+                            <Modal.Button onClick={handleConfirmButton}>확인</Modal.Button>
+                        </Modal.Footer>
+                    </Modal>
+                </ModalPortal>
             </Box>
         </Container>
     );

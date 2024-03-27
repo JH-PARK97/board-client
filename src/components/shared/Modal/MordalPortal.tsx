@@ -9,13 +9,5 @@ interface ModalProtalProps {
 export default function ModalPortal({ children }: ModalProtalProps) {
     const modalRoot = document.getElementById('modal-root') as HTMLElement;
 
-    return createPortal(
-        <>
-            <div className="dim"> </div>
-            <div className="modal">
-                <div className="modal-content">{children}</div>
-            </div>
-        </>,
-        modalRoot
-    );
+    return createPortal(children, modalRoot);
 }
