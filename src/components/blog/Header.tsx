@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
+import { useModalStore } from '../../store/modal';
+// import ModalPortal from '../shared/Modal/MordalPortal';
+import Modal from '../shared/Modal/Modal';
 
 interface HeaderProps {
     sections: ReadonlyArray<{
@@ -20,6 +23,7 @@ export default function Header(props: HeaderProps) {
     const { sections, title } = props;
     const navigate = useNavigate();
     const { isLogin, logout, subscribeAccessToken } = useAuthStore();
+    const { isModalOpen, openModal, closeModal } = useModalStore();
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
 
@@ -44,8 +48,18 @@ export default function Header(props: HeaderProps) {
     };
 
     const handleCreatePostButton = () => {
-        navigate('/post/create');
+        if (!isLogin) {
+            openModal();
+        } else {
+            navigate('/post/create');
+        }
     };
+
+    const onConfirm = () => {
+        closeModal();
+        navigate('/signin');
+    };
+
     return (
         <React.Fragment>
             <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
@@ -74,6 +88,20 @@ export default function Header(props: HeaderProps) {
                     </Link>
                 ))}
             </Toolbar>
+            {isModalOpen &&
+                // <ModalPortal>
+                //     <Modal
+                //         title="알림"
+                //         content={
+                //             <div>
+                //                 <p>로그인된 유저만 접근 가능합니다.</p>
+                //             </div>
+                //         }
+                //         onConfirm={onConfirm}
+                //         onClose={closeModal}
+                //     />
+                // </ModalPortal>
+                null}
         </React.Fragment>
     );
 }

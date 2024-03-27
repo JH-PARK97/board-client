@@ -1,27 +1,58 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
+import { useModalStore } from '../../../store/modal';
 
-interface ModalProps {
-    title: string;
-    onClose: () => void;
-    onConfirm?: () => void;
-    content?: React.ReactNode;
+// Sub Component - Title, Content, footer, button
+interface ModalTitleProps {
+    children?: ReactNode;
 }
 
-export default function Modal({ title, onClose, onConfirm, content }: ModalProps) {
+function ModalTitle({ children }: ModalTitleProps) {
     return (
-        <div className="modal">
-            <div className="modal-content">
-                <div className="modal-header">
-                    <h2>{title}</h2>
-                    {/* <span className="close" onClick={onClose}>
-                        x
-                    </span> */}
-                </div>
-                <div className="modal-body">{content}</div>
-                <div className="modal-footer">
-                    <button onClick={onConfirm}>확인</button>
-                </div>
-            </div>
+        <div className="modal-title">
+            <h2>{children}</h2>
+            <span className="close">x</span>
         </div>
     );
 }
+
+interface ModalContentProps {
+    children?: ReactNode;
+}
+
+function ModalContent({ children }: ModalContentProps) {
+    return <div className="modal-body">{children}</div>;
+}
+
+interface ModalLabelButtonProps {
+    children?: ReactNode;
+    onClick?: () => void;
+}
+
+function ModalLabelButton({ children, onClick }: ModalLabelButtonProps) {
+    return (
+        <div className="modal-footer flex">
+            <button onClick={onClick}>{children}</button>
+        </div>
+    );
+}
+
+// Main Component - ModalMain
+
+interface ModalProps {
+    children?: ReactNode;
+}
+
+function Modal({ children }: ModalProps) {
+    const { isModalOpen } = useModalStore();
+    if (!isModalOpen) {
+        return null;
+    }
+
+    return <>{children}</>;
+}
+
+export default Object.assign(Modal, {
+    Title: ModalTitle,
+    Content: ModalContent,
+    Footer: ModalLabelButton,
+});

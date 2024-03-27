@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 import { useModalStore } from '../../store/modal';
+// import Modal from '../shared/Modal/Modal';
 import Modal from '../shared/Modal/Modal';
 import ModalPortal from '../shared/Modal/MordalPortal';
 
@@ -19,6 +20,7 @@ export default function Github() {
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
     const [isSaved, setIsSaved] = useState<boolean>();
+    const [loading, setLoading] = useState<boolean>(true);
     const [email, setEmail] = useState<string | null>(null);
     const code = searchParams.get('code');
 
@@ -68,6 +70,8 @@ export default function Github() {
     const loginGithub = async () => {
         try {
             const res = await axios.get(`http://localhost:8080/callback/github?code=${code}`);
+
+            setLoading(false);
             if (res.data.resultCd === 200) {
                 localStorage.setItem('accessToken', res.data.token);
                 login(res.data, isSaved ?? false);
@@ -104,20 +108,17 @@ export default function Github() {
             >
                 {isModalOpen && (
                     <ModalPortal>
-                        <Modal
-                            title="알림"
-                            content={
-                                <div>
-                                    <p>계정이 존재하지 않습니다.</p>
-                                    <p> 회원가입 페이지로 이동합니다.</p>
-                                </div>
-                            }
-                            onClose={closeModal}
-                            onConfirm={onConfirm}
-                        />
+                        <Modal>
+                            <Modal.Title>알림</Modal.Title>
+                            <Modal.Content>
+                                <p>경고</p>
+                                <p>경고</p>
+                            </Modal.Content>
+                            <Modal.Footer>확인</Modal.Footer>
+                        </Modal>
                     </ModalPortal>
                 )}
-                <CircularProgress />
+                {loading && <CircularProgress />}
             </Box>
         </Container>
     );
