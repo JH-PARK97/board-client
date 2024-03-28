@@ -7,6 +7,7 @@ import SignIn from './components/auth/SignIn';
 import Github from './components/Oauth/Github';
 import NotFound from './components/NotFound/NotFound';
 import CreatePost from './components/post/CreatePost';
+import Footer from './components/blog/Footer';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -25,19 +26,15 @@ async function checkLogin(ctx: LoaderFunctionArgs) {
     //     console.log('로그인 상태에만 진입 가능한 페이지');
     //     return redirect('/signup');
     // }
+    if (pathname === '/') {
+        return redirect('/home');
+    }
 
     if (protectPage && isLogin) {
-        console.log('비로그인 상태에만 진입 가능한 페이지');
         return redirect('/home');
     }
     if (!protectPage && !isLogin) {
-        if (pathname === '' || '/') {
-            return redirect('/home');
-        }
-
-        console.log('로그인 상태에만 진입 가능한 페이지');
-
-        return redirect('/signup');
+        return redirect('/signin');
     }
     return null;
 }
@@ -51,6 +48,7 @@ export default function App() {
             },
             {
                 path: '/',
+                element: <Footer description="Something here to give the footer a purpose!" />,
                 children: [
                     {
                         path: '/',
@@ -64,6 +62,10 @@ export default function App() {
                                 path: '/signin',
                                 element: <SignIn />,
                             },
+                            {
+                                path: '/post/create',
+                                element: <CreatePost />,
+                            },
                         ],
                     },
                     {
@@ -73,11 +75,6 @@ export default function App() {
                     {
                         path: '/callback/github',
                         element: <Github />,
-                    },
-                    {
-                        path: '/post/create',
-                        element: <CreatePost />,
-                        loader: checkLogin,
                     },
                 ],
             },

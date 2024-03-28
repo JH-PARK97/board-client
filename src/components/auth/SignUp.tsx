@@ -29,19 +29,6 @@ const ageOptions = Array.from({ length: 100 }, (_, index) => ({
     label: (index + 1).toString(),
 }));
 
-function Copyright(props: any) {
-    return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="https://mui.com/">
-                Your Website
-            </Link>
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
-
 const defaultTheme = createTheme();
 
 export default function SignUp() {
@@ -53,6 +40,7 @@ export default function SignUp() {
     const defaultValues: SignUpBodySchema = useMemo(() => {
         return {
             email: email ? email : '',
+            nickname: '',
             password: '',
             passwordConfirm: '',
             age: '',
@@ -148,6 +136,13 @@ export default function SignUp() {
                                 </Grid>
 
                                 <Grid item xs={12}>
+                                    <FormInput fullWidth name="nickname" control={control} label="닉네임" />
+                                    {errors.nickname && (
+                                        <FormHelperText error>{errors?.nickname?.message}</FormHelperText>
+                                    )}
+                                </Grid>
+
+                                <Grid item xs={12}>
                                     <FormInput
                                         fullWidth
                                         name="password"
@@ -220,7 +215,6 @@ export default function SignUp() {
                             </Grid>
                         </form>
                     </Box>
-                    <Copyright sx={{ mt: 5 }} />
                 </Container>
             </ThemeProvider>
         </FormProvider>

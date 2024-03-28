@@ -3,6 +3,7 @@ import { SignUpBodySchema } from './user.validate';
 
 type SignUpBodyData = {
     email: string;
+    nickname: string;
     password: string;
     passwordConfirm: string;
     gender: string;
@@ -12,10 +13,11 @@ type SignUpBodyData = {
 
 export default async function createUserAPI(args: SignUpBodySchema) {
     const formData = new FormData();
-    const { age, email, gender, password, passwordConfirm, phoneNumber, profile } = args;
+    const { age, email, nickname, gender, password, passwordConfirm, phoneNumber, profile } = args;
 
     const body: SignUpBodyData = {
         email,
+        nickname,
         password,
         passwordConfirm,
         gender,
