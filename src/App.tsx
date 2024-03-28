@@ -7,7 +7,7 @@ import SignIn from './components/auth/SignIn';
 import Github from './components/Oauth/Github';
 import NotFound from './components/NotFound/NotFound';
 import CreatePost from './components/post/CreatePost';
-import Footer from './components/blog/Footer';
+import Footer from './components/shared/Layout/Footer';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);

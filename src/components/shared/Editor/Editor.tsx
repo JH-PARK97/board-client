@@ -24,9 +24,10 @@ const Tiptap = ({ getContent }: TipTapProps) => {
     return (
         <>
             <EditorProvider
+            
                 editorProps={{
                     attributes: {
-                        class: 'focus:outline-none',
+                        class: 'focus:outline-none max-h-[700px] h-[700px]',
                     },
                 }}
                 extensions={extensions}

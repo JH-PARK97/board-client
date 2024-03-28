@@ -14,7 +14,7 @@ export const getUserEmail = () => {
     const authStorage = localStorage.getItem('auth-storage');
     if (authStorage) {
         const authInfo = JSON.parse(authStorage);
-        return authInfo.state.user.email;
+        return authInfo.state.user.data.email;
     } else {
         return null;
     }

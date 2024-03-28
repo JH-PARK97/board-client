@@ -6,21 +6,17 @@ import CreateIcon from '@mui/icons-material/Create';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/auth';
-import { useModalStore } from '../../store/modal';
-import Modal from '../shared/Modal/Modal';
-import ModalPortal from '../shared/Modal/MordalPortal';
+import { useAuthStore } from '../../../store/auth';
+import { useModalStore } from '../../../store/modal';
+import Modal from '../Modal/Modal';
+import ModalPortal from '../Modal/MordalPortal';
 
 interface HeaderProps {
-    sections: ReadonlyArray<{
-        title: string;
-        url: string;
-    }>;
     title: string;
 }
 
 export default function Header(props: HeaderProps) {
-    const { sections, title } = props;
+    const { title } = props;
     const navigate = useNavigate();
     const { isLogin, logout, subscribeAccessToken } = useAuthStore();
     const { toggleModal } = useModalStore();
@@ -57,9 +53,8 @@ export default function Header(props: HeaderProps) {
 
     return (
         <React.Fragment>
-            <Toolbar sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                <Button size="small">Subscribe</Button>
-                <Typography component="h2" variant="h5" color="inherit" align="center" noWrap sx={{ flex: 1 }}>
+            <Toolbar sx={{ boxShadow: 'inherit', marginBottom: 1 }}>
+                <Typography component="h2" variant="h5" color="inherit" align="left" noWrap sx={{ flex: 1 }}>
                     {title}
                 </Typography>
                 <IconButton onClick={handleCreatePostButton}>
@@ -69,20 +64,7 @@ export default function Header(props: HeaderProps) {
                     {isLogin ? '로그아웃' : '로그인'}
                 </Button>
             </Toolbar>
-            <Toolbar component="nav" variant="dense" sx={{ justifyContent: 'space-between', overflowX: 'auto' }}>
-                {sections.map((section) => (
-                    <Link
-                        color="inherit"
-                        noWrap
-                        key={section.title}
-                        variant="body2"
-                        href={section.url}
-                        sx={{ p: 1, flexShrink: 0 }}
-                    >
-                        {section.title}
-                    </Link>
-                ))}
-            </Toolbar>
+
             <ModalPortal>
                 <Modal removeDimmed>
                     <Modal.Title>알림</Modal.Title>
