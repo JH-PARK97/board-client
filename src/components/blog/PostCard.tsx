@@ -4,7 +4,7 @@ interface PostCardProps {
     children: ReactNode;
 }
 export default function PostCard({ children }: PostCardProps) {
-    return <div className="postcard-container  bg-slate-100">{children}</div>;
+    return <div className="postcard-container h-full  bg-slate-100">{children}</div>;
 }
 
 interface PostCardImageProps {
@@ -36,7 +36,7 @@ interface PostCardTitleProps {
 PostCard.Title = function Title({ children }: PostCardTitleProps) {
     return (
         <div className="postcard-title h-[10%] my-1">
-            <h4 className="text-ellipsis overflow-hidden text-nowrap">{children}</h4>
+            <p className="text-base text-ellipsis font-bold overflow-hidden text-nowrap">{children}</p>
         </div>
     );
 };
@@ -59,7 +59,7 @@ interface PostCardSubInfoProps {
 
 PostCard.SubInfo = function SubInfo({ children }: PostCardSubInfoProps) {
     return (
-        <div className="postcard-subinfo h-[10%] text-[12px] leading-3 text-gray-500 content-center">
+        <div className="postcard-subinfo h-[10%] text-[12px] leading-3 text-gray-500 content-center mt-auto">
             <p> {children}</p>
         </div>
     );
@@ -72,8 +72,14 @@ interface PostCardFooterProps {
 PostCard.Footer = function Footer({ children }: PostCardFooterProps) {
     return (
         <div className="postcard-subinfo h-[10%] text-[12px] content-center border-t-[1px] border-slate-100">
-            <div className='flex justify-start items-center gap-2'>
-                <img className='postcard-profile-image rounded-full' src="/default-image.jpg" alt="profile" width={24} height={24} ></img>
+            <div className="flex justify-start items-center gap-2">
+                <img
+                    className="postcard-profile-image rounded-full"
+                    src="/default-image.jpg"
+                    alt="profile"
+                    width={24}
+                    height={24}
+                ></img>
                 by <span className="font-bold">{children}</span>
             </div>
         </div>

@@ -29,11 +29,24 @@ export default function Blog() {
             <Header title="Blog" />
             <div className="content-container">
                 {data.map((post: dataProps, idx: number) => {
-                    if (idx > 10) return null;
+                    if (idx % 3) {
+                        return (
+                            <PostCard key={idx}>
+                                <div className="postcard-body w-full h-full flex flex-col p-3">
+                                    {/* <PostCard.Image src="https://source.unsplash.com/random?wallpapers" /> */}
+                                    <PostCard.Title>{post.title}</PostCard.Title>
+                                    <PostCard.Content>{post.content}</PostCard.Content>
+                                    <PostCard.SubInfo>{post.createdDate}</PostCard.SubInfo>
+                                    <PostCard.Footer>{post.userId}</PostCard.Footer>
+                                </div>
+                            </PostCard>
+                        );
+                    }
                     return (
                         <PostCard key={idx}>
                             <PostCard.Image src="https://source.unsplash.com/random?wallpapers" />
-                            <div className="postcard-body h-full w-full p-4 ">
+
+                            <div className="postcard-body w-full h-full  p-3">
                                 <PostCard.Title>{post.title}</PostCard.Title>
                                 <PostCard.Content>{post.content}</PostCard.Content>
                                 <PostCard.SubInfo>{post.createdDate}</PostCard.SubInfo>
