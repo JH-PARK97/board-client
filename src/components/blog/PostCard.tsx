@@ -4,9 +4,7 @@ interface PostCardProps {
     children: ReactNode;
 }
 export default function PostCard({ children }: PostCardProps) {
-    return (
-            <div className="postcard-container text-center bg-slate-200">{children}</div>
-    );
+    return <div className="postcard-container  bg-slate-100">{children}</div>;
 }
 
 interface PostCardImageProps {
@@ -16,7 +14,7 @@ interface PostCardImageProps {
 
 PostCard.Image = function Image({ children, src }: PostCardImageProps) {
     return (
-        <div className="postcard-image h-[40%] w-full  relative">
+        <div className="postcard-image h-[45%] w-full relative">
             <img
                 src={src}
                 style={{
@@ -36,7 +34,11 @@ interface PostCardTitleProps {
 }
 
 PostCard.Title = function Title({ children }: PostCardTitleProps) {
-    return <div className="postcard-title h-[10%] text-left">{children}</div>;
+    return (
+        <div className="postcard-title h-[10%] my-1">
+            <h4 className="text-ellipsis overflow-hidden text-nowrap">{children}</h4>
+        </div>
+    );
 };
 
 interface PostCardContentProps {
@@ -44,7 +46,11 @@ interface PostCardContentProps {
 }
 
 PostCard.Content = function Content({ children }: PostCardContentProps) {
-    return <div className="postcard-content">{children}</div>;
+    return (
+        <div className="postcard-content h-[65px] text-ellipsis overflow-hidden text-[14px]">
+            <p> {children}</p>
+        </div>
+    );
 };
 
 interface PostCardSubInfoProps {
@@ -52,7 +58,11 @@ interface PostCardSubInfoProps {
 }
 
 PostCard.SubInfo = function SubInfo({ children }: PostCardSubInfoProps) {
-    return <div className="postcard-subinfo">{children}</div>;
+    return (
+        <div className="postcard-subinfo h-[10%] text-[12px] leading-3 text-gray-500 content-center">
+            <p> {children}</p>
+        </div>
+    );
 };
 
 interface PostCardFooterProps {
@@ -60,5 +70,12 @@ interface PostCardFooterProps {
 }
 
 PostCard.Footer = function Footer({ children }: PostCardFooterProps) {
-    return <div className="postcard-subinfo">{children}</div>;
+    return (
+        <div className="postcard-subinfo h-[10%] text-[12px] content-center border-t-[1px] border-slate-100">
+            <div className='flex justify-start items-center gap-2'>
+                <img className='postcard-profile-image rounded-full' src="/default-image.jpg" alt="profile" width={24} height={24} ></img>
+                by <span className="font-bold">{children}</span>
+            </div>
+        </div>
+    );
 };
