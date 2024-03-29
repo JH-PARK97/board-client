@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import CreateIcon from '@mui/icons-material/Create';
 import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../../store/auth';
 import { useModalStore } from '../../../store/modal';
@@ -53,7 +52,7 @@ export default function Header(props: HeaderProps) {
 
     return (
         <React.Fragment>
-            <Toolbar sx={{ boxShadow: 'inherit', marginBottom: 1 }}>
+            <Toolbar sx={{ boxShadow: 'inherit', marginBottom: 2 }}>
                 <Typography component="h2" variant="h5" color="inherit" align="left" noWrap sx={{ flex: 1 }}>
                     {title}
                 </Typography>

@@ -1,20 +1,48 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Header from '../shared/Layout/Header';
 import PostCard from './PostCard';
 
+interface dataProps {
+    title: string;
+    content: string;
+    createdDate: string;
+    userId: string;
+}
 export default function Blog() {
-    return (
-        <div className="max-w-screen-xl mx-auto h-[100vh]">
-            <Header title="Blog" />
+    const [data, setData] = useState([]);
 
-            <PostCard>
-                <PostCard.Image>이미지</PostCard.Image>
-                <PostCard.Title>제목</PostCard.Title>
-                <PostCard.Content>콘텐츠</PostCard.Content>
-                <PostCard.SubInfo>부가정보</PostCard.SubInfo>
-                <PostCard.Footer>작성자 정보</PostCard.Footer>
-            </PostCard>
+    useEffect(() => {
+        const fetchPostData = async () => {
+            const resp = await fetch('/post.json');
+            const json = await resp.json();
+            setData(json);
+        };
+        fetchPostData();
+    }, []);
+
+    if (!data) {
+        return null;
+    }
+    return (
+        <div className="h-[100%] w-[90%] m-auto">
+            <Header title="Blog" />
+            <div className="content-container">
+                {data.map((post: dataProps, idx: number) => {
+                    if (idx > 20) return null;
+                    return (
+                        <PostCard key={idx}>
+                            {/* <PostCard.Image src="https://source.unsplash.com/random?wallpapers" /> */}
+                            <div className="postcard-body h-full p-3">
+                                <PostCard.Title>{post.title}</PostCard.Title>
+                                <PostCard.Content>{post.content}</PostCard.Content>
+                                <PostCard.SubInfo>{post.createdDate}</PostCard.SubInfo>
+                                <PostCard.Footer>{post.userId}</PostCard.Footer>
+                            </div>
+                        </PostCard>
+                    );
+                })}
+            </div>
         </div>
     );
 }

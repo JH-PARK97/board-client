@@ -5,18 +5,30 @@ interface PostCardProps {
 }
 export default function PostCard({ children }: PostCardProps) {
     return (
-        <div className="content-container">
-            <div className="postcard-container text-center bg-slate-300">{children}</div>
-        </div>
+            <div className="postcard-container text-center bg-slate-200">{children}</div>
     );
 }
 
 interface PostCardImageProps {
     children?: ReactNode;
+    src: string;
 }
 
-PostCard.Image = function Image({ children }: PostCardImageProps) {
-    return <div className="postcard-image">{children}</div>;
+PostCard.Image = function Image({ children, src }: PostCardImageProps) {
+    return (
+        <div className="postcard-image h-[40%] w-full  relative">
+            <img
+                src={src}
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                }}
+                alt="postcard-img"
+            ></img>
+            {children}
+        </div>
+    );
 };
 
 interface PostCardTitleProps {
@@ -24,7 +36,7 @@ interface PostCardTitleProps {
 }
 
 PostCard.Title = function Title({ children }: PostCardTitleProps) {
-    return <div className="postcard-title">{children}</div>;
+    return <div className="postcard-title h-[10%] text-left">{children}</div>;
 };
 
 interface PostCardContentProps {

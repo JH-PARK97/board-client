@@ -1,66 +1,66 @@
 {
-  "name": "board-client",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@hookform/resolvers": "^3.3.4",
-    "@mui/icons-material": "^5.15.3",
-    "@mui/material": "^5.15.3",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@tiptap/extension-placeholder": "^2.2.4",
-    "@tiptap/extension-underline": "^2.2.4",
-    "@tiptap/pm": "^2.2.4",
-    "@tiptap/react": "^2.2.4",
-    "@tiptap/starter-kit": "^2.2.4",
-    "@types/jest": "^29.5.11",
-    "@types/node": "^20.10.7",
-    "@types/react": "^18.2.47",
-    "@types/react-dom": "^18.2.18",
-    "axios": "^1.6.5",
-    "markdown-to-jsx": "^7.4.0",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-hook-form": "^7.49.3",
-    "react-router-dom": "^6.21.1",
-    "react-scripts": "5.0.1",
-    "react-use": "^17.5.0",
-    "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4",
-    "zod": "^3.22.4",
-    "zustand": "^4.5.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ],
-    "rules": {
-      "no-restricted-globals": "off"
+    "name": "board-client",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@emotion/react": "^11.11.3",
+        "@emotion/styled": "^11.11.0",
+        "@hookform/resolvers": "^3.3.4",
+        "@mui/icons-material": "^5.15.3",
+        "@mui/material": "^5.15.3",
+        "@testing-library/jest-dom": "^5.17.0",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@tiptap/extension-placeholder": "^2.2.4",
+        "@tiptap/extension-underline": "^2.2.4",
+        "@tiptap/pm": "^2.2.4",
+        "@tiptap/react": "^2.2.4",
+        "@tiptap/starter-kit": "^2.2.4",
+        "@types/jest": "^29.5.11",
+        "@types/node": "^20.10.7",
+        "@types/react": "^18.2.47",
+        "@types/react-dom": "^18.2.18",
+        "axios": "^1.6.5",
+        "markdown-to-jsx": "^7.4.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-hook-form": "^7.49.3",
+        "react-router-dom": "^6.21.1",
+        "react-scripts": "5.0.1",
+        "react-use": "^17.5.0",
+        "typescript": "^4.9.5",
+        "web-vitals": "^2.1.4",
+        "zod": "^3.22.4",
+        "zustand": "^4.5.0"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ],
+        "rules": {
+            "no-restricted-globals": "off"
+        }
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "devDependencies": {
+        "tailwindcss": "^3.4.1"
     }
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "tailwindcss": "^3.4.1"
-  }
 }

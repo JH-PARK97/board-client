@@ -93,7 +93,7 @@ export default function SignUp() {
                     <CssBaseline />
                     <Box
                         sx={{
-                            marginTop: 8,
+                            marginTop: 5,
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -105,7 +105,6 @@ export default function SignUp() {
                         <form
                             method="post"
                             onSubmit={handleSubmit(onSubmit)}
-                            style={{ marginTop: 30 }}
                             encType="multipart/form-data"
                         >
                             <Grid container spacing={2}>

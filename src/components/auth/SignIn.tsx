@@ -29,7 +29,6 @@ import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
 
-
 const defaultTheme = createTheme();
 
 export default function SignIn() {
@@ -96,11 +95,11 @@ export default function SignIn() {
 
     return (
         <ThemeProvider theme={defaultTheme}>
-            <Container component="main" maxWidth="xs">
+            <div className="w-full">
                 <CssBaseline />
                 <Box
                     sx={{
-                        marginTop: 8,
+                        marginTop: 10,
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -148,8 +147,7 @@ export default function SignIn() {
                         </Grid>
                     </form>
                 </Box>
-
-            </Container>
+            </div>
         </ThemeProvider>
     );
 }

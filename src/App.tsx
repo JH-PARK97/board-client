@@ -39,6 +39,16 @@ async function checkLogin(ctx: LoaderFunctionArgs) {
     return null;
 }
 
+function footerRender() {
+    const pathname = window.location.pathname;
+
+    if (['/signin', '/signup'].includes(pathname)) {
+        return null;
+    }
+
+    return <Footer description="Something here to give the footer a purpose!" />;
+}
+
 export default function App() {
     const router = useMemo(() => {
         return createBrowserRouter([
@@ -48,7 +58,7 @@ export default function App() {
             },
             {
                 path: '/',
-                element: <Footer description="Something here to give the footer a purpose!" />,
+                element: footerRender(),
                 children: [
                     {
                         path: '/',

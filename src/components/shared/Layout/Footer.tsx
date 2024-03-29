@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import { Outlet } from 'react-router-dom';
+import { height } from '@mui/system';
 
 function Copyright() {
     return (
@@ -29,17 +30,22 @@ export default function Footer(props: FooterProps) {
     return (
         <>
             <Outlet />
-            <Box component="footer" sx={{ bgcolor: 'background.paper', py: 6 }}>
-                <Container maxWidth="lg">
-                    <Typography variant="h6" align="center" gutterBottom>
-                        {title}
-                    </Typography>
-                    <Typography variant="subtitle1" align="center" color="text.secondary" component="p">
-                        {description}
-                    </Typography>
-                    <Copyright />
-                </Container>
-            </Box>
+
+            <div
+                style={{
+                    marginTop: 30,
+                    width: '100%',
+                    height: 50,
+                }}
+            >
+                <Typography variant="h6" align="center" gutterBottom>
+                    {title}
+                </Typography>
+                <Typography variant="subtitle1" align="center" color="text.secondary" component="p">
+                    {description}
+                </Typography>
+                <Copyright />
+            </div>
         </>
     );
 }

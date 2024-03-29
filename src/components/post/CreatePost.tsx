@@ -59,7 +59,7 @@ export default function CreatePost() {
                         <div className="editor-wrapper w-full border overflow-auto">
                             <Tiptap getContent={getContent} />
                         </div>
-                        <div className="editor-footer flex justify-between shadow-lg py-1">
+                        <div className="editor-footer flex justify-between mt-2">
                             <div className="editor-footer-button-left">
                                 <Button variant="outlined" onClick={() => navigator(-1)}>
                                     나가기
