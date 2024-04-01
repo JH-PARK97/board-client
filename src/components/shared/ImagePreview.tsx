@@ -1,21 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
+
 interface ImagePreviewProps {
-    imageUrl?: string;
+    imageUrl?: string | null;
     height: number;
     width: number;
 }
+
 export default function ImagePreview({ imageUrl, height, width }: ImagePreviewProps) {
     return (
         <>
-            <img
-                src={imageUrl ? imageUrl : '/default-image.jpg'}
-                alt="profile_image_filed"
-                height={height}
-                width={width}
+            <div
+                className="image_wrapper"
                 style={{
-                    borderRadius: 100,
+                    height,
+                    width,
                 }}
-            />
+            >
+                <img
+                    src={imageUrl ? imageUrl : ''}
+                    alt="profile_image_filed"
+                    style={{
+                        borderRadius: 100,
+                        objectFit: 'fill',
+                        width,
+                        height,
+                    }}
+                />
+            </div>
         </>
     );
 }

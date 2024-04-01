@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // components
 import Button from '@mui/material/Button';
@@ -23,6 +23,7 @@ import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImagePreview from '../shared/ImagePreview';
+import { getRandomAvatar } from '../../utils/utils';
 
 const ageOptions = Array.from({ length: 100 }, (_, index) => ({
     value: (index + 1).toString(),
@@ -33,6 +34,10 @@ const defaultTheme = createTheme();
 
 export default function SignUp() {
     const [imageUrl, setImageUrl] = useState<string>('');
+    const avatars = useMemo(() => {
+        return getRandomAvatar();
+    }, []);
+
     const navigator = useNavigate();
     const location = useLocation();
     const email = location?.state?.email;
@@ -61,11 +66,16 @@ export default function SignUp() {
         setError,
         formState: { errors },
         handleSubmit,
+        setValue,
     } = methods;
 
     const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
         try {
+            if (!data.profile) {
+                data.profile = avatars;
+            }
             const resp = await createUserAPI(data);
+
             if (!resp) return null;
             if (resp.resultCd === 200) {
                 navigator('/signin');
@@ -102,11 +112,7 @@ export default function SignUp() {
                         <Typography component="h1" variant="h5">
                             회원 가입
                         </Typography>
-                        <form
-                            method="post"
-                            onSubmit={handleSubmit(onSubmit)}
-                            encType="multipart/form-data"
-                        >
+                        <form method="post" onSubmit={handleSubmit(onSubmit)} encType="multipart/form-data">
                             <Grid container spacing={2}>
                                 <Grid item xs={12}>
                                     <div
@@ -120,7 +126,11 @@ export default function SignUp() {
                                         }}
                                     >
                                         <FormFileUpload content="업로드" onUpload={handleFileUpload} />
-                                        <ImagePreview height={100} width={100} imageUrl={imageUrl} />
+                                        <ImagePreview
+                                            height={150}
+                                            width={150}
+                                            imageUrl={imageUrl ? imageUrl : avatars}
+                                        />
                                     </div>
                                 </Grid>
                                 <Grid item xs={12}>

@@ -9,6 +9,7 @@ type SignUpBodyData = {
     gender: string;
     phoneNumber: string;
     age: number;
+    profile?: string | File;
 };
 
 export default async function createUserAPI(args: SignUpBodySchema) {
@@ -23,6 +24,7 @@ export default async function createUserAPI(args: SignUpBodySchema) {
         gender,
         phoneNumber,
         age: Number(age),
+        profile,
     };
 
     // const blob = new Blob([JSON.stringify(body)], {
@@ -34,7 +36,7 @@ export default async function createUserAPI(args: SignUpBodySchema) {
 
     formData.append('signUp', stringifyBody);
 
-    if (profile) formData.append('profile', profile || '');
+    formData.append('profile', profile || '');
 
     // console.log('blob : ', await blob.text());
     // console.log('stringifyBody : ', stringifyBody);

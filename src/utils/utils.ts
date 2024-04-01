@@ -14,8 +14,17 @@ export const getUserEmail = () => {
     const authStorage = localStorage.getItem('auth-storage');
     if (authStorage) {
         const authInfo = JSON.parse(authStorage);
-        return authInfo.state.user.data.email;
+        const email = authInfo?.state?.user?.email;
+        return email;
     } else {
         return null;
     }
+};
+
+export const getRandomAvatar = () => {
+    const seed = Math.random().toString();
+    const options = `seed=${seed}`;
+    const defaultImage = encodeURIComponent(`https://api.dicebear.com/8.x/lorelei/png/${options}`);
+    const randomAvatar = `https://www.gravatar.com/avatar/${seed}?d=${defaultImage}`;
+    return randomAvatar;
 };
