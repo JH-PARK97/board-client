@@ -8,6 +8,7 @@ import Github from './components/Oauth/Github';
 import NotFound from './components/NotFound/NotFound';
 import CreatePost from './components/post/CreatePost';
 import Footer from './components/shared/Layout/Footer';
+import MapExam from './components/map/MapExam';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -85,6 +86,10 @@ export default function App() {
                     {
                         path: '/callback/github',
                         element: <Github />,
+                    },
+                    {
+                        path: '/map',
+                        element: <MapExam />,
                     },
                 ],
             },

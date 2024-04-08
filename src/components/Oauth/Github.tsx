@@ -74,7 +74,7 @@ export default function Github() {
             setLoading(false);
             if (res.data.resultCd === 200) {
                 localStorage.setItem('accessToken', res.data.token);
-                login(res.data, isSaved ?? false);
+                login(res.data.data, isSaved ?? false);
                 return true;
             } else if (res.data.resultCd === 401) {
                 const email = res.data.email;
