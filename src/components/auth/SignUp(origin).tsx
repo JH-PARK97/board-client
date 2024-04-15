@@ -15,15 +15,20 @@ import { FormFileUpload, FormInput, FormRadioGroup, FormSelect } from '../shared
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import { schemaStrapi as SignUpSchema } from '../../api/user/create/user.validate';
-import type { StrapiSignUpBodySchema } from '../../api/user/create/user.validate';
+import { schema as SignUpSchema } from '../../api/user/create/user.validate';
+import type { SignUpBodySchema } from '../../api/user/create/user.validate';
 
 // fetch
-import { createUserSTRAPI } from '../../api/user/create/user.api';
+import createUserAPI from '../../api/user/create/user.api';
 import { AxiosError } from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ImagePreview from '../shared/ImagePreview';
 import { getRandomAvatar } from '../../utils/utils';
+
+const ageOptions = Array.from({ length: 100 }, (_, index) => ({
+    value: (index + 1).toString(),
+    label: (index + 1).toString(),
+}));
 
 const defaultTheme = createTheme();
 
@@ -37,17 +42,19 @@ export default function SignUp() {
     const location = useLocation();
     const email = location?.state?.email;
 
-    const defaultValues: StrapiSignUpBodySchema = useMemo(() => {
+    const defaultValues: SignUpBodySchema = useMemo(() => {
         return {
             email: email ? email : '',
-            username: '',
+            nickname: '',
             password: '',
+            passwordConfirm: '',
+            age: '',
             gender: '',
             phoneNumber: '',
-            profileImage: undefined,
+            profile: undefined,
         };
     }, [email]);
-    const methods = useForm<StrapiSignUpBodySchema>({
+    const methods = useForm<SignUpBodySchema>({
         mode: 'onChange',
         resolver: zodResolver(SignUpSchema),
         defaultValues,
@@ -62,15 +69,17 @@ export default function SignUp() {
         setValue,
     } = methods;
 
-    const onSubmit: SubmitHandler<StrapiSignUpBodySchema> = async (data) => {
-        console.log(data);
+    const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {
         try {
-            if (!data.profileImage) {
-                data.profileImage = avatars;
+            if (!data.profile) {
+                data.profile = avatars;
             }
+            const resp = await createUserAPI(data);
 
-            const resp = await createUserSTRAPI(data);
-            console.log(resp);
+            if (!resp) return null;
+            if (resp.resultCd === 200) {
+                navigator('/signin');
+            }
         } catch (error) {
             console.log(error);
             if (error instanceof AxiosError) {
@@ -136,9 +145,9 @@ export default function SignUp() {
                                 </Grid>
 
                                 <Grid item xs={12}>
-                                    <FormInput fullWidth name="username" control={control} label="닉네임" />
-                                    {errors.username && (
-                                        <FormHelperText error>{errors?.username?.message}</FormHelperText>
+                                    <FormInput fullWidth name="nickname" control={control} label="닉네임" />
+                                    {errors.nickname && (
+                                        <FormHelperText error>{errors?.nickname?.message}</FormHelperText>
                                     )}
                                 </Grid>
 
@@ -153,6 +162,33 @@ export default function SignUp() {
                                     {errors.password && (
                                         <FormHelperText error>{errors?.password?.message}</FormHelperText>
                                     )}
+                                </Grid>
+
+                                <Grid item xs={12}>
+                                    <FormInput
+                                        fullWidth
+                                        name="passwordConfirm"
+                                        control={control}
+                                        label="비밀번호 확인 "
+                                        type={'password'}
+                                    />
+                                    {errors.passwordConfirm && (
+                                        <FormHelperText error>{errors?.passwordConfirm?.message}</FormHelperText>
+                                    )}
+                                </Grid>
+
+                                <Grid item xs={6}>
+                                    <FormSelect
+                                        formControlProps={{ fullWidth: true }}
+                                        inputLabel="나이"
+                                        control={control}
+                                        name={'age'}
+                                        selectItem={ageOptions.map((option) => ({
+                                            value: option.value,
+                                            children: option.label,
+                                        }))}
+                                    />
+                                    {errors.age && <FormHelperText error>{errors?.age?.message}</FormHelperText>}
                                 </Grid>
 
                                 <Grid item xs={6}>

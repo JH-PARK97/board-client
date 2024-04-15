@@ -1,5 +1,6 @@
+import axios from 'axios';
 import { Post } from '../../client';
-import { SignUpBodySchema } from './user.validate';
+import { SignUpBodySchema, StrapiSignUpBodySchema } from './user.validate';
 
 type SignUpBodyData = {
     email: string;
@@ -10,6 +11,15 @@ type SignUpBodyData = {
     phoneNumber: string;
     age: number;
     profile?: string | File;
+};
+
+type StrapiSignUpBodyData = {
+    email: string;
+    username: string;
+    password: string;
+    gender: string;
+    phoneNumber: string;
+    profileImage?: string | File;
 };
 
 export default async function createUserAPI(args: SignUpBodySchema) {
@@ -44,4 +54,45 @@ export default async function createUserAPI(args: SignUpBodySchema) {
     const { data } = await Post('user', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
 
     return data;
+}
+
+export async function createUserSTRAPI(args: StrapiSignUpBodySchema) {
+    // const formData = new FormData();
+    const { email, gender, password, username, phoneNumber, profileImage } = args;
+
+    // const body: StrapiSignUpBodyData = {
+    //     email,
+    //     username,
+    //     password,
+    //     gender,
+    //     phoneNumber,
+    //     profileImage,
+    // };
+    // console.log('body', body)
+
+    // const stringifyBody = JSON.stringify(body);
+
+    // formData.append('signUp', stringifyBody);
+    // console.log('stringifyBody : ' ,stringifyBody)
+
+    // formData.append('profileIamge', profileImage || '');
+
+    const res = await axios.post(
+        'http://localhost:1337/api/auth/local/register',
+        {
+            email,
+            username,
+            password,
+            gender,
+            phoneNumber,
+            profileImage,
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+    );
+
+    return res;
 }

@@ -11,11 +11,16 @@ interface dataProps {
 }
 export default function Blog() {
     const [data, setData] = useState([]);
+    
+
 
     useEffect(() => {
         const fetchPostData = async () => {
             const resp = await fetch('/post.json');
+            const resp1 = await fetch('http://localhost:1337/api/boards?pagination%5BwithCount%5D=true');
             const json = await resp.json();
+            const json1 = await resp1.json();
+            console.log(json1)
             setData(json);
         };
         fetchPostData();
