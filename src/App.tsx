@@ -9,6 +9,7 @@ import NotFound from './components/NotFound/NotFound';
 import CreatePost from './components/post/CreatePost';
 import Footer from './components/shared/Layout/Footer';
 import MapExam from './components/map/MapExam';
+import MapExam2 from './components/map/MapExam2';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -90,6 +91,10 @@ export default function App() {
                     {
                         path: '/map',
                         element: <MapExam />,
+                    },
+                    {
+                        path: '/map2',
+                        element: <MapExam2 />,
                     },
                 ],
             },
