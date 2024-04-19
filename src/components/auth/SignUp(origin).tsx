@@ -62,11 +62,9 @@ export default function SignUp() {
 
     const {
         control,
-        watch,
         setError,
         formState: { errors },
         handleSubmit,
-        setValue,
     } = methods;
 
     const onSubmit: SubmitHandler<SignUpBodySchema> = async (data) => {

@@ -57,35 +57,11 @@ export default async function createUserAPI(args: SignUpBodySchema) {
 }
 
 export async function createUserSTRAPI(args: StrapiSignUpBodySchema) {
-    // const formData = new FormData();
-    const { email, gender, password, username, phoneNumber, profileImage } = args;
-
-    // const body: StrapiSignUpBodyData = {
-    //     email,
-    //     username,
-    //     password,
-    //     gender,
-    //     phoneNumber,
-    //     profileImage,
-    // };
-    // console.log('body', body)
-
-    // const stringifyBody = JSON.stringify(body);
-
-    // formData.append('signUp', stringifyBody);
-    // console.log('stringifyBody : ' ,stringifyBody)
-
-    // formData.append('profileIamge', profileImage || '');
 
     const res = await axios.post(
         'http://localhost:1337/api/auth/local/register',
         {
-            email,
-            username,
-            password,
-            gender,
-            phoneNumber,
-            profileImage,
+            ...args,
         },
         {
             headers: {

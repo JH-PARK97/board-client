@@ -3,9 +3,9 @@ import Button from '@mui/material/Button';
 
 export default function GitSignInButton() {
     const githubConfig = {
-        gitClientId: process.env.REACT_APP_GITHUB_CLIENT_ID,
-        gitRedirUrl: process.env.REACT_APP_GITHUB_CALLBACK_URL,
-        gitAuthUrl: process.env.REACT_APP_GITHUB_AUTH_URL,
+        gitClientId: import.meta.env.VITE_GITHUB_CLIENT_ID,
+        gitRedirUrl: import.meta.env.VITE_GITHUB_CALLBACK_URL,
+        gitAuthUrl: import.meta.env.VITE_GITHUB_AUTH_URL,
     };
     const { gitAuthUrl, gitClientId, gitRedirUrl } = githubConfig;
 

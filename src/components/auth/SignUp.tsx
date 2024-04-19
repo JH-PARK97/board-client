@@ -55,11 +55,9 @@ export default function SignUp() {
 
     const {
         control,
-        watch,
         setError,
         formState: { errors },
         handleSubmit,
-        setValue,
     } = methods;
 
     const onSubmit: SubmitHandler<StrapiSignUpBodySchema> = async (data) => {
@@ -69,12 +67,13 @@ export default function SignUp() {
                 data.profileImage = avatars;
             }
 
-            const resp = await createUserSTRAPI(data);
-            console.log(resp);
+            const resp : any = await createUserSTRAPI(data);
+            if (!resp) return null;
+   
         } catch (error) {
             console.log(error);
             if (error instanceof AxiosError) {
-                if (error.request.status === 409) {
+                if (error.request.status === 400) {
                     setError('email', { message: '중복된 이메일입니다.' }, { shouldFocus: true });
                 }
             } else {

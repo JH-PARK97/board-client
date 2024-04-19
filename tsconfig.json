@@ -1,14 +1,19 @@
 {
     "compilerOptions": {
-        "baseUrl": "./",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./src/*"]
+        },
         "jsx": "react",
         "allowJs": true,
-        "target": "ES6",
+        "target": "ESNext",
+        "module": "ESNext",
         "outDir": "./dist",
         "moduleResolution": "Node",
-        "lib": ["ES2015", "DOM", "DOM.Iterable"],
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
         "esModuleInterop": true,
-        "strict": true
+        "strict": true,
+        "types": ["vite/client", "vite-plugin-svgr/client"]
     },
     "include": ["src"],
     "exclude": ["node_modules", "dist"]
