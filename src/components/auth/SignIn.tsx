@@ -18,15 +18,17 @@ import GitSignInButton from './GitSignInButton';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignInBodySchema } from 'src/api/auth/login.validate';
-import { schema as SignInSchema} from '../../api/auth/login.validate'; 
+import { schema as SignInSchema } from '../../api/auth/login.validate';
 
 // api
-import { loginSTRAPI } from '../../api/auth/login.api'; 
+import { loginSTRAPI } from '../../api/auth/login.api';
+
 import { AxiosError } from 'axios';
 
 // hooks
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/auth'; 
+import { useAuthStore } from '../../store/auth';
+import { LoginResponse, UserItem } from '../../api/auth/login.type';
 
 const defaultTheme = createTheme();
 
@@ -44,6 +46,7 @@ export default function SignIn() {
         setError,
         formState: { errors },
     } = useForm<SignInBodySchema>({
+        mode:'onChange',
         resolver: zodResolver(SignInSchema),
         defaultValues: useMemo(() => {
             let email = '';
@@ -68,10 +71,10 @@ export default function SignIn() {
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
         try {
             const resp: any = await loginSTRAPI(data);
-            if (resp.status === 200) {
-                const { jwt, user } = resp.data;
-                localStorage.setItem('accessToken', jwt);
-                login(user, idSave);
+            console.log(resp);
+            if (resp.status === 200 && resp.data.jwt) {
+                localStorage.setItem('accessToken', resp.data.jwt);
+                login(resp.data.user, idSave);
                 navigator('/home');
             }
         } catch (error) {
@@ -82,7 +85,7 @@ export default function SignIn() {
                     setError('password', { message: '이메일 또는 비밀번호를 확인해 주세요.' });
                 }
             } else {
-                console.log(error);
+                console.log('error: ', error);
             }
         }
     };
@@ -111,7 +114,7 @@ export default function SignIn() {
                     </Typography>
 
                     <form className="login-form" onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
-                        <Grid container spacing={2}>
+                        <Grid width={450} container spacing={2}>
                             <Grid item xs={12}>
                                 <FormInput fullWidth name="email" control={control} label="이메일" />
                                 {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}

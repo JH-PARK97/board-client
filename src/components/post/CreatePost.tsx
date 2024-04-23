@@ -5,7 +5,7 @@ import Tiptap from '../shared/Editor/Editor';
 import Button from '@mui/material/Button';
 import { zodResolver } from '@hookform/resolvers/zod';
 import createPostAPI from '../../api/post/create/post.api';
-import { getUserEmail } from '../../utils/utils';
+import { getUserName } from '../../utils/utils';
 import { CreatePostBodySchema } from '../../api/post/create/post.validate';
 import { schema as CreatePostSchema } from '../../api/post/create/post.validate';
 import { useNavigate } from 'react-router-dom';
@@ -25,15 +25,13 @@ export default function CreatePost() {
     });
     const onSubmit = async (input: CreatePostBodySchema) => {
         try {
-            const email = getUserEmail();
+            const user = getUserName();
             const body = {
                 ...input,
-                email,
+                // user,
             };
             const resp = await createPostAPI(body);
-            if (resp.resultCd === 200) {
-                navigator('/home');
-            }
+            console.log(resp);
         } catch (e) {
             console.log(e);
         }

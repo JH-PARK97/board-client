@@ -1,48 +1,47 @@
 import React, { useEffect, useState } from 'react';
+import getPostAPI from '../../api/post/get/post.api';
 
 import Header from '../shared/Layout/Header';
 import PostCard from './PostCard';
 
-interface dataProps {
+interface postDataProps {
     title: string;
     content: string;
-    createdDate: string;
-    userId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    user: any;
+    username: string;
 }
 export default function Blog() {
-    const [data, setData] = useState([]);
-    
-
+    const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        const fetchPostData = async () => {
-            const resp = await fetch('/post.json');
-            // const resp1 = await fetch('http://localhost:1337/api/boards?pagination%5BwithCount%5D=true');
-            const json = await resp.json();
-            // const json1 = await resp1.json();
-            // console.log(json1)
-            setData(json);
+        const fetchPosts = async () => {
+            const resp = await getPostAPI();
+            setPosts(resp.data.data);
         };
-        fetchPostData();
+        fetchPosts();
     }, []);
 
-    if (!data) {
+    if (!posts) {
         return null;
     }
     return (
         <div className="h-[100%] w-[90%] m-auto">
             <Header title="Blog" />
             <div className="content-container">
-                {data.map((post: dataProps, idx: number) => {
+                {posts.map((post: any, idx: number) => {
+                    const postData: postDataProps = { ...post.attributes, ...post.attributes.user.data.attributes };
+                    console.log(postData);
                     if (idx % 3) {
                         return (
                             <PostCard key={idx}>
                                 <div className="postcard-body w-full h-full flex flex-col p-3">
-                                    {/* <PostCard.Image src="https://source.unsplash.com/random?wallpapers" /> */}
-                                    <PostCard.Title>{post.title}</PostCard.Title>
-                                    <PostCard.Content>{post.content}</PostCard.Content>
-                                    <PostCard.SubInfo>{post.createdDate}</PostCard.SubInfo>
-                                    <PostCard.Footer>{post.userId}</PostCard.Footer>
+                                    <PostCard.Title>{postData.title}</PostCard.Title>
+                                    <PostCard.Content>{postData.content}</PostCard.Content>
+                                    <PostCard.SubInfo>{postData.createdAt}</PostCard.SubInfo>
+                                    <PostCard.Footer>{postData.username}</PostCard.Footer>
                                 </div>
                             </PostCard>
                         );
@@ -52,10 +51,10 @@ export default function Blog() {
                             <PostCard.Image src="https://source.unsplash.com/random?wallpapers" />
 
                             <div className="postcard-body w-full h-full  p-3">
-                                <PostCard.Title>{post.title}</PostCard.Title>
-                                <PostCard.Content>{post.content}</PostCard.Content>
-                                <PostCard.SubInfo>{post.createdDate}</PostCard.SubInfo>
-                                <PostCard.Footer>{post.userId}</PostCard.Footer>
+                            <PostCard.Title>{postData.title}</PostCard.Title>
+                                    <PostCard.Content>{postData.content}</PostCard.Content>
+                                    <PostCard.SubInfo>{postData.createdAt}</PostCard.SubInfo>
+                                    <PostCard.Footer>{postData.username}</PostCard.Footer>
                             </div>
                         </PostCard>
                     );

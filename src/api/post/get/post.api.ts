@@ -1,8 +1,18 @@
-import { Get } from '../../client';
-// import { CreatePostBodySchema } from './post.validate';
-// import { createPostItem } from './post.type';
+import { client } from '../../client';
+import qs from 'qs';
 
+const query = qs.stringify({
+    populate: {
+        user: {
+            fields: 'username',
+        },
+    },
+});
 export default async function getPostAPI() {
-    const { data } = await Get('post');
-    return data;
+    try {
+        const res = await client.get(`posts?${query}`);
+        return res;
+    } catch (error) {
+        throw error;
+    }
 }

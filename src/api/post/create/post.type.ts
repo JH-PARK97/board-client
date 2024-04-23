@@ -1,5 +1,5 @@
 export interface createPostItem {
-    userId: string;
+    // user: string;
     title: string;
     content: string;
 }

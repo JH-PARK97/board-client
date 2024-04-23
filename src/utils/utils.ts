@@ -10,12 +10,12 @@ export const fileReader = (file: File | Blob) => {
     });
 };
 
-export const getUserEmail = () => {
+export const getUserName = () => {
     const authStorage = localStorage.getItem('auth-storage');
     if (authStorage) {
         const authInfo = JSON.parse(authStorage);
-        const email = authInfo?.state?.user?.email;
-        return email;
+        const username = authInfo?.state?.user?.username;
+        return username;
     } else {
         return null;
     }
