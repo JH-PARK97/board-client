@@ -7,9 +7,10 @@ import SignIn from './components/auth/SignIn';
 import Github from './components/Oauth/Github';
 import NotFound from './components/NotFound/NotFound';
 import CreatePost from './components/post/CreatePost';
-import Footer from './components/shared/Layout/Footer';
 import MapExam from './components/map/MapExam';
 import MapExam2 from './components/map/MapExam2';
+import DetailPost from './components/post/DetailPost';
+import Layout from './components/shared/Layout/Layout';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -41,16 +42,6 @@ async function checkLogin(ctx: LoaderFunctionArgs) {
     return null;
 }
 
-function footerRender() {
-    const pathname = window.location.pathname;
-
-    if (['/signin', '/signup'].includes(pathname)) {
-        return null;
-    }
-
-    return <Footer description="Something here to give the footer a purpose!" />;
-}
-
 export default function App() {
     const router = useMemo(() => {
         return createBrowserRouter([
@@ -60,7 +51,7 @@ export default function App() {
             },
             {
                 path: '/',
-                element: footerRender(),
+                element: <Layout />,
                 children: [
                     {
                         path: '/',
@@ -80,9 +71,14 @@ export default function App() {
                             },
                         ],
                     },
+                    {},
                     {
                         path: '/home',
                         element: <Blog />,
+                    },
+                    {
+                        path: '/post/detail',
+                        element: <DetailPost />,
                     },
                     {
                         path: '/callback/github',

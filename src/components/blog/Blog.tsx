@@ -28,11 +28,9 @@ export default function Blog() {
         return null;
     }
     return (
-        <div className="h-[100%] w-[90%] m-auto">
-            <Header title="Blog" />
             <div className="content-container">
                 {posts.map((post: any, idx: number) => {
-                    const postData: postDataProps = { ...post.attributes, ...post.attributes.user.data.attributes };
+                    const postData: postDataProps = { ...post?.attributes, ...post?.attributes?.user?.data?.attributes };
                     console.log(postData);
                     if (idx % 3) {
                         return (
@@ -60,6 +58,5 @@ export default function Blog() {
                     );
                 })}
             </div>
-        </div>
     );
 }

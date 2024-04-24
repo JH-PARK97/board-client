@@ -24,7 +24,6 @@ const Tiptap = ({ getContent }: TipTapProps) => {
     return (
         <>
             <EditorProvider
-            
                 editorProps={{
                     attributes: {
                         class: 'focus:outline-none max-h-[700px] h-[700px]',
@@ -34,7 +33,7 @@ const Tiptap = ({ getContent }: TipTapProps) => {
                 slotBefore={<EditorToolBar />}
                 content={content}
                 onUpdate={(value) => {
-                    const content = value.editor.getHTML();
+                    const content = value.editor.getText();
                     getContent(content);
                 }}
             >

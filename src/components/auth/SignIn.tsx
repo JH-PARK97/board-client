@@ -26,9 +26,8 @@ import { loginSTRAPI } from '../../api/auth/login.api';
 import { AxiosError } from 'axios';
 
 // hooks
-import { useNavigate } from 'react-router-dom';
+import {  useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/auth';
-import { LoginResponse, UserItem } from '../../api/auth/login.type';
 
 const defaultTheme = createTheme();
 

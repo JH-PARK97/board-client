@@ -29,8 +29,6 @@ export default function Footer(props: FooterProps) {
 
     return (
         <>
-            <Outlet />
-
             <div
                 style={{
                     marginTop: 30,
