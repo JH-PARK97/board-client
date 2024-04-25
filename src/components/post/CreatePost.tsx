@@ -1,17 +1,19 @@
 import { Container, createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import Tiptap from '../shared/Editor/Editor';
+import Tiptap from '@/components/shared/Editor/Editor';
 import Button from '@mui/material/Button';
 import { zodResolver } from '@hookform/resolvers/zod';
-import createPostAPI from '../../api/post/create/post.api';
-import { getUser } from '../../utils/utils';
-import { CreatePostBodySchema } from '../../api/post/create/post.validate';
-import { schema as CreatePostSchema } from '../../api/post/create/post.validate';
+import createPostAPI from '@/api/post/create/post.api';
+import { CreatePostBodySchema } from '@/api/post/create/post.validate';
+import { schema as CreatePostSchema } from '@/api/post/create/post.validate';
 import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
+import useLogout from '../../hooks/useLogout';
 
 export default function CreatePost() {
     const defaultTheme = createTheme();
+    const logout = useLogout();
     const navigator = useNavigate();
     const [content, setContent] = useState<string>();
     const {
@@ -25,15 +27,24 @@ export default function CreatePost() {
     });
     const onSubmit = async (input: CreatePostBodySchema) => {
         try {
-            const user = getUser();
             const body = {
                 ...input,
-                // email: user,
             };
             const resp = await createPostAPI(body);
-            console.log(resp);
-        } catch (e) {
-            console.log(e);
+            if (resp.resultCd === 200) {
+                navigator('/home');
+            }
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                const { status, statusText } = error.request;
+                console.log(status, statusText);
+                if (status === 401) {
+                    alert('토큰 만료');
+                    logout();
+                }
+            } else {
+                console.log('error: ', error);
+            }
         }
     };
     const getContent = (content: string) => {

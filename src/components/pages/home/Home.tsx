@@ -26,36 +26,35 @@ export default function Home() {
     if (!posts) {
         return null;
     }
+
     return (
-            <div className="content-container">
-                {posts.map((post: any, idx: number) => {
-                    const postData: postDataProps = { ...post?.attributes, ...post?.attributes?.user?.data?.attributes };
-                    console.log(postData);
-                    if (idx % 3) {
-                        return (
-                            <PostCard key={idx}>
-                                <div className="postcard-body w-full h-full flex flex-col p-3">
-                                    <PostCard.Title>{postData.title}</PostCard.Title>
-                                    <PostCard.Content>{postData.content}</PostCard.Content>
-                                    <PostCard.SubInfo>{postData.createdAt}</PostCard.SubInfo>
-                                    <PostCard.Footer>{postData.username}</PostCard.Footer>
-                                </div>
-                            </PostCard>
-                        );
-                    }
+        <div className="content-container">
+            {posts.map((post: any, idx: number) => {
+                if (idx % 3) {
                     return (
                         <PostCard key={idx}>
-                            <PostCard.Image src="https://source.unsplash.com/random?wallpapers" />
-
-                            <div className="postcard-body w-full h-full  p-3">
-                            <PostCard.Title>{postData.title}</PostCard.Title>
-                                    <PostCard.Content>{postData.content}</PostCard.Content>
-                                    <PostCard.SubInfo>{postData.createdAt}</PostCard.SubInfo>
-                                    <PostCard.Footer>{postData.username}</PostCard.Footer>
+                            <div className="postcard-body w-full h-full flex flex-col p-3">
+                                <PostCard.Title>{post.title}</PostCard.Title>
+                                <PostCard.Content>{post.content}</PostCard.Content>
+                                <PostCard.SubInfo>{post.createdAt}</PostCard.SubInfo>
+                                <PostCard.Footer>{post.user.nickname}</PostCard.Footer>
                             </div>
                         </PostCard>
                     );
-                })}
-            </div>
+                }
+                return (
+                    <PostCard key={idx}>
+                        <PostCard.Image src="https://source.unsplash.com/random?wallpapers" />
+
+                        <div className="postcard-body w-full h-full  p-3">
+                            <PostCard.Title>{post.title}</PostCard.Title>
+                            <PostCard.Content>{post.content}</PostCard.Content>
+                            <PostCard.SubInfo>{post.createdAt}</PostCard.SubInfo>
+                            <PostCard.Footer>{post.user.nickname}</PostCard.Footer>
+                        </div>
+                    </PostCard>
+                );
+            })}
+        </div>
     );
 }
