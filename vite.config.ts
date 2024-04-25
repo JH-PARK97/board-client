@@ -10,8 +10,11 @@ export default defineConfig({
         port: 3000,
     },
     resolve: {
-        alias: {
-            '@': path.resolve(__dirname, './src'),
-        },
+        alias: [
+            {
+                find: '@',
+                replacement: path.resolve(__dirname, './src'),
+            },
+        ],
     },
 });

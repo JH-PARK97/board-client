@@ -10,16 +10,6 @@ export const fileReader = (file: File | Blob) => {
     });
 };
 
-export const getUserName = () => {
-    const authStorage = localStorage.getItem('auth-storage');
-    if (authStorage) {
-        const authInfo = JSON.parse(authStorage);
-        const username = authInfo?.state?.user?.username;
-        return username;
-    } else {
-        return null;
-    }
-};
 
 export const getRandomAvatar = () => {
     const seed = Math.random().toString();
