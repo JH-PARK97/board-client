@@ -10,7 +10,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { FormInput } from '../shared/Form';
+import { FormInput } from '../../shared/Form';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
 import GitSignInButton from './GitSignInButton';
 
@@ -18,16 +18,16 @@ import GitSignInButton from './GitSignInButton';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { SignInBodySchema } from 'src/api/auth/login.validate';
-import { schema as SignInSchema } from '../../api/auth/login.validate';
+import { schema as SignInSchema } from '../../../api/auth/login.validate';
 
 // api
-import { loginSTRAPI } from '../../api/auth/login.api';
+import { loginSTRAPI } from '../../../api/auth/login.api';
 
 import { AxiosError } from 'axios';
 
 // hooks
 import {  useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/auth';
+import { useAuthStore } from '../../../store/auth';
 
 const defaultTheme = createTheme();
 

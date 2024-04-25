@@ -3,11 +3,11 @@ import { Box } from '@mui/system';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuthStore } from '../../store/auth';
-import { useModalStore } from '../../store/modal';
+import { useAuthStore } from '../../../store/auth';
+import { useModalStore } from '../../../store/modal';
 // import Modal from '../shared/Modal/Modal';
-import Modal from '../shared/Modal/Modal';
-import ModalPortal from '../shared/Modal/MordalPortal';
+import Modal from '../../shared/Modal/Modal';
+import ModalPortal from '../../shared/Modal/MordalPortal';
 
 // let isCall = false;
 

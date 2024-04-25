@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import getPostAPI from '../../api/post/get/post.api';
+import getPostAPI from '../../../api/post/get/post.api';
 
-import Header from '../shared/Layout/Header';
 import PostCard from './PostCard';
 
 interface postDataProps {
@@ -13,7 +12,7 @@ interface postDataProps {
     user: any;
     username: string;
 }
-export default function Blog() {
+export default function Home() {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
