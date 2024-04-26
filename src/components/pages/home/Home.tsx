@@ -27,7 +27,7 @@ export default function Home() {
                         <PostCard data={post} key={idx}>
                             <div className="postcard-body w-full h-full flex flex-col p-3">
                                 <PostCard.Title>{post.title}</PostCard.Title>
-                                <PostCard.Content>{post.content}</PostCard.Content>
+                                <PostCard.Content content={post.content} />
                                 <PostCard.SubInfo>{post.createdAt}</PostCard.SubInfo>
                                 <PostCard.Footer>{post.user.nickname}</PostCard.Footer>
                             </div>
@@ -40,7 +40,7 @@ export default function Home() {
 
                         <div className="postcard-body w-full h-full  p-3">
                             <PostCard.Title>{post.title}</PostCard.Title>
-                            <PostCard.Content>{post.content}</PostCard.Content>
+                            <PostCard.Content content={post.content} />
                             <PostCard.SubInfo>{post.createdAt}</PostCard.SubInfo>
                             <PostCard.Footer>{post.user.nickname}</PostCard.Footer>
                         </div>

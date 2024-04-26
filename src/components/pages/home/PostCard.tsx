@@ -55,13 +55,14 @@ PostCard.Title = function Title({ children }: PostCardTitleProps) {
 };
 
 interface PostCardContentProps {
-    children?: ReactNode;
+    content?: string;
 }
 
-PostCard.Content = function Content({ children }: PostCardContentProps) {
+PostCard.Content = function Content({ content }: PostCardContentProps) {
+    const removeTagContent = content?.replace(/(<([^>]+)>)/gi, '');
     return (
         <div className="postcard-content h-[65px] text-ellipsis overflow-hidden text-[14px]">
-            <p> {children}</p>
+            <p> {removeTagContent}</p>
         </div>
     );
 };

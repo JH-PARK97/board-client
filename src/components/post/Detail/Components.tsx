@@ -25,9 +25,5 @@ interface DetailPostContentProps {
 }
 
 DetailPost.Content = function Content({ children }: DetailPostContentProps) {
-    return (
-        <div className="detailpost-content">
-            <p> {children}</p>
-        </div>
-    );
+    return <div className="detailpost-content">{children}</div>;
 };
