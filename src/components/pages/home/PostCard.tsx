@@ -1,10 +1,23 @@
 import React, { ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PostDetailItem } from '../../../api/post/detail/post.type';
 
 interface PostCardProps {
     children: ReactNode;
+    data: PostDetailItem;
 }
-export default function PostCard({ children }: PostCardProps) {
-    return <div className="postcard-container h-full  bg-slate-100">{children}</div>;
+export default function PostCard({ children, data }: PostCardProps) {
+    const navigator = useNavigate();
+    const handlePostCardClick = () => {
+        const { id } = data;
+        navigator(`/post/detail/${id}`);
+    };
+
+    return (
+        <div onClick={handlePostCardClick} className="postcard-container h-full  bg-slate-100">
+            {children}
+        </div>
+    );
 }
 
 interface PostCardImageProps {

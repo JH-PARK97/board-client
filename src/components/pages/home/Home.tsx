@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import getPostAPI from '../../../api/post/get/post.api';
-
+import getPostAPI from '@/api/post/get/post.api';
+import { PostListItem } from '@/api/post/get/post.type';
 import PostCard from './PostCard';
 
-interface postDataProps {
-    title: string;
-    content: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    user: any;
-    username: string;
-}
 export default function Home() {
-    const [posts, setPosts] = useState([]);
+    const [posts, setPosts] = useState<PostListItem>();
 
     useEffect(() => {
         const fetchPosts = async () => {
             const resp = await getPostAPI();
+            if (!resp) return null;
             setPosts(resp.data.data);
         };
         fetchPosts();
@@ -32,7 +24,7 @@ export default function Home() {
             {posts.map((post: any, idx: number) => {
                 if (idx % 3) {
                     return (
-                        <PostCard key={idx}>
+                        <PostCard data={post} key={idx}>
                             <div className="postcard-body w-full h-full flex flex-col p-3">
                                 <PostCard.Title>{post.title}</PostCard.Title>
                                 <PostCard.Content>{post.content}</PostCard.Content>
@@ -43,7 +35,7 @@ export default function Home() {
                     );
                 }
                 return (
-                    <PostCard key={idx}>
+                    <PostCard data={post} key={idx}>
                         <PostCard.Image src="https://source.unsplash.com/random?wallpapers" />
 
                         <div className="postcard-body w-full h-full  p-3">

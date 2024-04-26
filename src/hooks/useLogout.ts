@@ -24,5 +24,5 @@ export default function useLogout() {
             navigate('/signin');
         }
     };
-    return handleLogout;
+    return { handleLogout };
 }

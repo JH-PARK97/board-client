@@ -13,7 +13,7 @@ import useLogout from '../../hooks/useLogout';
 
 export default function CreatePost() {
     const defaultTheme = createTheme();
-    const logout = useLogout();
+    const { handleLogout } = useLogout();
     const navigator = useNavigate();
     const [content, setContent] = useState<string>();
     const {
@@ -40,7 +40,7 @@ export default function CreatePost() {
                 console.log(status, statusText);
                 if (status === 401) {
                     alert('토큰 만료');
-                    logout();
+                    handleLogout();
                 }
             } else {
                 console.log('error: ', error);

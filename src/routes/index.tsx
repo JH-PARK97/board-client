@@ -54,7 +54,7 @@ export default function Router() {
                         element: <Home />,
                     },
                     {
-                        path: '/post/detail',
+                        path: '/post/detail/:id',
                         element: <DetailPost />,
                     },
                     {
