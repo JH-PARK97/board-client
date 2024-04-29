@@ -15,6 +15,30 @@ export default function EditorToolBar() {
             <div className="editor-toolbar flex justify-center border-b-[1px] mb-2">
                 <button
                     type="button"
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+                    disabled={!editor.can().toggleHeading({ level: 1 })}
+                    className={editor.isActive('heading', { level: 1 }) ? 'menu-button is-active' : 'menu-button'}
+                >
+                    <Icons.H1 />
+                </button>
+                <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                    disabled={!editor.can().toggleHeading({ level: 2 })}
+                    className={editor.isActive('heading', { level: 2 }) ? 'menu-button is-active' : 'menu-button'}
+                >
+                    <Icons.H2 />
+                </button>
+                <button
+                    type="button"
+                    onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
+                    disabled={!editor.can().toggleHeading({ level: 3 })}
+                    className={editor.isActive('heading', { level: 3 }) ? 'menu-button is-active' : 'menu-button'}
+                >
+                    <Icons.H3 />
+                </button>
+                <button
+                    type="button"
                     onClick={() => editor.chain().focus().undo().run()}
                     disabled={!editor.can().undo()}
                     className={editor.isActive('undo') ? 'menu-button is-active' : 'menu-button'}

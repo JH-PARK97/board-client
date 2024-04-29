@@ -33,7 +33,7 @@ const Tiptap = ({ getContent }: TipTapProps) => {
                 slotBefore={<EditorToolBar />}
                 content={content}
                 onUpdate={(value) => {
-                    const content = value.editor.getText();
+                    const content = value.editor.getHTML();
                     getContent(content);
                 }}
             >

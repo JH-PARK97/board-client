@@ -218,3 +218,8 @@ code {
     border-radius: 5px;
     font-size: 150%;
 }
+
+.separator {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+}
