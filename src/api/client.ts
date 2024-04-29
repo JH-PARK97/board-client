@@ -35,7 +35,7 @@ client.interceptors.request.use(
         if (accessToken) {
             config.headers.Authorization = `Bearer ${accessToken}`;
         } else {
-            window.location.href = '/signin';
+            // window.location.href = '/signin';
         }
 
         return config;
