@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import getPostDetailAPI from '@/api/post/detail/post.api';
 import { PostDetailItem } from '@/api/post/detail/post.type';
 import DetailPost from './Components';
 import { useParams } from 'react-router-dom';
 
+export const PostDetailContext = createContext<PostDetailItem | null>(null);
 export default function DetailPostPage() {
     const [postInfo, setPostInfo] = useState<PostDetailItem>();
     const { id } = useParams();
@@ -22,12 +23,15 @@ export default function DetailPostPage() {
         fetchPostDetail();
     }, []);
 
+    if (!postInfo) {
+        return null;
+    }
+
     return (
         <>
-            <DetailPost>
-                <DetailPost.Title>{postInfo?.title}</DetailPost.Title>
-                <DetailPost.Content>{postInfo?.content}</DetailPost.Content>
-            </DetailPost>
+            <PostDetailContext.Provider value={postInfo}>
+                <DetailPost />
+            </PostDetailContext.Provider>
         </>
     );
 }

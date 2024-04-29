@@ -1,22 +1,34 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PostDetailItem } from '../../../api/post/detail/post.type';
+import { dateFormat } from '../../../utils/utils';
+import { PostListContext } from './Home';
 
-interface PostCardProps {
-    children: ReactNode;
-    data: PostDetailItem;
-}
-export default function PostCard({ children, data }: PostCardProps) {
+export default function PostCard() {
+    const posts = useContext(PostListContext);
     const navigator = useNavigate();
-    const handlePostCardClick = () => {
-        const { id } = data;
-        navigator(`/post/detail/${id}`);
+
+    const handlePostCardClick = (postId: number) => {
+        navigator(`/post/detail/${postId}`);
     };
 
     return (
-        <div onClick={handlePostCardClick} className="postcard-container h-full  bg-slate-100">
-            {children}
-        </div>
+        <>
+            {posts &&
+                posts.map((post, idx) => {
+                    return (
+                        <div
+                            key={idx}
+                            className="postcard-body w-full h-full flex flex-col p-3 bg-white"
+                            onClick={() => handlePostCardClick(post.id)}
+                        >
+                            <PostCard.Title>{post.title}</PostCard.Title>
+                            <PostCard.Content>{post.content}</PostCard.Content>
+                            <PostCard.SubInfo>{dateFormat(post.createdAt)}</PostCard.SubInfo>
+                            <PostCard.Footer>{post.user.nickname}</PostCard.Footer>
+                        </div>
+                    );
+                })}
+        </>
     );
 }
 
@@ -55,11 +67,20 @@ PostCard.Title = function Title({ children }: PostCardTitleProps) {
 };
 
 interface PostCardContentProps {
-    content?: string;
+    children: string;
 }
 
-PostCard.Content = function Content({ content }: PostCardContentProps) {
-    const removeTagContent = content?.replace(/(<([^>]+)>)/gi, '');
+// PostCard.Content = function Content({ content }: PostCardContentProps) {
+//     const removeTagContent = content?.replace(/(<([^>]+)>)/gi, '');
+//     return (
+//         <div className="postcard-content h-[65px] text-ellipsis overflow-hidden text-[14px]">
+//             <p> {removeTagContent}</p>
+//         </div>
+//     );
+// };
+
+PostCard.Content = function Content({ children }: PostCardContentProps) {
+    const removeTagContent = children?.replace(/(<([^>]+)>)/gi, '');
     return (
         <div className="postcard-content h-[65px] text-ellipsis overflow-hidden text-[14px]">
             <p> {removeTagContent}</p>
