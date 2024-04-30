@@ -18,12 +18,12 @@ export default function ImageUpload({ editor }: { editor: Editor }) {
         const file = e?.target?.files[0];
 
         if (file) {
-            const src = window.URL.createObjectURL(file);
-            editor.chain().focus().setImage({ src: src }).run();
             const resp = await fileUploadAPI(file);
-            const local = 'http://localhost:8080/';
-            const path = local + resp?.filePath;
-            console.log(path);
+            if (!resp) return null;
+            const filename = resp.file.filename;
+            const imgSrc = `${import.meta.env.VITE_API_URL}/images/${filename}`;
+
+            editor.chain().focus().setImage({ src: imgSrc }).run();
         }
     };
 

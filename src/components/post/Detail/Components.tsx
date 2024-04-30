@@ -1,4 +1,5 @@
 import { EditorContent, useEditor } from '@tiptap/react';
+import Image from '@tiptap/extension-image';
 import StarterKit from '@tiptap/starter-kit';
 import React, { ReactNode, useContext } from 'react';
 import { dateConvert, dateFormat, FORMAT } from '../../../utils/utils';
@@ -50,7 +51,12 @@ interface DetailPostContentProps {
 
 DetailPost.Content = function Content({ children }: DetailPostContentProps) {
     const editor = useEditor({
-        extensions: [StarterKit],
+        extensions: [
+            StarterKit,
+            Image.configure({
+                inline: true,
+            }),
+        ],
         content: `${children}`,
         editorProps: {
             attributes: {
