@@ -67,9 +67,8 @@ export default function SignUp() {
                 data.profileImage = avatars;
             }
 
-            const resp : any = await createUserSTRAPI(data);
+            const resp: any = await createUserSTRAPI(data);
             if (!resp) return null;
-   
         } catch (error) {
             console.log(error);
             if (error instanceof AxiosError) {
@@ -115,7 +114,7 @@ export default function SignUp() {
                                             flexDirection: 'column-reverse',
                                         }}
                                     >
-                                        <FormFileUpload content="업로드" onUpload={handleFileUpload} />
+                                        <FormFileUpload name="profile" content="업로드" onUpload={handleFileUpload} />
                                         <ImagePreview
                                             height={150}
                                             width={150}

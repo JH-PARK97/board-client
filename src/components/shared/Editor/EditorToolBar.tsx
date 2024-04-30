@@ -2,10 +2,10 @@ import { useCurrentEditor } from '@tiptap/react';
 
 import React from 'react';
 import * as Icons from './Icons';
+import ImageUpload from './ImageUpload';
 
 export default function EditorToolBar() {
     const { editor } = useCurrentEditor();
-
     if (!editor) {
         return null;
     }
@@ -93,6 +93,8 @@ export default function EditorToolBar() {
                 >
                     <Icons.Code />
                 </button>
+
+                <ImageUpload editor={editor} />
             </div>
         </>
     );

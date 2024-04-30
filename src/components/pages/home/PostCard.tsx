@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dateFormat } from '../../../utils/utils';
+import { dateConvert, dateFormat } from '../../../utils/utils';
 import { PostListContext } from './Home';
 
 export default function PostCard() {
@@ -23,7 +23,7 @@ export default function PostCard() {
                         >
                             <PostCard.Title>{post.title}</PostCard.Title>
                             <PostCard.Content>{post.content}</PostCard.Content>
-                            <PostCard.SubInfo>{dateFormat(post.createdAt)}</PostCard.SubInfo>
+                            <PostCard.SubInfo>{dateConvert(post.createdAt)}</PostCard.SubInfo>
                             <PostCard.Footer>{post.user.nickname}</PostCard.Footer>
                         </div>
                     );

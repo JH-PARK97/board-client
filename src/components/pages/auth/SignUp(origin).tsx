@@ -123,7 +123,7 @@ export default function SignUp() {
                                             flexDirection: 'column-reverse',
                                         }}
                                     >
-                                        <FormFileUpload content="업로드" onUpload={handleFileUpload} />
+                                        <FormFileUpload name="profile" content="업로드" onUpload={handleFileUpload} />
                                         <ImagePreview
                                             height={150}
                                             width={150}

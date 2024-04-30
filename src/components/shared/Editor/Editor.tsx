@@ -1,5 +1,6 @@
 import { Editor, EditorProvider } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
 import React from 'react';
 import EditorToolBar from './EditorToolBar';
 import Underline from '@tiptap/extension-underline';
@@ -15,6 +16,9 @@ const extensions = [
     Placeholder.configure({
         emptyEditorClass: 'is-editor-empty',
         placeholder: 'Write something...',
+    }),
+    Image.configure({
+        inline: true,
     }),
 ];
 
@@ -34,6 +38,7 @@ const Tiptap = ({ getContent }: TipTapProps) => {
                 content={content}
                 onUpdate={(value) => {
                     const content = value.editor.getHTML();
+                    console.log(content);
                     getContent(content);
                 }}
             >

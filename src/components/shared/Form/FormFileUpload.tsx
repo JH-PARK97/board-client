@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { Button, ButtonProps } from '@mui/material';
 import fileUploadAPI from '../../../api/file/upload.api';
 import { useAsyncFn } from 'react-use';
@@ -6,10 +6,11 @@ import { useFormContext } from 'react-hook-form';
 
 interface customButtonProps extends ButtonProps {
     content: string;
+    name: string;
     onUpload: (url: string) => void;
 }
 
-export default function FormFileUpload({ content, onUpload }: customButtonProps) {
+export default function FormFileUpload({ content, onUpload, name }: customButtonProps) {
     const { register, setValue } = useFormContext();
     const [, doFetch] = useAsyncFn(async (file: File) => {
         const resp = await fileUploadAPI(file);
@@ -36,7 +37,7 @@ export default function FormFileUpload({ content, onUpload }: customButtonProps)
                 }
             };
             doFetch(file);
-            setValue('profile', file);
+            setValue(name, file);
         }
     };
 
@@ -44,7 +45,7 @@ export default function FormFileUpload({ content, onUpload }: customButtonProps)
         <Button onClick={handleUploadButtonClick}>
             {content}
             <input
-                {...register('profile')}
+                {...register(name)}
                 id="fileUpload"
                 ref={fileInputRef}
                 type="file"
