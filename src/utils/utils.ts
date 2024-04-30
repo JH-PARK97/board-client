@@ -1,4 +1,5 @@
 import moment from 'moment';
+import 'moment-timezone';
 import { isNumber, isString } from './assertion';
 
 export const fileReader = (file: File | Blob) => {
@@ -22,6 +23,7 @@ export const getRandomAvatar = () => {
 };
 
 export const FORMAT = {
+    YYYYMMDD_KR: 'YYYY년 MM월 DD일',
     YYYYMMDD: 'YYYY-MM-DD',
     YYYYMMDD_HHMMSS: 'YYYY-MM-DD HH:mm:ss',
     YYYYMMDD_HHMM: 'YYYY-MM-DD HH:mm',
@@ -33,10 +35,18 @@ export const dateFormat = (date?: number | string | Date | null, key = FORMAT.YY
     }
 
     const time = isString(date) ? moment(date).toDate() : isNumber(date) ? new Date(date) : date;
-
     const mom = moment(time);
     if (mom.isValid()) {
         return mom.format(key);
     }
     return format;
+};
+
+export const dateConvert = (date?: number | string | Date | null, format = FORMAT.YYYYMMDD_HHMM) => {
+    if (!date) {
+        return null;
+    }
+
+    const _date = moment(date).tz('Asia/Seoul').format(format);
+    return _date;
 };

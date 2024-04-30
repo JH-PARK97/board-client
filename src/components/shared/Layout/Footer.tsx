@@ -30,11 +30,8 @@ export default function Footer(props: FooterProps) {
     return (
         <>
             <div
-                style={{
-                    marginTop: 30,
-                    width: '100%',
-                    height: 50,
-                }}
+                className="relative w-full h-12"
+               
             >
                 <Typography variant="h6" align="center" gutterBottom>
                     {title}

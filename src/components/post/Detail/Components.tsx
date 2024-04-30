@@ -1,7 +1,7 @@
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import React, { ReactNode, useContext } from 'react';
-import { dateFormat, FORMAT } from '../../../utils/utils';
+import { dateConvert, dateFormat, FORMAT } from '../../../utils/utils';
 
 import { PostDetailContext } from './DetailPost';
 
@@ -10,7 +10,7 @@ export default function DetailPost() {
     if (!postDetail) return null;
     const subInfo = { writer: postDetail?.user?.nickname, createdAt: postDetail?.createdAt };
     return (
-        <div className="container w-[45%] h-[100%] m-auto">
+        <div className="m-auto w-[60%]">
             <DetailPost.Title>{postDetail?.title}</DetailPost.Title>
             <DetailPost.SubInfo data={subInfo} />
             <DetailPost.Content>{postDetail?.content}</DetailPost.Content>
@@ -36,10 +36,10 @@ interface DetailPostSubInfoProps {
 DetailPost.SubInfo = function Subinfo({ data }: DetailPostSubInfoProps) {
     console.log(data);
     return (
-        <div className="detailpost-subinfo">
+        <div className="detailpost-subinfo mb-5">
             <span className="writer font-semibold">{data.writer} </span>
             <span className="separator">·</span>
-            <span className="writer text-gray-500">{dateFormat(data.createdAt, FORMAT.YYYYMMDD)} </span>
+            <span className="createdAt text-gray-500">{dateConvert(data.createdAt, FORMAT.YYYYMMDD_KR)} </span>
         </div>
     );
 };
@@ -60,7 +60,7 @@ DetailPost.Content = function Content({ children }: DetailPostContentProps) {
     });
     editor?.setEditable(false);
     return (
-        <div className="detailpost-content leading-7">
+        <div className="detailpost-content leading-7 min-h-[600px] ">
             <EditorContent editor={editor} />
         </div>
     );

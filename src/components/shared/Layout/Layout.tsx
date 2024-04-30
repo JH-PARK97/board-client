@@ -5,10 +5,10 @@ import Header from './Header';
 
 export default function Layout() {
     return (
-        <div className="w-[90%] h-full m-auto">
+        <>
             <Header title="Blog" />
-            <Content />
+                <Content />
             <Footer description="fooooter" />
-        </div>
+        </>
     );
 }

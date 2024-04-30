@@ -212,6 +212,8 @@ code {
     grid-auto-rows: 380px;
     grid-template-columns: repeat(5, 300px);
     grid-gap: 35px;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .postcard-container {
