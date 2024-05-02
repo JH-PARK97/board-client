@@ -1,11 +1,10 @@
-import Image from '@tiptap/extension-image';
 import { Editor } from '@tiptap/react';
 import React, { useRef } from 'react';
 import fileUploadAPI from '../../../api/file/upload.api';
 
 import * as Icons from './Icons';
 
-export default function ImageUpload({ editor }: { editor: Editor }) {
+export default function PostImageUpload({ editor }: { editor: Editor }) {
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleImageUpload = () => {
@@ -18,10 +17,10 @@ export default function ImageUpload({ editor }: { editor: Editor }) {
         const file = e?.target?.files[0];
 
         if (file) {
-            const resp = await fileUploadAPI(file);
+            const resp = await fileUploadAPI(file, 'posts');
             if (!resp) return null;
             const filename = resp.file.filename;
-            const imgSrc = `${import.meta.env.VITE_API_URL}/images/${filename}`;
+            const imgSrc = `${import.meta.env.VITE_API_URL}/images/${filename}?path=posts`;
 
             editor.chain().focus().setImage({ src: imgSrc }).run();
         }

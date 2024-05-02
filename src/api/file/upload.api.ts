@@ -1,10 +1,12 @@
 import { client } from '../client';
 
-export default async function fileUploadAPI(file: File) {
+export default async function fileUploadAPI(file: File, path: string) {
     try {
         let formData = new FormData();
-        formData.append('file', file);
-        const { data } = await client.post('upload', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
+        formData.append(path, file);
+        const { data } = await client.post(`upload?path=${path}`, formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
 
         return data;
     } catch (error) {

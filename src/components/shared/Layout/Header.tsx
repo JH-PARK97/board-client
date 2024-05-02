@@ -77,7 +77,7 @@ export default function Header(props: HeaderProps) {
                 <Modal removeDimmed>
                     <Modal.Title>알림</Modal.Title>
                     <Modal.Content>
-                        <p>접근 권한이 없습니다.</p>
+                        <p>로그인 후 이용해 주세요 !</p>
                     </Modal.Content>
                     <Modal.Footer>
                         <Modal.Button onClick={toggleModal}>확인</Modal.Button>

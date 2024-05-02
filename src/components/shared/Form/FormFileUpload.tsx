@@ -13,7 +13,7 @@ interface customButtonProps extends ButtonProps {
 export default function FormFileUpload({ content, onUpload, name }: customButtonProps) {
     const { register, setValue } = useFormContext();
     const [, doFetch] = useAsyncFn(async (file: File) => {
-        const resp = await fileUploadAPI(file);
+        const resp = await fileUploadAPI(file, 'profile');
         return resp;
     }, []);
     const fileInputRef = useRef<HTMLInputElement>(null);

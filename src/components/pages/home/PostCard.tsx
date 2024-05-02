@@ -11,16 +11,29 @@ export default function PostCard() {
         navigator(`/post/detail/${postId}`);
     };
 
+    const createthumbnailSrc = (str: string) => {
+        const regex = /<img.*?src=["'](.*?)["']/;
+        const match = str.match(regex);
+
+        if (match && match?.length > 1) {
+            console.log(match[1]);
+            return match[1];
+        }
+    };
+
     return (
         <>
             {posts &&
                 posts.map((post, idx) => {
+                    const src = createthumbnailSrc(post.content);
+
                     return (
                         <div
                             key={idx}
                             className="postcard-body w-full h-full flex flex-col p-3 bg-white"
                             onClick={() => handlePostCardClick(post.id)}
                         >
+                            {src && <PostCard.Image src={src}></PostCard.Image>}
                             <PostCard.Title>{post.title}</PostCard.Title>
                             <PostCard.Content>{post.content}</PostCard.Content>
                             <PostCard.SubInfo>{dateConvert(post.createdAt)}</PostCard.SubInfo>
@@ -33,11 +46,10 @@ export default function PostCard() {
 }
 
 interface PostCardImageProps {
-    children?: ReactNode;
     src: string;
 }
 
-PostCard.Image = function Image({ children, src }: PostCardImageProps) {
+PostCard.Image = function Image({ src }: PostCardImageProps) {
     return (
         <div className="postcard-image h-[45%] w-full relative">
             <img
@@ -49,7 +61,6 @@ PostCard.Image = function Image({ children, src }: PostCardImageProps) {
                 }}
                 alt="postcard-img"
             ></img>
-            {children}
         </div>
     );
 };
@@ -69,15 +80,6 @@ PostCard.Title = function Title({ children }: PostCardTitleProps) {
 interface PostCardContentProps {
     children: string;
 }
-
-// PostCard.Content = function Content({ content }: PostCardContentProps) {
-//     const removeTagContent = content?.replace(/(<([^>]+)>)/gi, '');
-//     return (
-//         <div className="postcard-content h-[65px] text-ellipsis overflow-hidden text-[14px]">
-//             <p> {removeTagContent}</p>
-//         </div>
-//     );
-// };
 
 PostCard.Content = function Content({ children }: PostCardContentProps) {
     const removeTagContent = children?.replace(/(<([^>]+)>)/gi, '');
