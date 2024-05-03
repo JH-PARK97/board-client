@@ -54,7 +54,6 @@ export default function Header(props: HeaderProps) {
         <React.Fragment>
             <Toolbar className="border-solid border" sx={{ boxShadow: 'inherit' }}>
                 <Typography
-                    className="cursor-pointer"
                     onClick={() => navigate('/home')}
                     component="h2"
                     variant="h5"
@@ -63,7 +62,7 @@ export default function Header(props: HeaderProps) {
                     noWrap
                     sx={{ flex: 1 }}
                 >
-                    {title}
+                    <p className="cursor-pointer">{title}</p>
                 </Typography>
                 <IconButton onClick={handleCreatePostButton}>
                     <CreateIcon />

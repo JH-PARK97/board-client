@@ -35,7 +35,6 @@ interface DetailPostSubInfoProps {
 }
 
 DetailPost.SubInfo = function Subinfo({ data }: DetailPostSubInfoProps) {
-    console.log(data);
     return (
         <div className="detailpost-subinfo mb-5">
             <span className="writer font-semibold">{data.writer} </span>

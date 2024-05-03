@@ -112,7 +112,7 @@ export default function SignIn() {
                     </Typography>
 
                     <form className="login-form" onSubmit={handleSubmit(onSubmit)} style={{ marginTop: 30 }}>
-                        <Grid container spacing={2}>
+                        <Grid width={450} container spacing={2}>
                             <Grid item xs={12}>
                                 <FormInput fullWidth name="email" control={control} label="이메일" />
                                 {errors.email && <FormHelperText error>{errors?.email?.message}</FormHelperText>}

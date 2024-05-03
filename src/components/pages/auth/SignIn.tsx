@@ -70,7 +70,6 @@ export default function SignIn() {
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
         try {
             const resp: any = await loginSTRAPI(data);
-            console.log(resp);
             if (resp.status === 200 && resp.data.jwt) {
                 localStorage.setItem('accessToken', resp.data.jwt);
                 login(resp.data.user, idSave);
