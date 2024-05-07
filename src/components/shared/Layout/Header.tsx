@@ -73,7 +73,7 @@ export default function Header(props: HeaderProps) {
             </Toolbar>
 
             <ModalPortal>
-                <Modal removeDimmed>
+                {/* <Modal removeDimmed>
                     <Modal.Title>알림</Modal.Title>
                     <Modal.Content>
                         <p>로그인 후 이용해 주세요 !</p>
@@ -81,7 +81,14 @@ export default function Header(props: HeaderProps) {
                     <Modal.Footer>
                         <Modal.Button onClick={toggleModal}>확인</Modal.Button>
                     </Modal.Footer>
-                </Modal>
+                </Modal> */}
+                <Modal
+                    content={'로그인 후 이용해 주세요!'}
+                    title="알림"
+                    removeDimmed={true}
+                    confirm="확인"
+                    onConfirm={toggleModal}
+                />
             </ModalPortal>
         </React.Fragment>
     );
