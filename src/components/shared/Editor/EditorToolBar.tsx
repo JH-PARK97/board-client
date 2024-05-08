@@ -1,14 +1,12 @@
-import { useCurrentEditor } from '@tiptap/react';
+import React, { useContext } from 'react';
 
-import React from 'react';
+import { TiptapContext } from './EditorProvider';
 import * as Icons from './Icons';
 import PostImageUpload from './PostImageUpload';
 
 export default function EditorToolBar() {
-    const { editor } = useCurrentEditor();
-    if (!editor) {
-        return null;
-    }
+    const { editor } = useContext(TiptapContext);
+    if (!editor) return null;
 
     return (
         <>

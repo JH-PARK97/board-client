@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dateConvert } from '../../../utils/utils';
+import { dateConvert, FORMAT } from '../../../utils/utils';
 import { PostListContext } from './Home';
 
 export default function PostCard() {
@@ -52,7 +52,7 @@ export default function PostCard() {
                             <div className="p-4">
                                 <PostCard.Title>{post.title}</PostCard.Title>
                                 <PostCard.Content hasThumbnail={hasThumbnail}>{post.content}</PostCard.Content>
-                                <PostCard.SubInfo>{dateConvert(post.createdAt)}</PostCard.SubInfo>
+                                <PostCard.SubInfo>{post.createdAt}</PostCard.SubInfo>
                                 <PostCard.Footer src={profileSrc}>{post.user.nickname}</PostCard.Footer>
                             </div>
                         </div>
@@ -101,7 +101,6 @@ interface PostCardContentProps {
 
 PostCard.Content = function Content({ children, hasThumbnail }: PostCardContentProps) {
     const removeTagContent = children?.replace(/(<([^>]+)>)/gi, '');
-    console.log(hasThumbnail);
     const contentHeight = hasThumbnail ? 'h-[60px]' : 'h-[105px]';
     return (
         <div className={`postcard-content  text-ellipsis overflow-hidden text-[14px] ${contentHeight}`}>
@@ -111,13 +110,13 @@ PostCard.Content = function Content({ children, hasThumbnail }: PostCardContentP
 };
 
 interface PostCardSubInfoProps {
-    children?: ReactNode;
+    children?: string;
 }
 
 PostCard.SubInfo = function SubInfo({ children }: PostCardSubInfoProps) {
     return (
         <div className="postcard-subinfo  h-[10%] text-[12px] leading-3 text-gray-500 content-center absolute bottom-[15%]">
-            <p> {children}</p>
+            <p> {dateConvert(children, FORMAT.YYYYMMDD_KR)}</p>
         </div>
     );
 };
@@ -138,7 +137,7 @@ PostCard.Footer = function Footer({ children, src }: PostCardFooterProps) {
                     width={24}
                     height={24}
                 ></img>
-                by <span className="font-bold">{children}</span>
+                by <span className="font-bold text-black">{children}</span>
             </div>
         </div>
     );

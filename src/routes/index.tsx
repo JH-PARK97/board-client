@@ -57,6 +57,7 @@ export default function Router() {
                         path: '/post/detail/:id',
                         element: <DetailPost />,
                     },
+
                     {
                         path: '/callback/github',
                         element: <Github />,
@@ -85,6 +86,10 @@ export default function Router() {
                     },
                     {
                         path: '/post/create',
+                        element: <CreatePost />,
+                    },
+                    {
+                        path: '/post/edit/:id',
                         element: <CreatePost />,
                     },
                 ],

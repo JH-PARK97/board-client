@@ -109,7 +109,7 @@ export default function Github() {
             >
                 {loading && <CircularProgress />}
                 <ModalPortal>
-                    <Modal>
+                    {/* <Modal>
                         <Modal.Title hiddenCloseButton={true}>알림</Modal.Title>
                         <Modal.Content>
                             <p>계정이 존재하지 않습니다.</p>
@@ -118,7 +118,19 @@ export default function Github() {
                         <Modal.Footer>
                             <Modal.Button onClick={handleConfirmButton}>확인</Modal.Button>
                         </Modal.Footer>
-                    </Modal>
+                    </Modal> */}
+                    <Modal
+                        title="알림"
+                        hiddenCloseButton={true}
+                        content={
+                            <>
+                                <p>계정이 존재하지 않습니다.</p>
+                                <p>회원가입 페이지로 이동합니다.</p>
+                            </>
+                        }
+                        confirm="확인"
+                        onConfirm={handleConfirmButton}
+                    />
                 </ModalPortal>
             </Box>
         </Container>

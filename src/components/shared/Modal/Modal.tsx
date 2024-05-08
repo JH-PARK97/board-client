@@ -4,7 +4,7 @@ import { useModalStore } from '../../../store/modal';
 // Main Component - Modal
 
 interface ModalProps {
-    children?: ReactNode;
+    hiddenCloseButton?: boolean;
     removeDimmed?: boolean;
     className?: string;
     title: string;
@@ -22,6 +22,7 @@ export default function Modal({
     content,
     title,
     cancel,
+    hiddenCloseButton,
     onConfirm,
     onCancel,
 }: ModalProps) {
@@ -42,7 +43,7 @@ export default function Modal({
             <div hidden={removeDimmed} className="dim"></div>
             <div className="modal z-10" ref={modalRef} onClick={handleModalOutsideClick}>
                 <div className={`modal-content ${className ? className : ''}`}>
-                    <Modal.Title title={title} />
+                    <Modal.Title title={title} hiddenCloseButton={hiddenCloseButton} />
                     <Modal.Content content={content} />
                     <Modal.Footer>
                         <Modal.Button onConfirm={onConfirm} onCancel={onCancel} confirm={confirm} cancel={cancel} />

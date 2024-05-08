@@ -1,30 +1,52 @@
+import React, { useContext, useEffect } from 'react';
+
 import { Container, createTheme, CssBaseline, ThemeProvider } from '@mui/material';
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import Tiptap from '@/components/shared/Editor/Editor';
 import Button from '@mui/material/Button';
+
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import createPostAPI from '@/api/post/create/post.api';
 import { CreatePostBodySchema } from '@/api/post/create/post.validate';
 import { schema as CreatePostSchema } from '@/api/post/create/post.validate';
-import { useNavigate } from 'react-router-dom';
-import { AxiosError } from 'axios';
+
+import { useNavigate, useParams } from 'react-router-dom';
 import useLogout from '../../hooks/useLogout';
+
+import { AxiosError } from 'axios';
+import { TiptapContext } from '../shared/Editor/EditorProvider';
+import getPostDetailAPI from '../../api/post/detail/post.api';
+import createPostAPI from '@/api/post/create/post.api';
+
 
 export default function CreatePost() {
     const defaultTheme = createTheme();
+    const params = useParams();
+    const { id } = params;
     const { handleLogout } = useLogout();
     const navigator = useNavigate();
-    const [content, setContent] = useState<string>();
+    const { editor, content } = useContext(TiptapContext);
+
     const {
         handleSubmit,
-        setError,
         register,
         setValue,
         formState: { errors },
     } = useForm<CreatePostBodySchema>({
         resolver: zodResolver(CreatePostSchema),
     });
+
+    useEffect(() => {
+        if (editor) {
+            fetchData();
+        }
+    }, [editor, id]);
+
+    useEffect(() => {
+        if (editor) {
+            setValue('content', editor?.getHTML());
+        }
+    }, [editor, content]);
+
     const onSubmit = async (input: CreatePostBodySchema) => {
         try {
             const body = {
@@ -47,9 +69,22 @@ export default function CreatePost() {
             }
         }
     };
-    const getContent = (content: string) => {
-        setContent(content);
-        setValue('content', content);
+
+    if (!editor) return null;
+
+    const fetchData = async () => {
+        if (!id) return null;
+        try {
+            const resp = await getPostDetailAPI(id);
+            if (resp.status === 200) {
+                const {
+                    data: { content },
+                } = resp.data;
+                editor.commands.setContent(content);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -66,7 +101,7 @@ export default function CreatePost() {
                             />
                         </div>
                         <div className="editor-wrapper w-full border overflow-auto">
-                            <Tiptap getContent={getContent} />
+                            <Tiptap />
                         </div>
                         <div className="editor-footer flex justify-between mt-2">
                             <div className="editor-footer-button-left">
