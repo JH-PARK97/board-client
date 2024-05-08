@@ -46,7 +46,6 @@ function EditorProvider({ children }: TiptapContextProviderProps) {
 
         onUpdate: ({ editor }) => {
             const html = editor.getHTML();
-            console.log(html);
             setContent(html);
         },
         content,

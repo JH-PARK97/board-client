@@ -1,17 +1,8 @@
-import { client, Post } from '../../client';
-import { createPostItem } from './post.type';
+import { Post } from '../../client';
+import { CreatePostItem } from './post.type';
+import { CreatePostBodySchema } from './post.validate';
 
-// export default async function createPostAPI(args: createPostItem) {
-//     console.log(args);
-//     try {
-//         const res = await client.post(`post`, { data: { ...args } });
-//         return res;
-//     } catch (error) {
-//         throw error;
-//     }
-// }
-
-export default async function createPostAPI(args: createPostItem) {
-    const { data } = await Post<createPostItem>('post', args);
+export default async function createPostAPI(args: CreatePostBodySchema) {
+    const { data } = await Post<CreatePostItem>('post', args);
     return data;
 }

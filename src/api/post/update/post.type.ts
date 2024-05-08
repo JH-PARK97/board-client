@@ -1,4 +1,4 @@
-export interface CreatePostItem {
+export interface UpdatePostItem {
     id: number;
     title: string;
     content: string;
@@ -6,6 +6,7 @@ export interface CreatePostItem {
     createdAt: string;
     updatedAt: string;
     userId: number;
+    user: User;
 }
 
 export interface User {

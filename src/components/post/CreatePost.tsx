@@ -7,16 +7,22 @@ import Button from '@mui/material/Button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreatePostBodySchema } from '@/api/post/create/post.validate';
+import { UpdatePostBodySchema } from '../../api/post/update/post.validate';
 import { schema as CreatePostSchema } from '@/api/post/create/post.validate';
+import { schema as UpdatePostSchema } from '@/api/post/update/post.validate';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import useLogout from '../../hooks/useLogout';
 
 import { AxiosError } from 'axios';
 import { TiptapContext } from '../shared/Editor/EditorProvider';
-import getPostDetailAPI from '../../api/post/detail/post.api';
+import getPostDetailAPI from '@/api/post/detail/post.api';
 import createPostAPI from '@/api/post/create/post.api';
+import updatePostAPI from '@/api/post/update/post.api';
+import { UpdatePostItem } from '@/api/post/update/post.type';
+import { CreatePostItem } from '@/api/post/create/post.type';
 
+type FormValues = CreatePostBodySchema | UpdatePostBodySchema;
 
 export default function CreatePost() {
     const defaultTheme = createTheme();
@@ -31,13 +37,13 @@ export default function CreatePost() {
         register,
         setValue,
         formState: { errors },
-    } = useForm<CreatePostBodySchema>({
-        resolver: zodResolver(CreatePostSchema),
+    } = useForm<FormValues>({
+        resolver: id ? zodResolver(UpdatePostSchema) : zodResolver(CreatePostSchema),
     });
 
     useEffect(() => {
-        if (editor) {
-            fetchData();
+        if (editor && id) {
+            fetchData(id);
         }
     }, [editor, id]);
 
@@ -47,14 +53,24 @@ export default function CreatePost() {
         }
     }, [editor, content]);
 
-    const onSubmit = async (input: CreatePostBodySchema) => {
+    const onSubmit = async (input: FormValues) => {
         try {
             const body = {
                 ...input,
             };
-            const resp = await createPostAPI(body);
-            if (resp.resultCd === 200) {
-                navigator('/home');
+
+            if (id) {
+                const resp = await updatePostAPI(id, body);
+                if (resp.resultCd === 200) {
+                    const id = resp.data.id;
+                    navigator(`/post/detail/${id}`);
+                }
+            } else {
+                const resp = await createPostAPI(body);
+                if (resp.resultCd === 200) {
+                    const id = resp.data.id;
+                    navigator(`/post/detail/${id}`);
+                }
             }
         } catch (error) {
             if (error instanceof AxiosError) {
@@ -72,15 +88,15 @@ export default function CreatePost() {
 
     if (!editor) return null;
 
-    const fetchData = async () => {
-        if (!id) return null;
+    const fetchData = async (id: string | number) => {
         try {
             const resp = await getPostDetailAPI(id);
             if (resp.status === 200) {
                 const {
-                    data: { content },
+                    data: { content, title },
                 } = resp.data;
                 editor.commands.setContent(content);
+                setValue('title', title);
             }
         } catch (error) {
             console.error(error);

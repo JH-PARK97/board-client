@@ -24,7 +24,7 @@ export const client = axios.create({
 client.interceptors.request.use(
     (config) => {
         // 로그인, 회원가입 페이지에선 header에 token 추가하지 않는다.
-    
+
         const accessToken = localStorage.getItem('accessToken');
         const pathname = window.location.pathname;
         const isAuthPage = pathname.includes('/signin') || pathname.includes('signup');
@@ -57,5 +57,22 @@ export const Post = async <T>(
     config?: AxiosRequestConfig
 ): Promise<AxiosResponse<CommonResponse<T>>> => {
     const response = await client.post(url, data, config);
+    return response;
+};
+
+export const Put = async <T>(
+    url: string,
+    data?: any,
+    config?: AxiosRequestConfig
+): Promise<AxiosResponse<CommonResponse<T>>> => {
+    const response = await client.put(url, data, config);
+    return response;
+};
+
+export const Delete = async <T>(
+    url: string,
+    config?: AxiosRequestConfig
+): Promise<AxiosResponse<CommonResponse<T>>> => {
+    const response = await client.delete(url, config);
     return response;
 };
