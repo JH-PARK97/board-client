@@ -50,3 +50,11 @@ export const dateConvert = (date?: number | string | Date | null, format = FORMA
     const _date = moment(date).tz('Asia/Seoul').format(format);
     return _date;
 };
+
+export const getUser = () => {
+    const authStorage = localStorage.getItem('auth-storage');
+    if (!authStorage) return null;
+    const authInfo = JSON.parse(authStorage);
+    return authInfo;
+};
+

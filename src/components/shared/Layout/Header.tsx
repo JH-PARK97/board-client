@@ -18,7 +18,7 @@ export default function Header(props: HeaderProps) {
     const { title } = props;
     const navigate = useNavigate();
     const { isLogin, logout, subscribeAccessToken } = useAuthStore();
-    const { toggleModal } = useModalStore();
+    const { isModalOpen, openModal, closeModal } = useModalStore();
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
 
@@ -44,7 +44,7 @@ export default function Header(props: HeaderProps) {
 
     const handleCreatePostButton = () => {
         if (!isLogin) {
-            toggleModal();
+            openModal();
         } else {
             navigate('/post/create');
         }
@@ -87,7 +87,7 @@ export default function Header(props: HeaderProps) {
                     title="알림"
                     removeDimmed={true}
                     confirm="확인"
-                    onConfirm={toggleModal}
+                    onConfirm={closeModal}
                 />
             </ModalPortal>
         </React.Fragment>

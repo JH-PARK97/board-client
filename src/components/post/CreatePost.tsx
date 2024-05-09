@@ -38,7 +38,7 @@ export default function CreatePost() {
         setValue,
         formState: { errors },
     } = useForm<FormValues>({
-        resolver: id ? zodResolver(UpdatePostSchema) : zodResolver(CreatePostSchema),
+        resolver: zodResolver(CreatePostSchema),
     });
 
     useEffect(() => {
