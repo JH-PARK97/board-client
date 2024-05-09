@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { createBrowserRouter, LoaderFunctionArgs, redirect, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, LoaderFunctionArgs, Outlet, redirect, RouterProvider } from 'react-router-dom';
 import NotFound from '@/components/pages/NotFound/NotFound';
 import Layout from '@/components/shared/Layout/Layout';
 import { SignUp, SignIn } from '@/components/pages/auth';
@@ -7,6 +7,7 @@ import { Github } from '@/components/pages/Oauth';
 import { Map1, Map2 } from '@/components/pages/map';
 import { Home } from '@/components/pages/home';
 import { CreatePost, DetailPost } from '@/components/post';
+import EditorProvider from '../components/shared/Editor/EditorProvider';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -85,13 +86,31 @@ export default function Router() {
                         element: <SignIn />,
                     },
                     {
-                        path: '/post/create',
-                        element: <CreatePost />,
+                        path: '/post',
+                        element:  (
+                            <EditorProvider>
+                                <Outlet />
+                            </EditorProvider>
+                        ),
+                        children: [
+                            {
+                                path: 'create',
+                                element: <CreatePost />,
+                            },
+                            {
+                                path: 'edit/:id',
+                                element: <CreatePost />,
+                            },
+                        ],
                     },
-                    {
-                        path: '/post/edit/:id',
-                        element: <CreatePost />,
-                    },
+                    // {
+                    //     path: '/post/create',
+                    //     element: <CreatePost />,
+                    // },
+                    // {
+                    //     path: '/post/edit/:id',
+                    //     element: <CreatePost />,
+                    // },
                 ],
             },
         ]);
