@@ -55,6 +55,9 @@ export const getUser = () => {
     const authStorage = localStorage.getItem('auth-storage');
     if (!authStorage) return null;
     const authInfo = JSON.parse(authStorage);
-    return authInfo;
-};
 
+    const {
+        state: { user },
+    } = authInfo;
+    return user;
+};

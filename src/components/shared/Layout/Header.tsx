@@ -35,7 +35,7 @@ export default function Header(props: HeaderProps) {
     const handleSigninButton = () => {
         if (isLogin) {
             logout(isSaved, email);
-            // navigate로 route를 해줘야 react-router-dom의 loader가 실행되기 때문에 사용
+            // navigate로 route를 해줘야 react-router-dom의 loader가 실행된다.
             navigate('/home');
         } else {
             navigate('/signin');
@@ -73,15 +73,6 @@ export default function Header(props: HeaderProps) {
             </Toolbar>
 
             <ModalPortal>
-                {/* <Modal removeDimmed>
-                    <Modal.Title>알림</Modal.Title>
-                    <Modal.Content>
-                        <p>로그인 후 이용해 주세요 !</p>
-                    </Modal.Content>
-                    <Modal.Footer>
-                        <Modal.Button onClick={toggleModal}>확인</Modal.Button>
-                    </Modal.Footer>
-                </Modal> */}
                 <Modal
                     content={'로그인 후 이용해 주세요!'}
                     title="알림"

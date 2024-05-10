@@ -6,12 +6,13 @@ import StarterKit from '@tiptap/starter-kit';
 
 import { dateConvert, FORMAT, getUser } from '@/utils/utils';
 
-import { PostDetailContext } from './DetailPost';
+import { PostDetailContext } from './DetailPostPage';
 import { useNavigate, useParams } from 'react-router-dom';
 import ModalPortal from '../../shared/Modal/MordalPortal';
 import Modal from '../../shared/Modal/Modal';
 import { useModalStore } from '@/store/modal';
 import deletePostAPI from '@/api/post/delete/post.api';
+import Comment from './Comment';
 
 interface SubInfoProps {
     createdAt: string;
@@ -23,16 +24,13 @@ interface SubInfoProps {
 export default function DetailPost() {
     const postDetail = useContext(PostDetailContext);
     const params = useParams();
-    const {
-        state: {
-            user: { id: userId },
-        },
-    } = getUser();
+    const { id: userId } = getUser();
+
     const { id } = params;
 
     if (!postDetail || !id) return null;
 
-    const subInfo: SubInfoProps = {
+    const subinfo: SubInfoProps = {
         writer: postDetail?.user?.nickname,
         writerId: postDetail.userId,
         createdAt: postDetail?.createdAt,
@@ -43,8 +41,9 @@ export default function DetailPost() {
     return (
         <div className="m-auto w-[40%]">
             <DetailPost.Title>{postDetail?.title}</DetailPost.Title>
-            <DetailPost.SubInfo data={subInfo} />
+            <DetailPost.SubInfo data={subinfo} />
             <DetailPost.Content>{postDetail?.content}</DetailPost.Content>
+            <Comment postId={id} />
         </div>
     );
 }

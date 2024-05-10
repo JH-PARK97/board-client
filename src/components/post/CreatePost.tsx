@@ -75,7 +75,6 @@ export default function CreatePost() {
         } catch (error) {
             if (error instanceof AxiosError) {
                 const { status, statusText } = error.request;
-                console.log(status, statusText);
                 if (status === 401) {
                     alert('토큰 만료');
                     handleLogout();
@@ -91,10 +90,10 @@ export default function CreatePost() {
     const fetchData = async (id: string | number) => {
         try {
             const resp = await getPostDetailAPI(id);
-            if (resp.status === 200) {
+            if (resp.resultCd === 200) {
                 const {
                     data: { content, title },
-                } = resp.data;
+                } = resp;
                 editor.commands.setContent(content);
                 setValue('title', title);
             }
