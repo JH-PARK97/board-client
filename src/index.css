@@ -12,6 +12,15 @@
     }
 }
 
+@layer utilities {
+    .no-scrollbar::-webkit-scrollbar {
+        dispaly: none;
+    }
+    .no-scrollbar {
+        scrollbar-width: none;
+    }
+}
+
 @tailwind components;
 @tailwind utilities;
 

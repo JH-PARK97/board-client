@@ -24,6 +24,7 @@ export const getRandomAvatar = () => {
 
 export const FORMAT = {
     YYYYMMDD_KR: 'YYYY년 MM월 DD일',
+    YYYYMMDD_HHMM_KR: 'YYYY년 MM월 DD일 HH:mm',
     YYYYMMDD: 'YYYY-MM-DD',
     YYYYMMDD_HHMMSS: 'YYYY-MM-DD HH:mm:ss',
     YYYYMMDD_HHMM: 'YYYY-MM-DD HH:mm',
@@ -61,7 +62,6 @@ export const getUser = () => {
     } = authInfo;
     return user;
 };
-
 
 export const createProfileImageSrc = (src: string) => {
     const checkURL = /^http[s]?:\/\/([\S]{3,})/i;
