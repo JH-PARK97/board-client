@@ -1,20 +1,14 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import getCommentAPI from '../../../api/comment/get/comment.api';
 import { CommentList } from '@/api/comment/get/comment.type';
+import { createProfileImageSrc, dateConvert, FORMAT } from '../../../utils/utils';
 
 interface CommentProps {
     postId: number | string;
 }
 
-interface SubInfoProps {
-    createdAt: string;
-    writer: string;
-    writerId: number;
-    profileImagePath: string;
-    postId: number;
-}
 export default function Comment({ postId }: CommentProps) {
-    const [commentList, setCommentList] = useState<any>();
+    const [commentList, setCommentList] = useState<CommentList[]>([]);
 
     useEffect(() => {
         const fetchCommentList = async () => {
@@ -30,23 +24,32 @@ export default function Comment({ postId }: CommentProps) {
         fetchCommentList();
     }, []);
 
-    if (!commentList) return null;
-    console.log(commentList.map((item) => item));
+    if (!commentList || commentList.length === 0) return null;
+
     return (
-        <div className="comment-container">
-            <Comment.Wrapper>
-                <Comment.Subinfo data={commentList} />
-                <Comment.Content>
-                    써주신 글 정말 많이 공부가 됐습니다!! 한참을 보면서 공부했네요 ㅎㅎ 빨리 이런 구조로 하나 만들어보고
-                    싶을 정도입니다. 한가지 궁금한건 index.ts로 모듈을 묶어서 내보낸다는게 정확히 이해가 가지 않아서요!
-                    아직 이렇게 해 본적이 없는데 이렇게 index.ts로 내보내는 이유가 있을까요? 유지보수 측면인가요~?
-                </Comment.Content>
-                <Comment.Footer>답글 보기</Comment.Footer>
-            </Comment.Wrapper>
+        <div>
+            {commentList.map((item) => {
+                const replyCount = Math.floor(Math.random() * 5) + 1;
+                console.log(item.user.profileImagePath);
+                const subinfo = {
+                    createdAt: item.createdAt,
+                    profileImagePath: item.user.profileImagePath,
+                    nickname: item.user.nickname,
+                };
+
+                return (
+                    <div key={item.id} className="comment-container">
+                        <Comment.Wrapper>
+                            <Comment.Subinfo data={subinfo} />
+                            <Comment.Content content={item.content} />
+                            <Comment.Footer replyCount={replyCount} />
+                        </Comment.Wrapper>
+                    </div>
+                );
+            })}
         </div>
     );
 }
-
 interface CommentWrapperProps {
     children: ReactNode;
 }
@@ -56,26 +59,49 @@ Comment.Wrapper = function Wrapper({ children }: CommentWrapperProps) {
 };
 
 interface CommentSubinfoProps {
-    data: CommentList;
+    data: {
+        createdAt: string;
+        nickname: string;
+        profileImagePath: string;
+    };
 }
 
 Comment.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
-    console.log(data);
-    return <div className="comment-subinfo"></div>;
+    const { createdAt, nickname, profileImagePath } = data;
+    const imageSrc = createProfileImageSrc(profileImagePath);
+    return (
+        <div className="comment-subinfo-header flex justify-between items-center">
+            <div className="profile items-center space-x-2 flex">
+                <div className="comment-subinfo-header-profile">
+                    <img className="rounded-full w-[3.375rem] h-[3.375rem]" src={imageSrc}></img>
+                </div>
+                <div className="comment-subinfo-header-info space-y-2">
+                    <div className="username font-bold">{nickname}</div>
+                    <div className="date text-[14px] leading-3 text-gray-500">
+                        {dateConvert(createdAt, FORMAT.YYYYMMDD_KR)}
+                    </div>
+                </div>
+            </div>
+            <div className="comment-subinfo-header-action flex w-[10%] justify-between ">
+                <div>수정</div>
+                <div>삭제</div>
+            </div>
+        </div>
+    );
 };
 
 interface CommentContentProps {
-    children: ReactNode;
+    content: string;
 }
 
-Comment.Content = function Content({ children }: CommentContentProps) {
-    return <div className="comment-content text-lg">{children}</div>;
+Comment.Content = function Content({ content }: CommentContentProps) {
+    return <div className="comment-content text-lg min-h-[80px]">{content}</div>;
 };
 
 interface CommentFooterProps {
-    children: ReactNode;
+    replyCount: number;
 }
 
-Comment.Footer = function Footer({ children }: CommentFooterProps) {
-    return <div>{children}</div>;
+Comment.Footer = function Footer({ replyCount }: CommentFooterProps) {
+    return <div>{`+${replyCount} 개의 답글`}</div>;
 };

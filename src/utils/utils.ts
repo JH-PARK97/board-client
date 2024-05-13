@@ -61,3 +61,18 @@ export const getUser = () => {
     } = authInfo;
     return user;
 };
+
+
+export const createProfileImageSrc = (src: string) => {
+    const checkURL = /^http[s]?:\/\/([\S]{3,})/i;
+    const isURL = checkURL.test(src);
+
+    if (isURL) {
+        return src;
+    } else {
+        const srcArray = src.split('\\profile\\');
+        const fileanme = srcArray[1];
+        const imgSrc = `${import.meta.env.VITE_API_URL}/images/${fileanme}?path=profile`;
+        return imgSrc;
+    }
+};

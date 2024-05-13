@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { dateConvert, FORMAT } from '../../../utils/utils';
+import { createProfileImageSrc, dateConvert, FORMAT } from '../../../utils/utils';
 import { PostListContext } from './Home';
 
 export default function PostCard() {
@@ -20,27 +20,13 @@ export default function PostCard() {
         }
     };
 
-    const createProfileSrc = (src: string) => {
-        const checkURL = /^http[s]?:\/\/([\S]{3,})/i;
-        const isURL = checkURL.test(src);
-
-        if (isURL) {
-            return src;
-        } else {
-            const srcArray = src.split('\\profile\\');
-            const fileanme = srcArray[1];
-            const imgSrc = `${import.meta.env.VITE_API_URL}/images/${fileanme}?path=profile`;
-            return imgSrc;
-        }
-    };
-
     return (
         <>
             {posts &&
                 posts.map((post, idx) => {
                     const thumbnailSrc = createthumbnailSrc(post.content);
                     const hasThumbnail = !!thumbnailSrc;
-                    const profileSrc = createProfileSrc(post.user.profileImagePath);
+                    const profileSrc = createProfileImageSrc(post.user.profileImagePath);
 
                     return (
                         <div
