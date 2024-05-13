@@ -7,15 +7,15 @@ import Button from '@mui/material/Button';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CreatePostBodySchema } from '@/api/post/create/post.validate';
-import { UpdatePostBodySchema } from '../../api/post/update/post.validate';
+import { UpdatePostBodySchema } from '@/api/post/update/post.validate';
 import { schema as CreatePostSchema } from '@/api/post/create/post.validate';
 import { schema as UpdatePostSchema } from '@/api/post/update/post.validate';
 
 import { useNavigate, useParams } from 'react-router-dom';
-import useLogout from '../../hooks/useLogout';
+import useLogout from '@/hooks/useLogout';
 
 import { AxiosError } from 'axios';
-import { TiptapContext } from '../shared/Editor/EditorProvider';
+import { TiptapContext } from '../../shared/Editor/EditorProvider';
 import getPostDetailAPI from '@/api/post/detail/post.api';
 import createPostAPI from '@/api/post/create/post.api';
 import updatePostAPI from '@/api/post/update/post.api';

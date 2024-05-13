@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import getPostDetailAPI from '@/api/post/detail/post.api';
 import { PostDetailItem } from '@/api/post/detail/post.type';
-import DetailPost from './Components';
+import DetailPost from './DetailPost';
 import { useNavigate, useParams } from 'react-router-dom';
 
 export const PostDetailContext = createContext<PostDetailItem | null>(null);
