@@ -54,13 +54,17 @@ export const dateConvert = (date?: number | string | Date | null, format = FORMA
 
 export const getUser = () => {
     const authStorage = localStorage.getItem('auth-storage');
-    if (!authStorage) return null;
+    if (!authStorage) return;
     const authInfo = JSON.parse(authStorage);
 
-    const {
-        state: { user },
-    } = authInfo;
-    return user;
+    if (authInfo.state.isLogin === false) {
+        return false;
+    } else {
+        const {
+            state: { user },
+        } = authInfo;
+        return user;
+    }
 };
 
 export const createProfileImageSrc = (src: string) => {

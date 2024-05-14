@@ -18,15 +18,15 @@ interface SubInfoProps {
     createdAt: string;
     writer: string;
     writerId: number;
-    currentUserId: number;
+    currentUserId?: number;
     postId: number;
 }
 export default function DetailPost() {
     const postDetail = useContext(PostDetailContext);
     const params = useParams();
-    const { id: userId } = getUser();
 
     const { id } = params;
+    const { id: userId } = getUser();
 
     if (!postDetail || !id) return null;
 
