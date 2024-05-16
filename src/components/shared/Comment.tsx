@@ -1,7 +1,6 @@
 import React, { ReactNode, useEffect, useState } from 'react';
 import { CommentList, ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
-import ReplyComment from '../post/detail/ReplyComment';
 import { ReplyCommentComponent } from './ReplyComment';
 
 interface CommentComponentProps {
@@ -29,7 +28,7 @@ function CommentComponent({ commentList }: CommentComponentProps) {
                             <CommentComponent.Subinfo data={subinfo} />
                             <CommentComponent.Content content={comment.content} />
                             <CommentComponent.Footer replyList={replyList}>
-                                <ReplyComment replyList={replyList} />
+                                <ReplyCommentComponent replyList={replyList}></ReplyCommentComponent>
                             </CommentComponent.Footer>
                         </CommentComponent.Wrapper>
                     </div>
@@ -70,7 +69,7 @@ CommentComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
                     </div>
                 </div>
             </div>
-            <div className="comment-subinfo-header-action flex w-[10%] justify-between ">
+            <div className="comment-subinfo-header-action flex w-[10%] justify-between date text-[14px] text-gray-500">
                 <div>수정</div>
                 <div>삭제</div>
             </div>

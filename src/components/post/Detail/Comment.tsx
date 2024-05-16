@@ -1,11 +1,9 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import getCommentAPI from '../../../api/comment/get/comment.api';
 import { CommentList } from '@/api/comment/get/comment.type';
-import { createProfileImageSrc, dateConvert, FORMAT } from '../../../utils/utils';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import createCommentAPI from '../../../api/comment/create/comment.api';
 import { CommentComponent } from '../../shared/Comment';
-import ReplyComment from './ReplyComment';
 
 interface CommentProps {
     postId: string;

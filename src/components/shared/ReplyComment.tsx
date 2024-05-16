@@ -1,7 +1,6 @@
 import React, { ReactNode, useState } from 'react';
 import { ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
-import ReplyComment from '../post/detail/ReplyComment';
 
 interface ReplyCommentComponentProps {
     replyList: ReplyList[];
@@ -9,7 +8,7 @@ interface ReplyCommentComponentProps {
 
 function ReplyCommentComponent({ replyList = [] }: ReplyCommentComponentProps) {
     return (
-        <div>
+        <div className="reply-commnet-container p-5 py-6 space-y-6  bg-gray-50 rounded-lg border-[1px] ">
             {replyList.map((reply) => {
                 const subinfo = {
                     createdAt: reply.createdAt,
@@ -18,15 +17,14 @@ function ReplyCommentComponent({ replyList = [] }: ReplyCommentComponentProps) {
                 };
 
                 return (
-                    <div key={reply.id} className="reply-comment-container">
-                        <ReplyCommentComponent.Wrapper>
-                            <ReplyCommentComponent.Subinfo data={subinfo} />
-                            <ReplyCommentComponent.Content content={reply.content} />
-                            <ReplyCommentComponent.Footer replyList={replyList} />
-                        </ReplyCommentComponent.Wrapper>
-                    </div>
+                    <ReplyCommentComponent.Wrapper>
+                        <ReplyCommentComponent.Subinfo data={subinfo} />
+                        <ReplyCommentComponent.Content content={reply.content} />
+                        <ReplyCommentComponent.Footer replyList={replyList} />
+                    </ReplyCommentComponent.Wrapper>
                 );
             })}
+            <div className="">댓글작성</div>
         </div>
     );
 }
@@ -35,11 +33,7 @@ interface CommentWrapperProps {
 }
 
 ReplyCommentComponent.Wrapper = function Wrapper({ children }: CommentWrapperProps) {
-    return (
-        <div className="reply-comment-wrapper min-h-[200px] p-5 py-6 space-y-6 -mt-[1px] bg-gray-50 rounded-lg border-[1px]">
-            {children}
-        </div>
-    );
+    return <div className="reply-comment-wrapper min-h-[200px] border-b-[1px] ">{children}</div>;
 };
 
 interface CommentSubinfoProps {
@@ -54,7 +48,7 @@ ReplyCommentComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) 
     const { createdAt, nickname, profileImagePath } = data;
     const imageSrc = createProfileImageSrc(profileImagePath);
     return (
-        <div className="reply-comment-subinfo-header flex justify-between items-center">
+        <div className="reply-comment-subinfo-header mb-6 flex justify-between items-center">
             <div className="profile items-center space-x-2 flex">
                 <div className="reply-comment-subinfo-header-profile">
                     <img className="rounded-full w-[3.375rem] h-[3.375rem]" src={imageSrc}></img>
@@ -66,7 +60,7 @@ ReplyCommentComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) 
                     </div>
                 </div>
             </div>
-            <div className="reply-comment-subinfo-header-action flex w-[10%] justify-between ">
+            <div className="reply-comment-subinfo-header-action flex w-[10%] justify-between text-[14px] text-gray-500">
                 <div>수정</div>
                 <div>삭제</div>
             </div>
@@ -94,9 +88,9 @@ ReplyCommentComponent.Footer = function Footer({ replyList }: CommentFooterProps
 
     return (
         <>
-            <div className="reply-comment-footer">
+            {/* <div className="reply-comment-footer">
                 <button onClick={handleClickButton}>답글</button>
-            </div>
+            </div> */}
         </>
     );
 };
