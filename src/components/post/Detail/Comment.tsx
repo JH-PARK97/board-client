@@ -10,7 +10,6 @@ interface CommentProps {
 
 interface CommentListContextType {
     commentList: CommentList[];
-    setCommentList: React.Dispatch<React.SetStateAction<CommentList[]>>;
     fetchCommentList: () => Promise<any>;
 }
 export const CommentListContext = createContext<CommentListContextType | undefined>(undefined);
@@ -37,7 +36,7 @@ export default function Comment({ postId }: CommentProps) {
 
     return (
         <>
-            <CommentListContext.Provider value={{ commentList, setCommentList, fetchCommentList }}>
+            <CommentListContext.Provider value={{ commentList, fetchCommentList }}>
                 <CreateComment createAPI={createCommentAPI} parentId={postId} />
                 <CommentComponent />
             </CommentListContext.Provider>

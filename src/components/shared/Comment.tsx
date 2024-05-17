@@ -100,7 +100,6 @@ interface CommentFooterProps {
 }
 
 interface CommentFooterContextType {
-    watchMoreReply: boolean;
     toggleReply: () => void;
 }
 export const CommentFooterContext = createContext<CommentFooterContextType | undefined>(undefined);
@@ -119,13 +118,11 @@ CommentComponent.Footer = function Footer({ replyCount, parentCommentId, replyLi
                     <button onClick={toggleReply}>{`${watchMoreReply ? `${replyCount}개의 답글` : `숨기기`}`}</button>
                 )}
             </div>
-            {replyCount !== 0 && (
-                <div hidden={watchMoreReply}>
-                    <CommentFooterContext.Provider value={{ toggleReply, watchMoreReply }}>
-                        <ReplyCommentComponent parentCommentId={parentCommentId} replyList={replyList} />
-                    </CommentFooterContext.Provider>
-                </div>
-            )}
+            <div hidden={watchMoreReply}>
+                <CommentFooterContext.Provider value={{ toggleReply }}>
+                    <ReplyCommentComponent parentCommentId={parentCommentId} replyList={replyList} />
+                </CommentFooterContext.Provider>
+            </div>
         </>
     );
 };
@@ -147,12 +144,20 @@ function CreateComment({ parentId, createAPI, handleClickReplyComment }: CreateC
         formState: { errors },
     } = useForm();
 
+    // handleClickReplyComment의 타입이 함수가 아닌 경우 = 댓글 작성하는 경우 (답글X)
+    const isEdit = typeof handleClickReplyComment !== 'function';
+
     const onSubmit = async (input: any) => {
         const resp = await createAPI(parentId, input);
         if (resp.resultCd === 200) {
             setValue('content', '');
             await fetchCommentList();
         }
+    };
+    const handelClickCancel = () => {
+        if (isEdit) return null;
+        handleClickReplyComment();
+        setValue('content', '');
     };
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -164,7 +169,7 @@ function CreateComment({ parentId, createAPI, handleClickReplyComment }: CreateC
                 />
                 <div className="comment-button-wapper flex justify-end space-x-3">
                     <button type="submit">댓글 작성</button>
-                    <button onClick={handleClickReplyComment} type="button">
+                    <button hidden={isEdit} onClick={handelClickCancel} type="button">
                         취소
                     </button>
                 </div>

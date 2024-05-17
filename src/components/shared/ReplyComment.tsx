@@ -14,7 +14,7 @@ function ReplyCommentComponent({ replyList = [], parentCommentId }: ReplyComment
     if (!commentFooterContext) {
         throw new Error('CommentComponent must be used within a CommentFooterContextProvider');
     }
-    const { toggleReply, watchMoreReply } = commentFooterContext;
+    const { toggleReply } = commentFooterContext;
     const [isClickReplyButton, setIsClickReplyButton] = useState<boolean>(true);
 
     function handleClickReplyComment() {
@@ -24,6 +24,7 @@ function ReplyCommentComponent({ replyList = [], parentCommentId }: ReplyComment
         setIsClickReplyButton((prev) => !prev);
     }
     const noReplyComment = replyList.length === 0;
+
     return (
         <div className="reply-comment-container p-5 py-6 space-y-6 bg-gray-50 rounded-lg border-[1px] ">
             {replyList.map((reply) => {
@@ -43,8 +44,6 @@ function ReplyCommentComponent({ replyList = [], parentCommentId }: ReplyComment
                     </React.Fragment>
                 );
             })}
-            {/* noReplyComment = 대댓글이 0개인 댓글
-                답글 달기를 누르면 바로 댓글 작성 input이 나와야함 */}
 
             {noReplyComment ? (
                 <CreateComment
@@ -126,18 +125,7 @@ interface CommentFooterProps {
 }
 
 ReplyCommentComponent.Footer = function Footer({ replyList }: CommentFooterProps) {
-    const [watchMoreReply, setWatchMoreReply] = useState(false);
-    function handleClickButton() {
-        setWatchMoreReply((prev) => !prev);
-    }
-
-    return (
-        <>
-            {/* <div className="reply-comment-footer">
-                <button onClick={handleClickButton}>답글</button>
-            </div> */}
-        </>
-    );
+    return <></>;
 };
 
 export { ReplyCommentComponent };
