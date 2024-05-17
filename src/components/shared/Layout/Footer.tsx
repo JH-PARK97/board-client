@@ -1,10 +1,6 @@
 import * as React from 'react';
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import { Outlet } from 'react-router-dom';
-import { height } from '@mui/system';
 
 function Copyright() {
     return (

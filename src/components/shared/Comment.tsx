@@ -1,13 +1,17 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { CommentList, ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
 import { ReplyCommentComponent } from './ReplyComment';
+import { useForm } from 'react-hook-form';
+import { CommentListContext } from '../post/detail/Comment';
 
-interface CommentComponentProps {
-    commentList: CommentList[];
-}
+function CommentComponent() {
+    const commentContext = useContext(CommentListContext);
 
-function CommentComponent({ commentList }: CommentComponentProps) {
+    if (!commentContext) {
+        throw new Error('CommentComponent must be used within a CommentListProvider');
+    }
+    const { commentList } = commentContext;
     return (
         <div>
             {commentList.map((comment) => {
@@ -17,19 +21,23 @@ function CommentComponent({ commentList }: CommentComponentProps) {
                     nickname: comment.user.nickname,
                 };
                 let replyList: ReplyList[] = [];
+                let replyCount = 0;
 
                 // comment.reply가 배열일 때만 replyList에 할당
                 if (Array.isArray(comment.reply)) {
                     replyList = comment.reply;
+                    replyCount = comment.reply.length;
                 }
                 return (
                     <div key={comment.id} className="comment-container">
                         <CommentComponent.Wrapper>
                             <CommentComponent.Subinfo data={subinfo} />
                             <CommentComponent.Content content={comment.content} />
-                            <CommentComponent.Footer replyList={replyList}>
-                                <ReplyCommentComponent replyList={replyList}></ReplyCommentComponent>
-                            </CommentComponent.Footer>
+                            <CommentComponent.Footer
+                                parentCommentId={comment.id}
+                                replyList={replyList}
+                                replyCount={replyCount}
+                            />
                         </CommentComponent.Wrapper>
                     </div>
                 );
@@ -86,30 +94,83 @@ CommentComponent.Content = function Content({ content }: CommentContentProps) {
 };
 
 interface CommentFooterProps {
-    replyList?: ReplyList[];
-    children: ReactNode;
+    replyCount?: number;
+    parentCommentId: number;
+    replyList: ReplyList[];
 }
 
-CommentComponent.Footer = function Footer({ replyList = [], children }: CommentFooterProps) {
-    const [watchMoreReply, setWatchMoreReply] = useState(true);
-    console.log(watchMoreReply);
-    function handleClickButton() {
+interface CommentFooterContextType {
+    watchMoreReply: boolean;
+    toggleReply: () => void;
+}
+export const CommentFooterContext = createContext<CommentFooterContextType | undefined>(undefined);
+CommentComponent.Footer = function Footer({ replyCount, parentCommentId, replyList }: CommentFooterProps) {
+    const [watchMoreReply, setWatchMoreReply] = useState<boolean>(true);
+
+    function toggleReply() {
         setWatchMoreReply((prev) => !prev);
     }
     return (
         <>
             <div className="comment-footer">
-                {replyList.length === 0 ? (
-                    <button>답글달기</button>
+                {replyCount === 0 ? (
+                    <button onClick={toggleReply}>{watchMoreReply ? `답글 달기` : `숨기기`}</button>
                 ) : (
-                    <button onClick={handleClickButton}>{`${
-                        watchMoreReply ? `${replyList?.length}개의 답글` : `숨기기`
-                    }`}</button>
+                    <button onClick={toggleReply}>{`${watchMoreReply ? `${replyCount}개의 답글` : `숨기기`}`}</button>
                 )}
             </div>
-            <div hidden={watchMoreReply}>{children}</div>
+            {replyCount !== 0 && (
+                <div hidden={watchMoreReply}>
+                    <CommentFooterContext.Provider value={{ toggleReply, watchMoreReply }}>
+                        <ReplyCommentComponent parentCommentId={parentCommentId} replyList={replyList} />
+                    </CommentFooterContext.Provider>
+                </div>
+            )}
         </>
     );
 };
 
-export { CommentComponent };
+interface CreateCommentProps {
+    parentId: number;
+    createAPI: (parentId: number, input: any) => Promise<any>;
+    handleClickReplyComment?: () => void;
+}
+function CreateComment({ parentId, createAPI, handleClickReplyComment }: CreateCommentProps) {
+    const commentContext = useContext(CommentListContext);
+    if (!commentContext) return null;
+    const { fetchCommentList } = commentContext;
+    const {
+        register,
+        handleSubmit,
+        watch,
+        setValue,
+        formState: { errors },
+    } = useForm();
+
+    const onSubmit = async (input: any) => {
+        const resp = await createAPI(parentId, input);
+        if (resp.resultCd === 200) {
+            setValue('content', '');
+            await fetchCommentList();
+        }
+    };
+    return (
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="comment-input">
+                <textarea
+                    {...register('content', { required: true })}
+                    placeholder="댓글을 작성하세요"
+                    className="w-full min-h-[100px] resize-none border-2 border-gray-100 p-4 pb-6 no-scrollbar "
+                />
+                <div className="comment-button-wapper flex justify-end space-x-3">
+                    <button type="submit">댓글 작성</button>
+                    <button onClick={handleClickReplyComment} type="button">
+                        취소
+                    </button>
+                </div>
+            </div>
+        </form>
+    );
+}
+
+export { CommentComponent, CreateComment };

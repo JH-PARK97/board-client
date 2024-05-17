@@ -87,7 +87,7 @@ export default function Router() {
                     },
                     {
                         path: '/post',
-                        element:  (
+                        element: (
                             <EditorProvider>
                                 <Outlet />
                             </EditorProvider>
@@ -103,14 +103,6 @@ export default function Router() {
                             },
                         ],
                     },
-                    // {
-                    //     path: '/post/create',
-                    //     element: <CreatePost />,
-                    // },
-                    // {
-                    //     path: '/post/edit/:id',
-                    //     element: <CreatePost />,
-                    // },
                 ],
             },
         ]);

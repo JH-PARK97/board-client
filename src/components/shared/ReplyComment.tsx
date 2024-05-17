@@ -1,14 +1,31 @@
-import React, { ReactNode, useState } from 'react';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
+import { CommentFooterContext, CreateComment } from './Comment';
+import createReplyCommentAPI from '../../api/reply/create/reply.api';
 
 interface ReplyCommentComponentProps {
     replyList: ReplyList[];
+    parentCommentId: number;
 }
 
-function ReplyCommentComponent({ replyList = [] }: ReplyCommentComponentProps) {
+function ReplyCommentComponent({ replyList = [], parentCommentId }: ReplyCommentComponentProps) {
+    const commentFooterContext = useContext(CommentFooterContext);
+    if (!commentFooterContext) {
+        throw new Error('CommentComponent must be used within a CommentFooterContextProvider');
+    }
+    const { toggleReply, watchMoreReply } = commentFooterContext;
+    const [isClickReplyButton, setIsClickReplyButton] = useState<boolean>(true);
+
+    function handleClickReplyComment() {
+        if (replyList.length === 0) {
+            toggleReply();
+        }
+        setIsClickReplyButton((prev) => !prev);
+    }
+    const noReplyComment = replyList.length === 0;
     return (
-        <div className="reply-commnet-container p-5 py-6 space-y-6  bg-gray-50 rounded-lg border-[1px] ">
+        <div className="reply-comment-container p-5 py-6 space-y-6 bg-gray-50 rounded-lg border-[1px] ">
             {replyList.map((reply) => {
                 const subinfo = {
                     createdAt: reply.createdAt,
@@ -17,14 +34,42 @@ function ReplyCommentComponent({ replyList = [] }: ReplyCommentComponentProps) {
                 };
 
                 return (
-                    <ReplyCommentComponent.Wrapper>
-                        <ReplyCommentComponent.Subinfo data={subinfo} />
-                        <ReplyCommentComponent.Content content={reply.content} />
-                        <ReplyCommentComponent.Footer replyList={replyList} />
-                    </ReplyCommentComponent.Wrapper>
+                    <React.Fragment key={reply.id}>
+                        <ReplyCommentComponent.Wrapper>
+                            <ReplyCommentComponent.Subinfo data={subinfo} />
+                            <ReplyCommentComponent.Content content={reply.content} />
+                            <ReplyCommentComponent.Footer replyList={replyList} />
+                        </ReplyCommentComponent.Wrapper>
+                    </React.Fragment>
                 );
             })}
-            <div className="">댓글작성</div>
+            {/* noReplyComment = 대댓글이 0개인 댓글
+                답글 달기를 누르면 바로 댓글 작성 input이 나와야함 */}
+
+            {noReplyComment ? (
+                <CreateComment
+                    handleClickReplyComment={handleClickReplyComment}
+                    createAPI={createReplyCommentAPI}
+                    parentId={parentCommentId}
+                />
+            ) : (
+                <div>
+                    <button
+                        className="border-[1px] p-2 w-full bg-white"
+                        hidden={!isClickReplyButton}
+                        onClick={handleClickReplyComment}
+                    >
+                        답글 작성하기
+                    </button>
+                    <div hidden={isClickReplyButton}>
+                        <CreateComment
+                            handleClickReplyComment={handleClickReplyComment}
+                            createAPI={createReplyCommentAPI}
+                            parentId={parentCommentId}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
@@ -73,7 +118,7 @@ interface CommentContentProps {
 }
 
 ReplyCommentComponent.Content = function Content({ content }: CommentContentProps) {
-    return <div className="reply-comment-content text-lg min-h-[80px]">{content}</div>;
+    return <div className="reply-comment-content text-lg min-h-[70px] mb-6">{content}</div>;
 };
 
 interface CommentFooterProps {

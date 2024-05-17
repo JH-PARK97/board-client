@@ -25,7 +25,9 @@ export default function DetailPost() {
     const postDetail = useContext(PostDetailContext);
     const params = useParams();
 
-    const { id } = params;
+    const { id: paramsId } = params;
+    const id = Number(paramsId);
+
     const { id: userId } = getUser();
 
     if (!postDetail || !id) return null;
@@ -39,7 +41,7 @@ export default function DetailPost() {
     };
 
     return (
-        <div className="m-auto w-[40%]">
+        <div className="m-auto w-[50%]">
             <DetailPost.Title>{postDetail?.title}</DetailPost.Title>
             <DetailPost.SubInfo data={subinfo} />
             <DetailPost.Content>{postDetail?.content}</DetailPost.Content>
