@@ -4,54 +4,132 @@ import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
 import { ReplyCommentComponent } from './ReplyComment';
 import { useForm } from 'react-hook-form';
 import { CommentListContext } from '../post/detail/Comment';
+import updateCommentAPI from '../../api/comment/update/comment.api';
 
-function CommentComponent() {
-    const commentContext = useContext(CommentListContext);
+interface CommentComponentProps {
+    commentList: CommentList[];
+}
+function CommentComponent({ commentList }: CommentComponentProps) {
+    // return (
+    //     <div>
+    //         {commentList.map((comment) => {
+    //             const subinfo = {
+    //                 createdAt: comment.createdAt,
+    //                 profileImagePath: comment.user.profileImagePath,
+    //                 nickname: comment.user.nickname,
+    //             };
+    //             let replyList: ReplyList[] = [];
+    //             let replyCount = 0;
 
-    if (!commentContext) {
-        throw new Error('CommentComponent must be used within a CommentListProvider');
-    }
-    const { commentList } = commentContext;
+    //             // comment.reply가 배열일 때만 replyList에 할당
+    //             if (Array.isArray(comment.reply)) {
+    //                 replyList = comment.reply;
+    //                 replyCount = comment.reply.length;
+    //             }
+    //             return (
+    //                 <div key={comment.id} className="comment-container">
+    //                     <CommentComponent.Wrapper>
+    //                         {(isEdit, handleClickModifyButton) => (
+    //                             <>
+    //                                 <CommentComponent.Subinfo
+    //                                     data={subinfo}
+    //                                     handleClickModifyButton={handleClickModifyButton}
+    //                                 />
+    //                                 <CommentComponent.Content
+    //                                     content={comment.content}
+    //                                     isEdit={isEdit}
+    //                                     commentId={comment.id}
+    //                                     handleClickModifyButton={handleClickModifyButton}
+    //                                 />
+    //                                 <CommentComponent.Footer
+    //                                     parentCommentId={comment.id}
+    //                                     replyList={replyList}
+    //                                     replyCount={replyCount}
+    //                                     handleClickModifyButton={handleClickModifyButton}
+    //                                 />
+    //                             </>
+    //                         )}
+    //                     </CommentComponent.Wrapper>
+    //                 </div>
+    //             );
+    //         })}
+    //     </div>
+    // );
+
     return (
         <div>
             {commentList.map((comment) => {
-                const subinfo = {
-                    createdAt: comment.createdAt,
-                    profileImagePath: comment.user.profileImagePath,
-                    nickname: comment.user.nickname,
-                };
-                let replyList: ReplyList[] = [];
-                let replyCount = 0;
-
-                // comment.reply가 배열일 때만 replyList에 할당
-                if (Array.isArray(comment.reply)) {
-                    replyList = comment.reply;
-                    replyCount = comment.reply.length;
-                }
-                return (
-                    <div key={comment.id} className="comment-container">
-                        <CommentComponent.Wrapper>
-                            <CommentComponent.Subinfo data={subinfo} />
-                            <CommentComponent.Content content={comment.content} />
-                            <CommentComponent.Footer
-                                parentCommentId={comment.id}
-                                replyList={replyList}
-                                replyCount={replyCount}
-                            />
-                        </CommentComponent.Wrapper>
-                    </div>
-                );
+                console.log(comment);
+                return <CommentListItem key={comment.id} comment={comment} />;
             })}
         </div>
     );
 }
-interface CommentWrapperProps {
-    children: ReactNode;
+interface CommentListItemProps {
+    comment: CommentList;
+}
+function CommentListItem({ comment }: CommentListItemProps) {
+    const [isEdit, setIsEdit] = useState<boolean>(true);
+
+    const handleClickModifyButton = () => {
+        setIsEdit((prev) => !prev);
+    };
+
+    const subinfo = {
+        createdAt: comment.createdAt,
+        profileImagePath: comment.user.profileImagePath,
+        nickname: comment.user.nickname,
+    };
+    let replyList: ReplyList[] = [];
+    let replyCount = 0;
+
+    // comment.reply가 배열일 때만 replyList에 할당
+    if (Array.isArray(comment.reply)) {
+        replyList = comment.reply;
+        replyCount = comment.reply.length;
+    }
+    return (
+        <div className="comment-container">
+            <div className="comment-wrapper min-h-[200px] py-6 space-y-6 border-b-[1px]">
+                <CommentComponent.Subinfo data={subinfo} handleClickModifyButton={handleClickModifyButton} />
+
+                {isEdit ? (
+                    <div className="comment-content text-lg min-h-[80px]">{comment.content}</div>
+                ) : (
+                    <CreateComment
+                        handleClickModifyButton={handleClickModifyButton}
+                        createAPI={updateCommentAPI}
+                        parentId={comment.id}
+                        defaultValue={comment.content}
+                    />
+                )}
+                <CommentComponent.Footer
+                    parentCommentId={comment.id}
+                    replyList={replyList}
+                    replyCount={replyCount}
+                    handleClickModifyButton={handleClickModifyButton}
+                />
+            </div>
+        </div>
+    );
 }
 
-CommentComponent.Wrapper = function Wrapper({ children }: CommentWrapperProps) {
-    return <div className="comment-wrapper min-h-[200px] py-6 space-y-6 border-b-[1px]">{children}</div>;
-};
+// interface CommentWrapperProps {
+//     children: (isEdit: boolean, handleClickModifyButton: () => void) => ReactNode;
+// }
+
+// CommentComponent.Wrapper = function Wrapper({ children }: CommentWrapperProps) {
+//     const [isEdit, setIsEdit] = useState<boolean>(true);
+
+//     const handleClickModifyButton = () => {
+//         setIsEdit((prev) => !prev);
+//     };
+//     return (
+//         <div className="comment-wrapper min-h-[200px] py-6 space-y-6 border-b-[1px]">
+//             {children(isEdit, handleClickModifyButton)}
+//         </div>
+//     );
+// };
 
 interface CommentSubinfoProps {
     data: {
@@ -59,9 +137,10 @@ interface CommentSubinfoProps {
         nickname: string;
         profileImagePath: string;
     };
+    handleClickModifyButton: () => void;
 }
 
-CommentComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
+CommentComponent.Subinfo = function Subinfo({ data, handleClickModifyButton }: CommentSubinfoProps) {
     const { createdAt, nickname, profileImagePath } = data;
     const imageSrc = createProfileImageSrc(profileImagePath);
     return (
@@ -78,7 +157,7 @@ CommentComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
                 </div>
             </div>
             <div className="comment-subinfo-header-action flex w-[10%] justify-between date text-[14px] text-gray-500">
-                <div>수정</div>
+                <div onClick={handleClickModifyButton}>수정</div>
                 <div>삭제</div>
             </div>
         </div>
@@ -87,16 +166,39 @@ CommentComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
 
 interface CommentContentProps {
     content: string;
+    commentId: number;
+    isEdit: boolean;
+    handleClickModifyButton: () => void;
 }
 
-CommentComponent.Content = function Content({ content }: CommentContentProps) {
-    return <div className="comment-content text-lg min-h-[80px]">{content}</div>;
+CommentComponent.Content = function Content({
+    content,
+    isEdit,
+    commentId,
+    handleClickModifyButton,
+}: CommentContentProps) {
+    console.log(commentId, content);
+    return (
+        <>
+            {isEdit ? (
+                <div className="comment-content text-lg min-h-[80px]">{content}</div>
+            ) : (
+                <CreateComment
+                    handleClickModifyButton={handleClickModifyButton}
+                    createAPI={updateCommentAPI}
+                    parentId={commentId}
+                    defaultValue={content}
+                />
+            )}
+        </>
+    );
 };
 
 interface CommentFooterProps {
     replyCount?: number;
     parentCommentId: number;
     replyList: ReplyList[];
+    handleClickModifyButton: () => void;
 }
 
 interface CommentFooterContextType {
@@ -131,8 +233,16 @@ interface CreateCommentProps {
     parentId: number;
     createAPI: (parentId: number, input: any) => Promise<any>;
     handleClickReplyComment?: () => void;
+    defaultValue?: string;
+    handleClickModifyButton?: () => void;
 }
-function CreateComment({ parentId, createAPI, handleClickReplyComment }: CreateCommentProps) {
+function CreateComment({
+    parentId,
+    createAPI,
+    handleClickReplyComment,
+    defaultValue,
+    handleClickModifyButton,
+}: CreateCommentProps) {
     const commentContext = useContext(CommentListContext);
     if (!commentContext) return null;
     const { fetchCommentList } = commentContext;
@@ -142,7 +252,11 @@ function CreateComment({ parentId, createAPI, handleClickReplyComment }: CreateC
         watch,
         setValue,
         formState: { errors },
-    } = useForm();
+    } = useForm({
+        defaultValues: {
+            content: defaultValue,
+        },
+    });
 
     // handleClickReplyComment의 타입이 함수가 아닌 경우 = 댓글 작성하는 경우 (답글X)
     const isEdit = typeof handleClickReplyComment !== 'function';
@@ -152,6 +266,10 @@ function CreateComment({ parentId, createAPI, handleClickReplyComment }: CreateC
         if (resp.resultCd === 200) {
             setValue('content', '');
             await fetchCommentList();
+        }
+
+        if (parentId) {
+            handleClickModifyButton?.();
         }
     };
     const handelClickCancel = () => {
