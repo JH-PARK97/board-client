@@ -13,6 +13,7 @@ export interface CommonResponse<T> {
     data: T;
     resultCd: number;
     token?: string;
+    resultMsg?: string;
 }
 
 export const client = axios.create({
