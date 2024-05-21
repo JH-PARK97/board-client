@@ -1,84 +1,51 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
-import { CommentFooterContext, CreateComment } from './Comment';
+import { CreateComment } from './Comment';
 import createReplyCommentAPI from '../../api/reply/create/reply.api';
 
-interface ReplyCommentComponentProps {
+interface ReplyComponentProps {
     replyList: ReplyList[];
     parentCommentId: number;
+    toggleReplyCreate: () => void;
 }
 
-function ReplyCommentComponent({ replyList = [], parentCommentId }: ReplyCommentComponentProps) {
-    const commentFooterContext = useContext(CommentFooterContext);
-    if (!commentFooterContext) {
-        throw new Error('CommentComponent must be used within a CommentFooterContextProvider');
-    }
-    const { toggleReply } = commentFooterContext;
-    const [isClickReplyButton, setIsClickReplyButton] = useState<boolean>(true);
-
-    function handleClickReplyComment() {
-        if (replyList.length === 0) {
-            toggleReply();
-        }
-        setIsClickReplyButton((prev) => !prev);
-    }
+function ReplyComponent({ replyList = [], parentCommentId, toggleReplyCreate }: ReplyComponentProps) {
     const noReplyComment = replyList.length === 0;
 
     return (
         <div className="reply-comment-container p-5 py-6 space-y-6 bg-gray-50 rounded-lg border-[1px] ">
             {replyList.map((reply) => {
-                const subinfo = {
-                    createdAt: reply.createdAt,
-                    profileImagePath: reply.user.profileImagePath,
-                    nickname: reply.user.nickname,
-                };
-
-                return (
-                    <React.Fragment key={reply.id}>
-                        <ReplyCommentComponent.Wrapper>
-                            <ReplyCommentComponent.Subinfo data={subinfo} />
-                            <ReplyCommentComponent.Content content={reply.content} />
-                            <ReplyCommentComponent.Footer replyList={replyList} />
-                        </ReplyCommentComponent.Wrapper>
-                    </React.Fragment>
-                );
+                return <ReplyListItem key={reply.id} reply={reply} />;
             })}
-
-            {noReplyComment ? (
-                <CreateComment
-                    handleClickReplyComment={handleClickReplyComment}
-                    createAPI={createReplyCommentAPI}
-                    parentId={parentCommentId}
-                />
-            ) : (
-                <div>
-                    <button
-                        className="border-[1px] p-2 w-full bg-white"
-                        hidden={!isClickReplyButton}
-                        onClick={handleClickReplyComment}
-                    >
-                        답글 작성하기
-                    </button>
-                    <div hidden={isClickReplyButton}>
-                        <CreateComment
-                            handleClickReplyComment={handleClickReplyComment}
-                            createAPI={createReplyCommentAPI}
-                            parentId={parentCommentId}
-                        />
-                    </div>
-                </div>
-            )}
+            <CreateReply
+                noReplyComment={noReplyComment}
+                parentCommentId={parentCommentId}
+                toggleReplyCreate={toggleReplyCreate}
+            />
         </div>
     );
 }
-interface CommentWrapperProps {
-    children: ReactNode;
+
+interface ReplyListItemProps {
+    reply: ReplyList;
 }
 
-ReplyCommentComponent.Wrapper = function Wrapper({ children }: CommentWrapperProps) {
-    return <div className="reply-comment-wrapper min-h-[200px] border-b-[1px] ">{children}</div>;
-};
+function ReplyListItem({ reply }: ReplyListItemProps) {
+    const subinfo = {
+        createdAt: reply.createdAt,
+        profileImagePath: reply.user.profileImagePath,
+        nickname: reply.user.nickname,
+    };
+
+    return (
+        <div className="reply-comment-wrapper min-h-[200px] border-b-[1px] ">
+            <ReplyComponent.Subinfo data={subinfo} />
+            <ReplyComponent.Content content={reply.content} />
+            <ReplyComponent.Footer replyList={reply} />
+        </div>
+    );
+}
 
 interface CommentSubinfoProps {
     data: {
@@ -88,7 +55,7 @@ interface CommentSubinfoProps {
     };
 }
 
-ReplyCommentComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
+ReplyComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
     const { createdAt, nickname, profileImagePath } = data;
     const imageSrc = createProfileImageSrc(profileImagePath);
     return (
@@ -116,16 +83,57 @@ interface CommentContentProps {
     content: string;
 }
 
-ReplyCommentComponent.Content = function Content({ content }: CommentContentProps) {
+ReplyComponent.Content = function Content({ content }: CommentContentProps) {
     return <div className="reply-comment-content text-lg min-h-[70px] mb-6">{content}</div>;
 };
 
 interface CommentFooterProps {
-    replyList?: ReplyList[];
+    replyList?: ReplyList;
 }
 
-ReplyCommentComponent.Footer = function Footer({ replyList }: CommentFooterProps) {
+ReplyComponent.Footer = function Footer({ replyList }: CommentFooterProps) {
     return <></>;
 };
 
-export { ReplyCommentComponent };
+interface CreateReplyProps {
+    noReplyComment: boolean;
+    parentCommentId: number;
+    toggleReplyCreate: () => void;
+}
+function CreateReply({ parentCommentId, noReplyComment, toggleReplyCreate }: CreateReplyProps) {
+    const [isClickReplyButton, setIsClickReplyButton] = useState<boolean>(true);
+
+    function handleClickReplyComment() {
+        if (noReplyComment) {
+            toggleReplyCreate();
+        }
+        setIsClickReplyButton((prev) => !prev);
+    }
+
+    return noReplyComment ? (
+        <CreateComment
+            handleClickReplyComment={handleClickReplyComment}
+            createAPI={createReplyCommentAPI}
+            parentId={parentCommentId}
+        />
+    ) : (
+        <div>
+            <button
+                className="border-[1px] p-2 w-full bg-white"
+                hidden={!isClickReplyButton}
+                onClick={handleClickReplyComment}
+            >
+                답글 작성하기
+            </button>
+            <div hidden={isClickReplyButton}>
+                <CreateComment
+                    handleClickReplyComment={handleClickReplyComment}
+                    createAPI={createReplyCommentAPI}
+                    parentId={parentCommentId}
+                />
+            </div>
+        </div>
+    );
+}
+
+export { ReplyComponent };

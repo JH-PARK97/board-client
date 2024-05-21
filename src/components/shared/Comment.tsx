@@ -1,7 +1,7 @@
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { CommentList, ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT, getUser } from '@/utils/utils';
-import { ReplyCommentComponent } from './ReplyComment';
+import { ReplyComponent } from './ReplyComment';
 import { useForm } from 'react-hook-form';
 import { CommentListContext } from '../post/detail/Comment';
 import updateCommentAPI from '../../api/comment/update/comment.api';
@@ -99,14 +99,17 @@ CommentComponent.Subinfo = function Subinfo({
     commentId,
 }: CommentSubinfoProps) {
     const commentContext = useContext(CommentListContext);
+
     if (!commentContext) return null;
+
     const { fetchCommentList } = commentContext;
+
     const { createdAt, nickname, profileImagePath } = data;
     const imageSrc = createProfileImageSrc(profileImagePath);
     const { closeModal, openModal } = useModalStore();
+
     const handleClickDeleteButton = async () => {
         const resp = await deleteCommentAPI(commentId);
-        console.log(resp);
         if (resp.resultCd === 200) {
             fetchCommentList();
             closeModal();
@@ -184,29 +187,29 @@ interface CommentFooterProps {
     handleClickModifyButton: () => void;
 }
 
-interface CommentFooterContextType {
-    toggleReply: () => void;
-}
-export const CommentFooterContext = createContext<CommentFooterContextType | undefined>(undefined);
 CommentComponent.Footer = function Footer({ replyCount, parentCommentId, replyList }: CommentFooterProps) {
     const [watchMoreReply, setWatchMoreReply] = useState<boolean>(true);
 
-    function toggleReply() {
+    function toggleReplyCreate() {
         setWatchMoreReply((prev) => !prev);
     }
     return (
         <>
             <div className="comment-footer">
                 {replyCount === 0 ? (
-                    <button onClick={toggleReply}>{watchMoreReply ? `답글 달기` : `숨기기`}</button>
+                    <button onClick={toggleReplyCreate}>{watchMoreReply ? `답글 달기` : `숨기기`}</button>
                 ) : (
-                    <button onClick={toggleReply}>{`${watchMoreReply ? `${replyCount}개의 답글` : `숨기기`}`}</button>
+                    <button onClick={toggleReplyCreate}>{`${
+                        watchMoreReply ? `${replyCount}개의 답글` : `숨기기`
+                    }`}</button>
                 )}
             </div>
             <div hidden={watchMoreReply}>
-                <CommentFooterContext.Provider value={{ toggleReply }}>
-                    <ReplyCommentComponent parentCommentId={parentCommentId} replyList={replyList} />
-                </CommentFooterContext.Provider>
+                <ReplyComponent
+                    toggleReplyCreate={toggleReplyCreate}
+                    parentCommentId={parentCommentId}
+                    replyList={replyList}
+                />
             </div>
         </>
     );
@@ -265,10 +268,14 @@ function CreateComment({
         }
     };
     const handelClickCancel = () => {
-        if (isEdit) return null;
-        handleClickReplyComment();
-        setValue('content', '');
+        if (isEdit) {
+            handleClickModifyButton?.();
+        } else {
+            handleClickReplyComment?.();
+            setValue('content', '');
+        }
     };
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="comment-input">
@@ -278,10 +285,12 @@ function CreateComment({
                     className="w-full min-h-[100px] resize-none border-2 border-gray-100 p-4 pb-6 no-scrollbar "
                 />
                 <div className="comment-button-wapper flex justify-end space-x-3">
-                    <button type="submit">댓글 작성</button>
-                    <button hidden={isEdit} onClick={handelClickCancel} type="button">
-                        취소
-                    </button>
+                    <button type="submit">{isEdit && defaultValue ? '댓글 수정' : '댓글 작성'}</button>
+                    {!isEdit || defaultValue ? (
+                        <button onClick={handelClickCancel} type="button">
+                            취소
+                        </button>
+                    ) : null}
                 </div>
             </div>
         </form>
