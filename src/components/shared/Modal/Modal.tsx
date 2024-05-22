@@ -1,11 +1,8 @@
-import React, { ReactNode, useRef } from 'react';
-import { useModalStore } from '../../../store/modal';
+import React, { ReactNode, useEffect, useRef } from 'react';
 import ModalPortal from './MordalPortal';
 
-// Main Component - Modal
-
 interface ModalProps {
-    hiddenCloseButton?: boolean;
+    isOpen: boolean;
     removeDimmed?: boolean;
     className?: string;
     title: string;
@@ -13,29 +10,51 @@ interface ModalProps {
     confirm?: string;
     cancel?: string;
     onConfirm: () => void;
-    onCancel?: () => void;
+    onCancel: () => void;
 }
 
 export default function Modal({
+    isOpen = false,
     removeDimmed = false,
-    className,
     confirm = '확인',
     content,
     title,
     cancel,
-    hiddenCloseButton,
     onConfirm,
     onCancel,
 }: ModalProps) {
     const modalRef = useRef<HTMLDivElement>(null);
-    const { isModalOpen, closeModal } = useModalStore();
-    if (!isModalOpen) {
-        return null;
-    }
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                onCancel();
+            }
+        };
+
+        if (isOpen) {
+            const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = 'hidden';
+            document.body.style.paddingRight = `${scrollBarWidth}px`;
+
+            document.addEventListener('keydown', handleKeyDown);
+        } else {
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+            document.body.style.paddingRight = '';
+            document.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isOpen, onCancel]);
+
+    if (!isOpen) return null;
 
     const handleModalOutsideClick = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (modalRef.current === e.target) {
-            closeModal();
+        if (modalRef.current && modalRef.current === e.target) {
+            onCancel();
         }
     };
 
@@ -44,12 +63,14 @@ export default function Modal({
             <ModalPortal>
                 <div hidden={removeDimmed} className="dim"></div>
                 <div className="modal z-10" ref={modalRef} onClick={handleModalOutsideClick}>
-                    <div className={`modal-content ${className ? className : ''}`}>
-                        <Modal.Title title={title} hiddenCloseButton={hiddenCloseButton} />
-                        <Modal.Content content={content} />
-                        <Modal.Footer>
+                    <div className="modal-content">
+                        <div className="modal-title">
+                            <h2>{title}</h2>
+                        </div>
+                        <div className="modal-body">{content}</div>
+                        <div className="modal-footer">
                             <Modal.Button onConfirm={onConfirm} onCancel={onCancel} confirm={confirm} cancel={cancel} />
-                        </Modal.Footer>
+                        </div>
                     </div>
                 </div>
             </ModalPortal>
@@ -57,58 +78,20 @@ export default function Modal({
     );
 }
 
-// Sub Component - Title, Content, Footer, Button
-interface ModalTitleProps {
-    title: string;
-    hiddenCloseButton?: boolean;
-    className?: string;
-}
-
-Modal.Title = function Title({ title, hiddenCloseButton = false, className = '' }: ModalTitleProps) {
-    const { closeModal } = useModalStore();
-    return (
-        <div className={`modal-title ${className}`}>
-            <h2>{title}</h2>
-            <span hidden={hiddenCloseButton} onClick={closeModal} className="close">
-                x
-            </span>
-        </div>
-    );
-};
-
-interface ModalContentProps {
-    content: ReactNode;
-    className?: string;
-}
-
-Modal.Content = function Content({ content, className = '' }: ModalContentProps) {
-    return <div className={`modal-body ${className}`}>{content}</div>;
-};
-
-interface ModalFooterProps {
-    children?: ReactNode;
-    className?: string;
-}
-
-Modal.Footer = function Footer({ children, className = '' }: ModalFooterProps) {
-    return <div className={`modal-footer ${className}`}>{children}</div>;
-};
-
 interface ModalButtonProps {
     confirm?: ReactNode;
     onConfirm?: () => void;
     onCancel?: () => void;
-    className?: string;
     cancel?: string;
 }
-Modal.Button = function Button({ confirm, onConfirm, onCancel, className = '', cancel }: ModalButtonProps) {
+Modal.Button = function Button({ confirm, onConfirm, onCancel, cancel }: ModalButtonProps) {
     return (
         <>
-            <button className={`${className} mr-3`} onClick={onConfirm}>
+            <button className="modal-action mr-3" onClick={onConfirm}>
                 {confirm}
             </button>
             {cancel && (
-                <button className={className} onClick={onCancel}>
+                <button className="modal-action" onClick={onCancel}>
                     {cancel}
                 </button>
             )}

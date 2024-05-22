@@ -4,8 +4,8 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
-import { useModalStore } from '@/store/modal';
 import { Modal } from '../../shared/Modal';
+import useModal from '../../../hooks/useModal';
 
 // let isCall = false;
 
@@ -13,10 +13,10 @@ export default function Github() {
     const iscall = useRef(false);
 
     const { login, isLogin } = useAuthStore();
-    const { toggleModal, isModalOpen } = useModalStore();
-
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
+    const { openModal, closeModal, isModalOpen } = useModal();
+
     const [isSaved, setIsSaved] = useState<boolean>();
     const [loading, setLoading] = useState<boolean>(true);
     const [email, setEmail] = useState<string | null>(null);
@@ -77,7 +77,7 @@ export default function Github() {
             } else if (res.data.resultCd === 401) {
                 const email = res.data.email;
                 setEmail(email);
-                toggleModal();
+                openModal();
             }
             return false;
         } catch (error) {
@@ -90,7 +90,7 @@ export default function Github() {
     };
 
     const handleConfirmButton = () => {
-        toggleModal();
+        closeModal();
         navigator('/signup', { state: { email } });
     };
 
@@ -106,20 +106,20 @@ export default function Github() {
                 }}
             >
                 {loading && <CircularProgress />}
-                {isModalOpen && (
-                        <Modal
-                            title="알림"
-                            hiddenCloseButton={true}
-                            content={
-                                <>
-                                    <p>계정이 존재하지 않습니다.</p>
-                                    <p>회원가입 페이지로 이동합니다.</p>
-                                </>
-                            }
-                            confirm="확인"
-                            onConfirm={handleConfirmButton}
-                        />
-                )}
+
+                <Modal
+                    onCancel={closeModal}
+                    isOpen={isModalOpen}
+                    title="알림"
+                    content={
+                        <>
+                            <p>계정이 존재하지 않습니다.</p>
+                            <p>회원가입 페이지로 이동합니다.</p>
+                        </>
+                    }
+                    confirm="확인"
+                    onConfirm={handleConfirmButton}
+                />
             </Box>
         </Container>
     );

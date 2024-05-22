@@ -1,15 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { ReplyList } from '@/api/comment/get/comment.type';
-import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
+import { createProfileImageSrc, dateConvert, FORMAT, getUser } from '@/utils/utils';
 import { CreateComment } from './Comment';
 
 import useToggle from '@/hooks/useToggle';
-import { Modal } from '@/components/shared/Modal';
-import { useModalStore } from '@/store/modal';
 
 import createReplyAPI from '@/api/reply/create/reply.api';
 import updateReplyAPI from '@/api/reply/update/reply.api';
 import deleteReplyAPI from '@/api/reply/delete/reply.api';
+import useModal from '@/hooks/useModal';
+import { Modal } from './Modal';
+import { CommentListContext } from '../post/detail/Comment';
 
 interface ReplyComponentProps {
     replyList: ReplyList[];
@@ -18,12 +19,17 @@ interface ReplyComponentProps {
 }
 
 function ReplyComponent({ replyList = [], parentCommentId, toggleReplyCreate }: ReplyComponentProps) {
+    const { id } = getUser();
     const noReply = replyList.length === 0;
 
     return (
         <div className="reply-comment-container p-5 py-6 space-y-6 bg-gray-50 rounded-lg border-[1px] ">
             {replyList.map((reply) => {
-                return <ReplyListItem parentCommentId={parentCommentId} key={reply.id} reply={reply} />;
+                const { userId } = reply;
+                const isWriter = id === userId;
+                return (
+                    <ReplyListItem isWriter={isWriter} parentCommentId={parentCommentId} key={reply.id} reply={reply} />
+                );
             })}
             <CreateReply noReply={noReply} parentCommentId={parentCommentId} toggleReplyCreate={toggleReplyCreate} />
         </div>
@@ -33,9 +39,10 @@ function ReplyComponent({ replyList = [], parentCommentId, toggleReplyCreate }: 
 interface ReplyListItemProps {
     reply: ReplyList;
     parentCommentId: number;
+    isWriter: boolean;
 }
 
-function ReplyListItem({ reply, parentCommentId }: ReplyListItemProps) {
+function ReplyListItem({ reply, parentCommentId, isWriter }: ReplyListItemProps) {
     const [isEdit, setIsEdit] = useToggle(true);
     const subinfo = {
         createdAt: reply.createdAt,
@@ -45,7 +52,12 @@ function ReplyListItem({ reply, parentCommentId }: ReplyListItemProps) {
 
     return (
         <div className="reply-comment-wrapper min-h-[200px] border-b-[1px] ">
-            <ReplyComponent.Subinfo reply={reply} handleClickReplyModifyButton={setIsEdit} data={subinfo} />
+            <ReplyComponent.Subinfo
+                reply={reply}
+                handleClickReplyModifyButton={setIsEdit}
+                data={subinfo}
+                isWriter={isWriter}
+            />
             {isEdit ? (
                 <div className="reply-comment-content text-lg min-h-[70px] mb-6">{reply.content}</div>
             ) : (
@@ -70,17 +82,21 @@ interface ReplySubinfoProps {
     };
     handleClickReplyModifyButton: () => void;
     reply: ReplyList;
+    isWriter: boolean;
 }
 
-ReplyComponent.Subinfo = function Subinfo({ reply, data, handleClickReplyModifyButton }: ReplySubinfoProps) {
+ReplyComponent.Subinfo = function Subinfo({ reply, data, handleClickReplyModifyButton, isWriter }: ReplySubinfoProps) {
+    const commentContext = useContext(CommentListContext);
+    if (!commentContext) return null;
+    const { fetchCommentList } = commentContext;
     const { createdAt, nickname, profileImagePath } = data;
     const imageSrc = createProfileImageSrc(profileImagePath);
-    const { closeModal, openModal } = useModalStore();
+    const { isModalOpen, openModal, closeModal } = useModal();
 
     const handleClickReplyDeleteButton = async () => {
-        console.log('답글삭제', 'parentCommentId : ', reply.commentId, 'replyId :', reply.id);
         const resp = await deleteReplyAPI(reply.commentId, reply.id);
         if (resp.resultCd === 200) {
+            fetchCommentList();
             closeModal();
         }
         if (resp.resultCd === 401) {
@@ -102,16 +118,22 @@ ReplyComponent.Subinfo = function Subinfo({ reply, data, handleClickReplyModifyB
                     </div>
                 </div>
             </div>
-            <div className="reply-comment-subinfo-header-action flex w-[10%] justify-between text-[14px] text-gray-500">
-                <div onClick={handleClickReplyModifyButton}>수정</div>
-                <div onClick={openModal}>삭제</div>
-                <Modal
-                    content="답글을 삭제 하시겠습니까?"
-                    title="삭제"
-                    onConfirm={handleClickReplyDeleteButton}
-                    removeDimmed
-                />
-            </div>
+
+            {isWriter && (
+                <div className="reply-comment-subinfo-header-action flex w-[10%] justify-between text-[14px] text-gray-500">
+                    <div onClick={handleClickReplyModifyButton}>수정</div>
+                    <div onClick={openModal}>삭제</div>
+                    <Modal
+                        isOpen={isModalOpen}
+                        onCancel={closeModal}
+                        cancel="취소"
+                        content="답글을 삭제 하시겠습니까?"
+                        title="삭제"
+                        onConfirm={handleClickReplyDeleteButton}
+                        removeDimmed
+                    />
+                </div>
+            )}
         </div>
     );
 };
