@@ -3,11 +3,9 @@ import { Box } from '@mui/system';
 import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useAuthStore } from '../../../store/auth';
-import { useModalStore } from '../../../store/modal';
-// import Modal from '../shared/Modal/Modal';
-import Modal from '../../shared/Modal/Modal';
-import ModalPortal from '../../shared/Modal/MordalPortal';
+import { useAuthStore } from '@/store/auth';
+import { useModalStore } from '@/store/modal';
+import { Modal } from '../../shared/Modal';
 
 // let isCall = false;
 
@@ -15,7 +13,7 @@ export default function Github() {
     const iscall = useRef(false);
 
     const { login, isLogin } = useAuthStore();
-    const { toggleModal } = useModalStore();
+    const { toggleModal, isModalOpen } = useModalStore();
 
     const [searchParams] = useSearchParams();
     const navigator = useNavigate();
@@ -108,30 +106,20 @@ export default function Github() {
                 }}
             >
                 {loading && <CircularProgress />}
-                <ModalPortal>
-                    {/* <Modal>
-                        <Modal.Title hiddenCloseButton={true}>알림</Modal.Title>
-                        <Modal.Content>
-                            <p>계정이 존재하지 않습니다.</p>
-                            <p>회원가입 페이지로 이동합니다.</p>
-                        </Modal.Content>
-                        <Modal.Footer>
-                            <Modal.Button onClick={handleConfirmButton}>확인</Modal.Button>
-                        </Modal.Footer>
-                    </Modal> */}
-                    <Modal
-                        title="알림"
-                        hiddenCloseButton={true}
-                        content={
-                            <>
-                                <p>계정이 존재하지 않습니다.</p>
-                                <p>회원가입 페이지로 이동합니다.</p>
-                            </>
-                        }
-                        confirm="확인"
-                        onConfirm={handleConfirmButton}
-                    />
-                </ModalPortal>
+                {isModalOpen && (
+                        <Modal
+                            title="알림"
+                            hiddenCloseButton={true}
+                            content={
+                                <>
+                                    <p>계정이 존재하지 않습니다.</p>
+                                    <p>회원가입 페이지로 이동합니다.</p>
+                                </>
+                            }
+                            confirm="확인"
+                            onConfirm={handleConfirmButton}
+                        />
+                )}
             </Box>
         </Container>
     );

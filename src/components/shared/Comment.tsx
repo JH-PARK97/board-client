@@ -6,9 +6,10 @@ import { useForm } from 'react-hook-form';
 import { CommentListContext } from '../post/detail/Comment';
 import updateCommentAPI from '../../api/comment/update/comment.api';
 import deleteCommentAPI from '../../api/comment/delete/comment.api';
-import ModalPortal from './Modal/MordalPortal';
-import Modal from './Modal/Modal';
+
 import { useModalStore } from '../../store/modal';
+import useToggle from '../../hooks/useToggle';
+import {  Modal } from './Modal';
 
 interface CommentComponentProps {
     commentList: CommentList[];
@@ -109,6 +110,7 @@ CommentComponent.Subinfo = function Subinfo({
     const { closeModal, openModal } = useModalStore();
 
     const handleClickDeleteButton = async () => {
+        console.log('댓글삭제 ', 'commentId : ', commentId);
         const resp = await deleteCommentAPI(commentId);
         if (resp.resultCd === 200) {
             fetchCommentList();
@@ -137,14 +139,13 @@ CommentComponent.Subinfo = function Subinfo({
                 <div className="comment-subinfo-header-action flex w-[10%] justify-between date text-[14px] text-gray-500">
                     <div onClick={handleClickModifyButton}>수정</div>
                     <div onClick={openModal}>삭제</div>
-                    <ModalPortal>
-                        <Modal
-                            content="댓글을 삭제 하시겠습니까?"
-                            title="삭제"
-                            onConfirm={handleClickDeleteButton}
-                            removeDimmed
-                        />
-                    </ModalPortal>
+
+                    <Modal
+                        content="댓글을 삭제 하시겠습니까?"
+                        title="삭제"
+                        onConfirm={handleClickDeleteButton}
+                        removeDimmed
+                    />
                 </div>
             )}
         </div>
@@ -188,25 +189,22 @@ interface CommentFooterProps {
 }
 
 CommentComponent.Footer = function Footer({ replyCount, parentCommentId, replyList }: CommentFooterProps) {
-    const [watchMoreReply, setWatchMoreReply] = useState<boolean>(true);
+    const [watchMoreReply, setWatchMoreReply] = useToggle(true);
 
-    function toggleReplyCreate() {
-        setWatchMoreReply((prev) => !prev);
-    }
     return (
         <>
             <div className="comment-footer">
                 {replyCount === 0 ? (
-                    <button onClick={toggleReplyCreate}>{watchMoreReply ? `답글 달기` : `숨기기`}</button>
+                    <button onClick={setWatchMoreReply}>{watchMoreReply ? `답글 달기` : `숨기기`}</button>
                 ) : (
-                    <button onClick={toggleReplyCreate}>{`${
+                    <button onClick={setWatchMoreReply}>{`${
                         watchMoreReply ? `${replyCount}개의 답글` : `숨기기`
                     }`}</button>
                 )}
             </div>
             <div hidden={watchMoreReply}>
                 <ReplyComponent
-                    toggleReplyCreate={toggleReplyCreate}
+                    toggleReplyCreate={setWatchMoreReply}
                     parentCommentId={parentCommentId}
                     replyList={replyList}
                 />
@@ -217,15 +215,17 @@ CommentComponent.Footer = function Footer({ replyCount, parentCommentId, replyLi
 
 interface CreateCommentProps {
     parentId: number;
-    createAPI: (parentId: number, input: any) => Promise<any>;
-    handleClickReplyComment?: () => void;
+    replyId?: number;
+    createAPI: (parentId: number, input: { content: string }, replyId?: number | undefined) => Promise<any>;
+    handleClickReply?: () => void;
     defaultValue?: string;
     handleClickModifyButton?: () => void;
 }
 function CreateComment({
     parentId,
+    replyId,
     createAPI,
-    handleClickReplyComment,
+    handleClickReply,
     defaultValue,
     handleClickModifyButton,
 }: CreateCommentProps) {
@@ -244,12 +244,12 @@ function CreateComment({
         },
     });
 
-    // handleClickReplyComment의 타입이 함수가 아닌 경우 = 댓글 작성하는 경우 (답글X)
-    const isEdit = typeof handleClickReplyComment !== 'function';
+    // handleClickReply의 타입이 함수가 아닌 경우 = 댓글 작성하는 경우 (답글X)
+    const isEdit = typeof handleClickReply !== 'function';
 
     const onSubmit = async (input: any) => {
         try {
-            const resp = await createAPI(parentId, input);
+            const resp = await createAPI(parentId, input, replyId);
             if (resp.resultCd === 200) {
                 setValue('content', '');
                 await fetchCommentList();
@@ -271,7 +271,7 @@ function CreateComment({
         if (isEdit) {
             handleClickModifyButton?.();
         } else {
-            handleClickReplyComment?.();
+            handleClickReply?.();
             setValue('content', '');
         }
     };
@@ -284,7 +284,7 @@ function CreateComment({
                     placeholder="댓글을 작성하세요"
                     className="w-full min-h-[100px] resize-none border-2 border-gray-100 p-4 pb-6 no-scrollbar "
                 />
-                <div className="comment-button-wapper flex justify-end space-x-3">
+                <div className="comment-button-wapper flex justify-end space-x-3 mb-5">
                     <button type="submit">{isEdit && defaultValue ? '댓글 수정' : '댓글 작성'}</button>
                     {!isEdit || defaultValue ? (
                         <button onClick={handelClickCancel} type="button">

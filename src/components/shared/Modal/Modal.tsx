@@ -1,5 +1,6 @@
 import React, { ReactNode, useRef } from 'react';
 import { useModalStore } from '../../../store/modal';
+import ModalPortal from './MordalPortal';
 
 // Main Component - Modal
 
@@ -40,16 +41,18 @@ export default function Modal({
 
     return (
         <>
-            <div hidden={removeDimmed} className="dim"></div>
-            <div className="modal z-10" ref={modalRef} onClick={handleModalOutsideClick}>
-                <div className={`modal-content ${className ? className : ''}`}>
-                    <Modal.Title title={title} hiddenCloseButton={hiddenCloseButton} />
-                    <Modal.Content content={content} />
-                    <Modal.Footer>
-                        <Modal.Button onConfirm={onConfirm} onCancel={onCancel} confirm={confirm} cancel={cancel} />
-                    </Modal.Footer>
+            <ModalPortal>
+                <div hidden={removeDimmed} className="dim"></div>
+                <div className="modal z-10" ref={modalRef} onClick={handleModalOutsideClick}>
+                    <div className={`modal-content ${className ? className : ''}`}>
+                        <Modal.Title title={title} hiddenCloseButton={hiddenCloseButton} />
+                        <Modal.Content content={content} />
+                        <Modal.Footer>
+                            <Modal.Button onConfirm={onConfirm} onCancel={onCancel} confirm={confirm} cancel={cancel} />
+                        </Modal.Footer>
+                    </div>
                 </div>
-            </div>
+            </ModalPortal>
         </>
     );
 }
@@ -61,12 +64,12 @@ interface ModalTitleProps {
     className?: string;
 }
 
-Modal.Title = function Title({ title, hiddenCloseButton = false, className }: ModalTitleProps) {
-    const { toggleModal } = useModalStore();
+Modal.Title = function Title({ title, hiddenCloseButton = false, className = '' }: ModalTitleProps) {
+    const { closeModal } = useModalStore();
     return (
-        <div className={`modal-title ${className ? className : ''}`}>
+        <div className={`modal-title ${className}`}>
             <h2>{title}</h2>
-            <span hidden={hiddenCloseButton} onClick={toggleModal} className="close">
+            <span hidden={hiddenCloseButton} onClick={closeModal} className="close">
                 x
             </span>
         </div>
@@ -78,8 +81,8 @@ interface ModalContentProps {
     className?: string;
 }
 
-Modal.Content = function Content({ content, className }: ModalContentProps) {
-    return <div className={`modal-body ${className ? className : ''}`}>{content}</div>;
+Modal.Content = function Content({ content, className = '' }: ModalContentProps) {
+    return <div className={`modal-body ${className}`}>{content}</div>;
 };
 
 interface ModalFooterProps {
@@ -87,8 +90,8 @@ interface ModalFooterProps {
     className?: string;
 }
 
-Modal.Footer = function Footer({ children, className }: ModalFooterProps) {
-    return <div className={`modal-footer ${className ? className : ''}`}>{children}</div>;
+Modal.Footer = function Footer({ children, className = '' }: ModalFooterProps) {
+    return <div className={`modal-footer ${className}`}>{children}</div>;
 };
 
 interface ModalButtonProps {
@@ -98,17 +101,17 @@ interface ModalButtonProps {
     className?: string;
     cancel?: string;
 }
-
-Modal.Button = function Button({ confirm, onConfirm, onCancel, className, cancel }: ModalButtonProps) {
+Modal.Button = function Button({ confirm, onConfirm, onCancel, className = '', cancel }: ModalButtonProps) {
     return (
         <>
             <button className={`${className} mr-3`} onClick={onConfirm}>
                 {confirm}
             </button>
-
-            <button hidden={!cancel} className={className} onClick={onCancel}>
-                {cancel}
-            </button>
+            {cancel && (
+                <button className={className} onClick={onCancel}>
+                    {cancel}
+                </button>
+            )}
         </>
     );
 };

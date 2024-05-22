@@ -8,8 +8,7 @@ import { dateConvert, FORMAT, getUser } from '@/utils/utils';
 
 import { PostDetailContext } from './DetailPostPage';
 import { useNavigate, useParams } from 'react-router-dom';
-import ModalPortal from '../../shared/Modal/MordalPortal';
-import Modal from '../../shared/Modal/Modal';
+import { Modal } from '../../shared/Modal';
 import { useModalStore } from '@/store/modal';
 import deletePostAPI from '@/api/post/delete/post.api';
 import Comment from './Comment';
@@ -92,7 +91,6 @@ DetailPost.SubInfo = function Subinfo({ data }: DetailPostSubInfoProps) {
                     삭제
                 </button>
             </div>
-            <ModalPortal>
                 <Modal
                     content="게시글을 삭제 하시겠습니까?"
                     title="삭제"
@@ -100,7 +98,6 @@ DetailPost.SubInfo = function Subinfo({ data }: DetailPostSubInfoProps) {
                     onCancel={() => closeModal()}
                     removeDimmed
                 />
-            </ModalPortal>
         </div>
     );
 };
