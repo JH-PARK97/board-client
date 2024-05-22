@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 
 import { EditorContent, useEditor } from '@tiptap/react';
 import Image from '@tiptap/extension-image';
@@ -9,9 +9,10 @@ import { dateConvert, FORMAT, getUser } from '@/utils/utils';
 import { PostDetailContext } from './DetailPostPage';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Modal } from '../../shared/Modal';
-import { useModalStore } from '@/store/modal';
+
 import deletePostAPI from '@/api/post/delete/post.api';
 import Comment from './Comment';
+import useModal from '@/hooks/useModal';
 
 interface SubInfoProps {
     createdAt: string;
@@ -63,9 +64,10 @@ interface DetailPostSubInfoProps {
 
 DetailPost.SubInfo = function Subinfo({ data }: DetailPostSubInfoProps) {
     const navigator = useNavigate();
-    const { closeModal, openModal } = useModalStore();
     const { createdAt, currentUserId, postId, writer, writerId } = data;
     const isWriter = currentUserId === writerId;
+
+    const { closeModal, isModalOpen, openModal } = useModal();
 
     function handleModifyClick() {
         navigator(`/post/edit/${postId}`);
@@ -91,13 +93,14 @@ DetailPost.SubInfo = function Subinfo({ data }: DetailPostSubInfoProps) {
                     삭제
                 </button>
             </div>
-                <Modal
-                    content="게시글을 삭제 하시겠습니까?"
-                    title="삭제"
-                    onConfirm={() => handleDeleteClick()}
-                    onCancel={() => closeModal()}
-                    removeDimmed
-                />
+            <Modal
+                content="게시글을 삭제 하시겠습니까?"
+                title="삭제"
+                onConfirm={() => handleDeleteClick()}
+                onCancel={() => closeModal()}
+                isOpen={isModalOpen}
+                removeDimmed
+            />
         </div>
     );
 };

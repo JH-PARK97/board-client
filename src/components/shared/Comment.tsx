@@ -4,12 +4,12 @@ import { createProfileImageSrc, dateConvert, FORMAT, getUser } from '@/utils/uti
 import { ReplyComponent } from './ReplyComment';
 import { useForm } from 'react-hook-form';
 import { CommentListContext } from '../post/detail/Comment';
-import updateCommentAPI from '../../api/comment/update/comment.api';
-import deleteCommentAPI from '../../api/comment/delete/comment.api';
+import updateCommentAPI from '@/api/comment/update/comment.api';
+import deleteCommentAPI from '@/api/comment/delete/comment.api';
 
-import { useModalStore } from '../../store/modal';
-import useToggle from '../../hooks/useToggle';
-import {  Modal } from './Modal';
+import useToggle from '@/hooks/useToggle';
+import { Modal } from './Modal';
+import useModal from '../../hooks/useModal';
 
 interface CommentComponentProps {
     commentList: CommentList[];
@@ -100,17 +100,15 @@ CommentComponent.Subinfo = function Subinfo({
     commentId,
 }: CommentSubinfoProps) {
     const commentContext = useContext(CommentListContext);
-
     if (!commentContext) return null;
-
     const { fetchCommentList } = commentContext;
+
+    const { openModal, closeModal, isModalOpen } = useModal();
 
     const { createdAt, nickname, profileImagePath } = data;
     const imageSrc = createProfileImageSrc(profileImagePath);
-    const { closeModal, openModal } = useModalStore();
 
     const handleClickDeleteButton = async () => {
-        console.log('댓글삭제 ', 'commentId : ', commentId);
         const resp = await deleteCommentAPI(commentId);
         if (resp.resultCd === 200) {
             fetchCommentList();
@@ -141,8 +139,11 @@ CommentComponent.Subinfo = function Subinfo({
                     <div onClick={openModal}>삭제</div>
 
                     <Modal
+                        isOpen={isModalOpen}
+                        onCancel={closeModal}
                         content="댓글을 삭제 하시겠습니까?"
                         title="삭제"
+                        cancel="취소"
                         onConfirm={handleClickDeleteButton}
                         removeDimmed
                     />

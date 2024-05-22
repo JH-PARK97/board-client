@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 type ToggleHookType = [boolean, () => void];
 
-function useToggle(initialValue = false): ToggleHookType {
+export default function useToggle(initialValue = false): ToggleHookType {
     const [status, setStatus] = useState<boolean>(initialValue);
 
     const toggleStatus = () => setStatus((prevStatus) => !prevStatus);
@@ -10,4 +10,4 @@ function useToggle(initialValue = false): ToggleHookType {
     return [status, toggleStatus];
 }
 
-export default useToggle;
+

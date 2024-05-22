@@ -6,8 +6,9 @@ import CreateIcon from '@mui/icons-material/Create';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
-import { useModalStore } from '@/store/modal';
 import { Modal } from '../Modal';
+import useToggle from '../../../hooks/useToggle';
+import useModal from '../../../hooks/useModal';
 
 interface HeaderProps {
     title: string;
@@ -17,9 +18,10 @@ export default function Header(props: HeaderProps) {
     const { title } = props;
     const navigate = useNavigate();
     const { isLogin, logout, subscribeAccessToken } = useAuthStore();
-    const { isModalOpen, openModal, closeModal } = useModalStore();
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
+    const { closeModal, isModalOpen, openModal } = useModal();
+
     useEffect(() => {
         const authStorage = localStorage.getItem('auth-storage');
         if (authStorage) {
@@ -70,15 +72,15 @@ export default function Header(props: HeaderProps) {
                 </Button>
             </Toolbar>
 
-            {isModalOpen && (
-                <Modal
-                    content="로그인 후 이용해 주세요!"
-                    title="알림"
-                    removeDimmed={true}
-                    confirm="확인"
-                    onConfirm={closeModal}
-                />
-            )}
+            <Modal
+                content="로그인 후 이용해 주세요!"
+                title="알림"
+                removeDimmed={true}
+                confirm="확인"
+                onConfirm={closeModal}
+                onCancel={closeModal}
+                isOpen={isModalOpen}
+            />
         </React.Fragment>
     );
 }
