@@ -1,4 +1,4 @@
-export interface CreateReplyItem {
+export interface DeleteReplyItem {
     resultCd: number;
     data: Data;
 }

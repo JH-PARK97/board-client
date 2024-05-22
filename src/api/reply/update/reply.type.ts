@@ -1,4 +1,4 @@
-export interface CreateReplyItem {
+export interface UpdateReplyItem {
     resultCd: number;
     data: Data;
 }

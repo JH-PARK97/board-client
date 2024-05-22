@@ -1,8 +1,15 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import React from 'react';
 import { ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT } from '@/utils/utils';
 import { CreateComment } from './Comment';
-import createReplyCommentAPI from '../../api/reply/create/reply.api';
+
+import useToggle from '@/hooks/useToggle';
+import { Modal } from '@/components/shared/Modal';
+import { useModalStore } from '@/store/modal';
+
+import createReplyAPI from '@/api/reply/create/reply.api';
+import updateReplyAPI from '@/api/reply/update/reply.api';
+import deleteReplyAPI from '@/api/reply/delete/reply.api';
 
 interface ReplyComponentProps {
     replyList: ReplyList[];
@@ -11,27 +18,25 @@ interface ReplyComponentProps {
 }
 
 function ReplyComponent({ replyList = [], parentCommentId, toggleReplyCreate }: ReplyComponentProps) {
-    const noReplyComment = replyList.length === 0;
+    const noReply = replyList.length === 0;
 
     return (
         <div className="reply-comment-container p-5 py-6 space-y-6 bg-gray-50 rounded-lg border-[1px] ">
             {replyList.map((reply) => {
-                return <ReplyListItem key={reply.id} reply={reply} />;
+                return <ReplyListItem parentCommentId={parentCommentId} key={reply.id} reply={reply} />;
             })}
-            <CreateReply
-                noReplyComment={noReplyComment}
-                parentCommentId={parentCommentId}
-                toggleReplyCreate={toggleReplyCreate}
-            />
+            <CreateReply noReply={noReply} parentCommentId={parentCommentId} toggleReplyCreate={toggleReplyCreate} />
         </div>
     );
 }
 
 interface ReplyListItemProps {
     reply: ReplyList;
+    parentCommentId: number;
 }
 
-function ReplyListItem({ reply }: ReplyListItemProps) {
+function ReplyListItem({ reply, parentCommentId }: ReplyListItemProps) {
+    const [isEdit, setIsEdit] = useToggle(true);
     const subinfo = {
         createdAt: reply.createdAt,
         profileImagePath: reply.user.profileImagePath,
@@ -40,24 +45,50 @@ function ReplyListItem({ reply }: ReplyListItemProps) {
 
     return (
         <div className="reply-comment-wrapper min-h-[200px] border-b-[1px] ">
-            <ReplyComponent.Subinfo data={subinfo} />
-            <ReplyComponent.Content content={reply.content} />
+            <ReplyComponent.Subinfo reply={reply} handleClickReplyModifyButton={setIsEdit} data={subinfo} />
+            {isEdit ? (
+                <div className="reply-comment-content text-lg min-h-[70px] mb-6">{reply.content}</div>
+            ) : (
+                <CreateComment
+                    replyId={reply.id}
+                    handleClickModifyButton={setIsEdit}
+                    createAPI={updateReplyAPI}
+                    parentId={parentCommentId}
+                    defaultValue={reply.content}
+                />
+            )}
             <ReplyComponent.Footer replyList={reply} />
         </div>
     );
 }
 
-interface CommentSubinfoProps {
+interface ReplySubinfoProps {
     data: {
         createdAt: string;
         nickname: string;
         profileImagePath: string;
     };
+    handleClickReplyModifyButton: () => void;
+    reply: ReplyList;
 }
 
-ReplyComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
+ReplyComponent.Subinfo = function Subinfo({ reply, data, handleClickReplyModifyButton }: ReplySubinfoProps) {
     const { createdAt, nickname, profileImagePath } = data;
     const imageSrc = createProfileImageSrc(profileImagePath);
+    const { closeModal, openModal } = useModalStore();
+
+    const handleClickReplyDeleteButton = async () => {
+        console.log('답글삭제', 'parentCommentId : ', reply.commentId, 'replyId :', reply.id);
+        const resp = await deleteReplyAPI(reply.commentId, reply.id);
+        if (resp.resultCd === 200) {
+            closeModal();
+        }
+        if (resp.resultCd === 401) {
+            console.log(resp.resultMsg);
+            closeModal();
+        }
+    };
+
     return (
         <div className="reply-comment-subinfo-header mb-6 flex justify-between items-center">
             <div className="profile items-center space-x-2 flex">
@@ -72,63 +103,57 @@ ReplyComponent.Subinfo = function Subinfo({ data }: CommentSubinfoProps) {
                 </div>
             </div>
             <div className="reply-comment-subinfo-header-action flex w-[10%] justify-between text-[14px] text-gray-500">
-                <div>수정</div>
-                <div>삭제</div>
+                <div onClick={handleClickReplyModifyButton}>수정</div>
+                <div onClick={openModal}>삭제</div>
+                <Modal
+                    content="답글을 삭제 하시겠습니까?"
+                    title="삭제"
+                    onConfirm={handleClickReplyDeleteButton}
+                    removeDimmed
+                />
             </div>
         </div>
     );
 };
 
-interface CommentContentProps {
-    content: string;
-}
-
-ReplyComponent.Content = function Content({ content }: CommentContentProps) {
-    return <div className="reply-comment-content text-lg min-h-[70px] mb-6">{content}</div>;
-};
-
-interface CommentFooterProps {
+interface ReplyFooterProps {
     replyList?: ReplyList;
 }
 
-ReplyComponent.Footer = function Footer({ replyList }: CommentFooterProps) {
+ReplyComponent.Footer = function Footer({ replyList }: ReplyFooterProps) {
     return <></>;
 };
 
 interface CreateReplyProps {
-    noReplyComment: boolean;
+    noReply: boolean;
     parentCommentId: number;
     toggleReplyCreate: () => void;
 }
-function CreateReply({ parentCommentId, noReplyComment, toggleReplyCreate }: CreateReplyProps) {
-    const [isClickReplyButton, setIsClickReplyButton] = useState<boolean>(true);
+function CreateReply({ parentCommentId, noReply, toggleReplyCreate }: CreateReplyProps) {
+    const [isClickReplyButton, setIsClickReplyButton] = useToggle(true);
 
-    function handleClickReplyComment() {
-        if (noReplyComment) {
+    function handleClickReply() {
+        if (noReply) {
             toggleReplyCreate();
         }
-        setIsClickReplyButton((prev) => !prev);
+        setIsClickReplyButton();
     }
 
-    return noReplyComment ? (
-        <CreateComment
-            handleClickReplyComment={handleClickReplyComment}
-            createAPI={createReplyCommentAPI}
-            parentId={parentCommentId}
-        />
+    return noReply ? (
+        <CreateComment handleClickReply={handleClickReply} createAPI={createReplyAPI} parentId={parentCommentId} />
     ) : (
         <div>
             <button
                 className="border-[1px] p-2 w-full bg-white"
                 hidden={!isClickReplyButton}
-                onClick={handleClickReplyComment}
+                onClick={handleClickReply}
             >
                 답글 작성하기
             </button>
             <div hidden={isClickReplyButton}>
                 <CreateComment
-                    handleClickReplyComment={handleClickReplyComment}
-                    createAPI={createReplyCommentAPI}
+                    handleClickReply={handleClickReply}
+                    createAPI={createReplyAPI}
                     parentId={parentCommentId}
                 />
             </div>

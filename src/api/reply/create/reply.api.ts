@@ -1,8 +1,8 @@
 import { Post } from '../../client';
-import { CreateReplyCommentItem } from './reply.type';
-import { CreateReplyCommentBodySchema } from './reply.validate';
+import { CreateReplyItem } from './reply.type';
+import { CreateReplyBodySchema } from './reply.validate';
 
-export default async function createReplyCommentAPI(commentId: string | number, args: CreateReplyCommentBodySchema) {
-    const { data } = await Post<CreateReplyCommentItem>(`reply/${commentId}`, args);
+export default async function createReplyAPI(commentId: string | number, args: CreateReplyBodySchema) {
+    const { data } = await Post<CreateReplyItem>(`reply/${commentId}`, args);
     return data;
 }
