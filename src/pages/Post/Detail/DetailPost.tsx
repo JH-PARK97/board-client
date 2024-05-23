@@ -6,13 +6,13 @@ import StarterKit from '@tiptap/starter-kit';
 
 import { dateConvert, FORMAT, getUser } from '@/utils/utils';
 
-import { PostDetailContext } from './DetailPostPage';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Modal } from '../../shared/Modal';
 
 import deletePostAPI from '@/api/post/delete/post.api';
-import Comment from './Comment';
+import CommentList from './CommentList';
 import useModal from '@/hooks/useModal';
+import { PostDetailItem } from '@/api/post/detail/post.type';
+import { Modal } from '../../../components/modal';
 
 interface SubInfoProps {
     createdAt: string;
@@ -21,8 +21,11 @@ interface SubInfoProps {
     currentUserId?: number;
     postId: number;
 }
-export default function DetailPost() {
-    const postDetail = useContext(PostDetailContext);
+
+interface DetailPostProps {
+    postInfo: PostDetailItem;
+}
+export default function DetailPost({ postInfo }: DetailPostProps) {
     const params = useParams();
 
     const { id: paramsId } = params;
@@ -30,22 +33,22 @@ export default function DetailPost() {
 
     const { id: userId } = getUser();
 
-    if (!postDetail || !id) return null;
+    if (!postInfo || !id) return null;
 
     const subinfo: SubInfoProps = {
-        writer: postDetail?.user?.nickname,
-        writerId: postDetail.userId,
-        createdAt: postDetail?.createdAt,
-        postId: postDetail.id,
+        writer: postInfo?.user?.nickname,
+        writerId: postInfo.userId,
+        createdAt: postInfo?.createdAt,
+        postId: postInfo.id,
         currentUserId: userId,
     };
 
     return (
         <div className="m-auto w-[50%]">
-            <DetailPost.Title>{postDetail?.title}</DetailPost.Title>
+            <DetailPost.Title>{postInfo?.title}</DetailPost.Title>
             <DetailPost.SubInfo data={subinfo} />
-            <DetailPost.Content>{postDetail?.content}</DetailPost.Content>
-            <Comment postId={id} />
+            <DetailPost.Content>{postInfo?.content}</DetailPost.Content>
+            <CommentList postId={id} />
         </div>
     );
 }

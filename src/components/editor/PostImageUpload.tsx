@@ -1,6 +1,6 @@
 import { Editor } from '@tiptap/react';
 import React, { useRef } from 'react';
-import fileUploadAPI from '../../../api/file/upload.api';
+import fileUploadAPI from '@/api/file/upload.api';
 
 import * as Icons from './Icons';
 

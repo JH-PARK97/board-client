@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react';
 import getPostAPI from '@/api/post/get/post.api';
 import { PostListItem } from '@/api/post/get/post.type';
-import PostCard from './PostCard';
+import PostCard from '@/components/PostCard';
 
 export const PostListContext = createContext<PostListItem[]>([]);
 

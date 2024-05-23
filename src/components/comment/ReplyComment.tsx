@@ -9,8 +9,8 @@ import createReplyAPI from '@/api/reply/create/reply.api';
 import updateReplyAPI from '@/api/reply/update/reply.api';
 import deleteReplyAPI from '@/api/reply/delete/reply.api';
 import useModal from '@/hooks/useModal';
-import { Modal } from './Modal';
-import { CommentListContext } from '../post/detail/Comment';
+import { Modal } from '../modal';
+import { CommentListContext } from '../../pages/Post/Detail/CommentList';
 
 interface ReplyComponentProps {
     replyList: ReplyList[];

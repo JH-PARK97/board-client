@@ -9,21 +9,21 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Container } from '@mui/system';
 import { CssBaseline, FormHelperText } from '@mui/material';
-import { FormFileUpload, FormInput, FormRadioGroup, FormSelect } from '../../shared/Form/index';
+import { FormFileUpload, FormInput, FormRadioGroup, FormSelect } from '@/components/form';
 
 // form & type
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, FormProvider } from 'react-hook-form';
 import type { SubmitHandler } from 'react-hook-form';
-import { schemaStrapi as SignUpSchema } from '../../../api/user/create/user.validate';
-import type { StrapiSignUpBodySchema } from '../../../api/user/create/user.validate';
+import { schemaStrapi as SignUpSchema } from '@/api/user/create/user.validate';
+import type { StrapiSignUpBodySchema } from '@/api/user/create/user.validate';
 
 // fetch
-import { createUserSTRAPI } from '../../../api/user/create/user.api';
+import { createUserSTRAPI } from '@/api/user/create/user.api';
 import { AxiosError } from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
-import ImagePreview from '../../shared/ImagePreview';
-import { getRandomAvatar } from '../../../utils/utils';
+import ImagePreview from '@/components/ImagePreview';
+import { getRandomAvatar } from '@/utils/utils';
 
 const defaultTheme = createTheme();
 

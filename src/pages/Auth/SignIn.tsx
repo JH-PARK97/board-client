@@ -10,23 +10,24 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { FormInput } from '../../shared/Form';
+import { FormInput } from '@/components/form';
 import { Checkbox, FormControlLabel, FormHelperText } from '@mui/material';
-import GitSignInButton from './GitSignInButton';
+import GitSignInButton from '@/components/oauth/GitSignInButton';
 
 // validation
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SignInBodySchema } from '@/api/auth/login.validate';
+import { SignInBodySchema } from 'src/api/auth/login.validate';
 import { schema as SignInSchema } from '@/api/auth/login.validate';
 
 // api
-import loginAPI from '@/api/auth/login.api';
+import { loginSTRAPI } from '@/api/auth/login.api';
+
 import { AxiosError } from 'axios';
 
 // hooks
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../../store/auth';
+import { useAuthStore } from '@/store/auth';
 
 const defaultTheme = createTheme();
 
@@ -44,6 +45,7 @@ export default function SignIn() {
         setError,
         formState: { errors },
     } = useForm<SignInBodySchema>({
+        mode: 'onChange',
         resolver: zodResolver(SignInSchema),
         defaultValues: useMemo(() => {
             let email = '';
@@ -67,23 +69,21 @@ export default function SignIn() {
 
     const onSubmit: SubmitHandler<SignInBodySchema> = async (data) => {
         try {
-            const resp = await loginAPI(data);
-            if (!resp.token) return null;
-            const { token } = resp;
-            if (resp.resultCd === 200) {
-                localStorage.setItem('accessToken', token);
-                login(resp.data, idSave);
+            const resp: any = await loginSTRAPI(data);
+            if (resp.status === 200 && resp.data.jwt) {
+                localStorage.setItem('accessToken', resp.data.jwt);
+                login(resp.data.user, idSave);
                 navigator('/home');
             }
         } catch (error) {
             if (error instanceof AxiosError) {
-                const errorCd = error?.response?.data?.error?.resultCd;
-                const errorMsg = error?.response?.data?.error?.resultMsg;
-                if (errorCd === 401) {
-                    setError('password', { message: errorMsg });
+                const errorCd = error?.response?.data?.error?.status;
+
+                if (errorCd === 400) {
+                    setError('password', { message: '이메일 또는 비밀번호를 확인해 주세요.' });
                 }
             } else {
-                console.log(error);
+                console.log('error: ', error);
             }
         }
     };

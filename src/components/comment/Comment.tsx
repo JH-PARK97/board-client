@@ -3,13 +3,14 @@ import { CommentList, ReplyList } from '@/api/comment/get/comment.type';
 import { createProfileImageSrc, dateConvert, FORMAT, getUser } from '@/utils/utils';
 import { ReplyComponent } from './ReplyComment';
 import { useForm } from 'react-hook-form';
-import { CommentListContext } from '../post/detail/Comment';
+
 import updateCommentAPI from '@/api/comment/update/comment.api';
 import deleteCommentAPI from '@/api/comment/delete/comment.api';
 
 import useToggle from '@/hooks/useToggle';
-import { Modal } from './Modal';
+import { Modal } from '../modal';
 import useModal from '../../hooks/useModal';
+import { CommentListContext } from '../../pages/Post/Detail/CommentList';
 
 interface CommentComponentProps {
     commentList: CommentList[];

@@ -6,9 +6,10 @@ import CreateIcon from '@mui/icons-material/Create';
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
-import { Modal } from '../Modal';
-import useToggle from '../../../hooks/useToggle';
-import useModal from '../../../hooks/useModal';
+import { Modal } from '../modal';
+import useToggle from '../../hooks/useToggle';
+import useModal from '../../hooks/useModal'; 
+import ThemeButton from '../ThemeButton';
 
 interface HeaderProps {
     title: string;
@@ -70,6 +71,7 @@ export default function Header(props: HeaderProps) {
                 <Button onClick={handleSigninButton} variant="outlined" size="small">
                     {isLogin ? '로그아웃' : '로그인'}
                 </Button>
+                {/* <ThemeButton /> */}
             </Toolbar>
 
             <Modal

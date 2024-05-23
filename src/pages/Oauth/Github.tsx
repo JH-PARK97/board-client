@@ -4,8 +4,8 @@ import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuthStore } from '@/store/auth';
-import { Modal } from '../../shared/Modal';
-import useModal from '../../../hooks/useModal';
+import { Modal } from '../../components/modal';
+import useModal from '@/hooks/useModal';
 
 // let isCall = false;
 

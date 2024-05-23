@@ -1,13 +1,16 @@
 import React, { useMemo } from 'react';
 import { createBrowserRouter, LoaderFunctionArgs, Outlet, redirect, RouterProvider } from 'react-router-dom';
-import NotFound from '@/components/pages/NotFound/NotFound';
-import Layout from '@/components/shared/Layout/Layout';
-import { SignUp, SignIn } from '@/components/pages/auth';
-import { Github } from '@/components/pages/Oauth';
-import { Map1, Map2 } from '@/components/pages/map';
-import { Home } from '@/components/pages/home';
-import { CreatePost, DetailPost } from '@/components/post';
-import EditorProvider from '../components/shared/Editor/EditorProvider';
+
+import NotFound from '@/pages/NotFound/NotFound';
+import Layout from '@/components/layout/Layout';
+import { SignUp, SignIn } from '@/pages/Auth';
+import { Github } from '@/pages/Oauth';
+import { Home } from '@/pages';
+import { Map1, Map2 } from '@/pages/Map';
+import { CreatePost } from '@/pages/Post';
+
+import EditorProvider from '../components/editor/EditorProvider';
+import DetailPostPage from '../pages/Post/Detail/DetailPostPage';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -56,7 +59,7 @@ export default function Router() {
                     },
                     {
                         path: '/post/detail/:id',
-                        element: <DetailPost />,
+                        element: <DetailPostPage />,
                     },
 
                     {

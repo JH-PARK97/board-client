@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Button, ButtonProps } from '@mui/material';
-import fileUploadAPI from '../../../api/file/upload.api';
+import fileUploadAPI from '@/api/file/upload.api';
 import { useAsyncFn } from 'react-use';
 import { useFormContext } from 'react-hook-form';
 

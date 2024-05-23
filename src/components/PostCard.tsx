@@ -1,7 +1,8 @@
 import React, { ReactNode, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createProfileImageSrc, dateConvert, FORMAT } from '../../../utils/utils';
-import { PostListContext } from './Home';
+import { FORMAT, dateConvert, createProfileImageSrc } from '../utils/utils';
+
+import { PostListContext } from '../pages/Home/Home';
 
 export default function PostCard() {
     const posts = useContext(PostListContext);
