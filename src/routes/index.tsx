@@ -9,8 +9,10 @@ import { Home } from '@/pages';
 import { Map1, Map2 } from '@/pages/Map';
 import { CreatePost } from '@/pages/Post';
 
-import EditorProvider from '../components/editor/EditorProvider';
-import DetailPostPage from '../pages/Post/Detail/DetailPostPage';
+import EditorProvider from '@/components/editor/EditorProvider';
+import DetailPost from '../pages/Post/Detail/DetailPost';
+import PageTitle from '@/components/PageTitle';
+import Blog from '../pages/Blog/Blog';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -47,7 +49,12 @@ export default function Router() {
         return createBrowserRouter([
             {
                 path: '*',
-                element: <NotFound />,
+                element: (
+                    <>
+                        <PageTitle title={'NotFound'} />
+                        <NotFound />
+                    </>
+                ),
             },
             {
                 path: '/',
@@ -55,11 +62,16 @@ export default function Router() {
                 children: [
                     {
                         path: '/home',
-                        element: <Home />,
+                        element: (
+                            <>
+                                <PageTitle title={'Home'} />
+                                <Home />
+                            </>
+                        ),
                     },
                     {
                         path: '/post/detail/:id',
-                        element: <DetailPostPage />,
+                        element: <DetailPost />,
                     },
 
                     {
@@ -74,6 +86,10 @@ export default function Router() {
                         path: '/map2',
                         element: <Map2 />,
                     },
+                    {
+                        path: '/blog',
+                        element: <Blog />,
+                    },
                 ],
             },
             {
@@ -82,11 +98,21 @@ export default function Router() {
                 children: [
                     {
                         path: '/signup',
-                        element: <SignUp />,
+                        element: (
+                            <>
+                                <PageTitle title={'SignUp'} />
+                                <SignUp />
+                            </>
+                        ),
                     },
                     {
                         path: '/signin',
-                        element: <SignIn />,
+                        element: (
+                            <>
+                                <PageTitle title={'SignIn'} />
+                                <SignIn />
+                            </>
+                        ),
                     },
                     {
                         path: '/post',
@@ -98,11 +124,21 @@ export default function Router() {
                         children: [
                             {
                                 path: 'create',
-                                element: <CreatePost />,
+                                element: (
+                                    <>
+                                        <PageTitle title={'글 작성'} />
+                                        <CreatePost />
+                                    </>
+                                ),
                             },
                             {
                                 path: 'edit/:id',
-                                element: <CreatePost />,
+                                element: (
+                                    <>
+                                        <PageTitle title={'게시글 수정'} />
+                                        <CreatePost />
+                                    </>
+                                ),
                             },
                         ],
                     },

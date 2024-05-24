@@ -53,7 +53,7 @@ export default function Header(props: HeaderProps) {
 
     return (
         <React.Fragment>
-            <Toolbar className="border-solid border" sx={{ boxShadow: 'inherit' }}>
+            <Toolbar className="border-solid " sx={{ boxShadow: 'inherit' }}>
                 <Typography
                     onClick={() => navigate('/home')}
                     component="h2"

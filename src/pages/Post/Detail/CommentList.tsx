@@ -1,4 +1,4 @@
-import React, { createContext,  useEffect, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import getCommentAPI from '@/api/comment/get/comment.api';
 import { CommentList } from '@/api/comment/get/comment.type';
 import createCommentAPI from '@/api/comment/create/comment.api';
@@ -13,7 +13,7 @@ interface CommentListContextType {
 }
 export const CommentListContext = createContext<CommentListContextType | undefined>(undefined);
 
-export default function CommentList({ postId }: CommentProps) {
+export default function Comment({ postId }: CommentProps) {
     const [commentList, setCommentList] = useState<CommentList[]>([]);
 
     const fetchCommentList = async () => {
