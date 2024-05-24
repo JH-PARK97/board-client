@@ -80,3 +80,18 @@ export const createProfileImageSrc = (src: string) => {
         return imgSrc;
     }
 };
+
+export const removeHtmlTag = (content: string) => {
+    return content.replace(/(<([^>]+)>)/gi, '');
+};
+
+export const createThumbnailSrc = (str: string) => {
+    const regex = /<img.*?src=["'](.*?)["']/;
+    const match = str.match(regex);
+
+    if (match && match?.length > 1) {
+        return match[1];
+    } else {
+        return null;
+    }
+};

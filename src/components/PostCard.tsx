@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FORMAT, dateConvert, createProfileImageSrc } from '../utils/utils';
+import { FORMAT, dateConvert, createProfileImageSrc, removeHtmlTag, createThumbnailSrc } from '../utils/utils';
 
 import { PostListContext } from '../pages/Home/Home';
 
@@ -12,20 +12,11 @@ export default function PostCard() {
         navigator(`/post/detail/${postId}`);
     };
 
-    const createthumbnailSrc = (str: string) => {
-        const regex = /<img.*?src=["'](.*?)["']/;
-        const match = str.match(regex);
-
-        if (match && match?.length > 1) {
-            return match[1];
-        }
-    };
-
     return (
         <>
             {posts &&
                 posts.map((post, idx) => {
-                    const thumbnailSrc = createthumbnailSrc(post.content);
+                    const thumbnailSrc = createThumbnailSrc(post.content);
                     const hasThumbnail = !!thumbnailSrc;
                     const profileSrc = createProfileImageSrc(post.user.profileImagePath);
                     const subinfo = {
@@ -68,7 +59,7 @@ PostCard.Image = function Image({ src }: PostCardImageProps) {
                     objectFit: 'cover',
                 }}
                 alt="postcard-img"
-            ></img>
+            />
         </div>
     );
 };
@@ -91,11 +82,10 @@ interface PostCardContentProps {
 }
 
 PostCard.Content = function Content({ children, hasThumbnail }: PostCardContentProps) {
-    const removeTagContent = children?.replace(/(<([^>]+)>)/gi, '');
-    const contentHeight = hasThumbnail ? 'h-[60px]' : 'h-[105px]';
+    const contentHeight = hasThumbnail ? 'h-[60px] line-clamp-3' : 'h-[130px] line-clamp-6';
     return (
-        <div className={`postcard-content  text-ellipsis overflow-hidden text-[14px] ${contentHeight}`}>
-            <div className="">{removeTagContent}</div>
+        <div className={`postcard-content   text-[14px] ${contentHeight}`}>
+            <div>{removeHtmlTag(children)}</div>
         </div>
     );
 };
@@ -108,7 +98,6 @@ interface PostCardSubInfoProps {
 }
 
 PostCard.SubInfo = function SubInfo({ subinfo }: PostCardSubInfoProps) {
-    console.log(subinfo.totalCommentCount);
     return (
         <div className="postcard-subinfo  h-[10%] text-[12px] leading-3 text-gray-500 content-center absolute bottom-[15%]">
             <span> {dateConvert(subinfo.createdAt, FORMAT.YYYYMMDD_KR)}</span>

@@ -71,7 +71,7 @@ export default function CreatePost() {
             }
         } catch (error) {
             if (error instanceof AxiosError) {
-                const { status, statusText } = error.request;
+                const { status } = error.request;
                 if (status === 401) {
                     alert('토큰 만료');
                     handleLogout();
@@ -93,6 +93,7 @@ export default function CreatePost() {
                 } = resp;
                 editor.commands.setContent(content);
                 setValue('title', title);
+                setValue('content', content);
             }
         } catch (error) {
             console.error(error);
