@@ -6,7 +6,7 @@ export interface CommentList {
     userId: number;
     postId: number;
     user: User;
-    reply?: ReplyList;
+    reply?: ReplyList[];
 }
 
 export interface User {

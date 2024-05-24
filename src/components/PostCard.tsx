@@ -28,6 +28,10 @@ export default function PostCard() {
                     const thumbnailSrc = createthumbnailSrc(post.content);
                     const hasThumbnail = !!thumbnailSrc;
                     const profileSrc = createProfileImageSrc(post.user.profileImagePath);
+                    const subinfo = {
+                        createdAt: post.createdAt,
+                        totalCommentCount: post.totalCommentCount,
+                    };
 
                     return (
                         <div
@@ -39,7 +43,7 @@ export default function PostCard() {
                             <div className="p-4">
                                 <PostCard.Title>{post.title}</PostCard.Title>
                                 <PostCard.Content hasThumbnail={hasThumbnail}>{post.content}</PostCard.Content>
-                                <PostCard.SubInfo>{post.createdAt}</PostCard.SubInfo>
+                                <PostCard.SubInfo subinfo={subinfo} />
                                 <PostCard.Footer src={profileSrc}>{post.user.nickname}</PostCard.Footer>
                             </div>
                         </div>
@@ -97,13 +101,19 @@ PostCard.Content = function Content({ children, hasThumbnail }: PostCardContentP
 };
 
 interface PostCardSubInfoProps {
-    children?: string;
+    subinfo: {
+        createdAt: string;
+        totalCommentCount: number;
+    };
 }
 
-PostCard.SubInfo = function SubInfo({ children }: PostCardSubInfoProps) {
+PostCard.SubInfo = function SubInfo({ subinfo }: PostCardSubInfoProps) {
+    console.log(subinfo.totalCommentCount);
     return (
         <div className="postcard-subinfo  h-[10%] text-[12px] leading-3 text-gray-500 content-center absolute bottom-[15%]">
-            <p> {dateConvert(children, FORMAT.YYYYMMDD_KR)}</p>
+            <span> {dateConvert(subinfo.createdAt, FORMAT.YYYYMMDD_KR)}</span>
+            <span className="separator">·</span>
+            <span>{subinfo.totalCommentCount}개의 댓글</span>
         </div>
     );
 };

@@ -7,6 +7,7 @@ export interface PostListItem {
     updatedAt: string;
     userId: number;
     user: User;
+    totalCommentCount: number;
 }
 
 export interface User {

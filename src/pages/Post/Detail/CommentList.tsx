@@ -33,9 +33,23 @@ export default function Comment({ postId }: CommentProps) {
 
     if (!commentList) return null;
 
+    let replyCount = 0;
+    const commentCount = commentList?.length;
+
+    commentList.forEach((comment) => {
+        if (comment.reply) {
+            replyCount += comment.reply.length;
+        }
+    });
+
+    const commentTotalCount = replyCount + commentCount;
+
     return (
         <>
             <CommentListContext.Provider value={{ fetchCommentList }}>
+                <div className="commet-totalCount mb-4">
+                    <p className="font-bold text-xl">{commentTotalCount}개의 댓글</p>
+                </div>
                 <CreateComment createAPI={createCommentAPI} parentId={postId} />
                 <CommentComponent commentList={commentList} />
             </CommentListContext.Provider>
