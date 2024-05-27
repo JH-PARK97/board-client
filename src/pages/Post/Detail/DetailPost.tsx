@@ -7,13 +7,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 export default function DetailPost() {
     const [postInfo, setPostInfo] = useState<PostDetailItem>();
     const navigate = useNavigate();
-    const { id } = useParams();
+    const { postId } = useParams();
 
-    if (!id) return null;
+    if (!postId) return null;
     useEffect(() => {
         const fetchPostDetail = async () => {
             try {
-                const resp = await getPostDetailAPI(id);
+                const resp = await getPostDetailAPI(postId);
                 const { data } = resp;
 
                 if (resp.resultCd === 200) {

@@ -12,7 +12,7 @@ export default function BlogComponent({ userPost }: BlogComponentProps) {
     const navigator = useNavigate();
 
     function handleClickPost(postId: number) {
-        navigator(`/post/detail/${postId}`);
+        navigator(`/post/${postId}`);
     }
 
     return (
@@ -27,7 +27,7 @@ export default function BlogComponent({ userPost }: BlogComponentProps) {
                         return (
                             <div
                                 key={post.id}
-                                className="blog-postlist-item w-full h-[200px] flex"
+                                className="blog-postlist-item w-full h-[200px] flex cursor-pointer"
                                 onClick={() => handleClickPost(post.id)}
                             >
                                 {thumbnailSrc && (

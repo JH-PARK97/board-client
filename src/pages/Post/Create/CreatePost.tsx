@@ -23,8 +23,7 @@ type FormValues = CreatePostBodySchema | UpdatePostBodySchema;
 
 export default function CreatePost() {
     const defaultTheme = createTheme();
-    const params = useParams();
-    const { id } = params;
+    const { id } = useParams();
     const { handleLogout } = useLogout();
     const navigator = useNavigate();
     const { editor, content } = useContext(TiptapContext);
@@ -60,13 +59,13 @@ export default function CreatePost() {
                 const resp = await updatePostAPI(id, body);
                 if (resp.resultCd === 200) {
                     const id = resp.data.id;
-                    navigator(`/post/detail/${id}`);
+                    navigator(`/post/${id}`);
                 }
             } else {
                 const resp = await createPostAPI(body);
                 if (resp.resultCd === 200) {
                     const id = resp.data.id;
-                    navigator(`/post/detail/${id}`);
+                    navigator(`/post/${id}`);
                 }
             }
         } catch (error) {

@@ -9,7 +9,7 @@ export default function PostCard() {
     const navigator = useNavigate();
 
     const handlePostCardClick = (postId: number) => {
-        navigator(`/post/detail/${postId}`);
+        navigator(`/post/${postId}`);
     };
 
     return (

@@ -29,10 +29,9 @@ interface DetailPostProps {
     postInfo: PostDetailItem;
 }
 export default function DetailPostComponent({ postInfo }: DetailPostProps) {
-    const params = useParams();
+    const { postId } = useParams();
 
-    const { id: paramsId } = params;
-    const id = Number(paramsId);
+    const id = Number(postId);
 
     const { id: userId } = getUser();
 

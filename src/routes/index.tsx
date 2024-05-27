@@ -70,7 +70,7 @@ export default function Router() {
                         ),
                     },
                     {
-                        path: '/post/detail/:id',
+                        path: '/post/:postId',
                         element: <DetailPost />,
                     },
 
@@ -87,7 +87,7 @@ export default function Router() {
                         element: <Map2 />,
                     },
                     {
-                        path: '/blog',
+                        path: '/blog/:userId',
                         element: <Blog />,
                     },
                 ],
@@ -115,6 +115,7 @@ export default function Router() {
                         ),
                     },
                     {
+                        // 하위 path에 EditorProvider 제공
                         path: '/post',
                         element: (
                             <EditorProvider>

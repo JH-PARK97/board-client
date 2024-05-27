@@ -81,8 +81,21 @@ export default function SignUp() {
         } catch (error) {
             console.log(error);
             if (error instanceof AxiosError) {
-                if (error.request.status === 409) {
-                    setError('email', { message: '중복된 이메일입니다.' }, { shouldFocus: true });
+                if (error.response?.data.error.resultCd === 409) {
+                    const errorMsg = error.response?.data.error.resultMsg;
+                    let duplicateField = errorMsg.includes('이메일');
+                    
+                    if (duplicateField) {
+                        duplicateField = 'email';
+                    } else {
+                        duplicateField = 'nickname';
+                    }
+                    console.log(duplicateField)
+                    setError(
+                        duplicateField,
+                        { message: duplicateField === 'email' ? '중복된 이메일입니다.' : '중복된 닉네임입니다.' },
+                        { shouldFocus: true }
+                    );
                 }
             } else {
                 console.error('error : ', error);
