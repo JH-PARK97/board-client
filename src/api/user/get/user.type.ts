@@ -3,6 +3,7 @@ export interface GetUserPostListItem {
     email: string;
     nickname: string;
     profileImagePath: string;
+    totalCount: number;
     posts: Post[];
 }
 
