@@ -37,8 +37,8 @@ export default function Comment({ postId }: CommentProps) {
     const commentCount = commentList?.length;
 
     commentList.forEach((comment) => {
-        if (comment.reply) {
-            replyCount += comment.reply.length;
+        if (comment.replies) {
+            replyCount += comment.replies.length;
         }
     });
 

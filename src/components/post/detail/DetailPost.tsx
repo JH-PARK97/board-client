@@ -83,7 +83,7 @@ DetailPostComponent.SubInfo = function Subinfo({ data }: DetailPostSubInfoProps)
     }
     async function handleDeleteClick() {
         await deletePostAPI(postId);
-        navigator('/home');
+        navigator(`/blog/${writerId}`);
         closeModal();
     }
 

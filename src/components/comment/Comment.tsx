@@ -48,9 +48,9 @@ function CommentListItem({ comment, isWriter }: CommentListItemProps) {
     let replyCount = 0;
 
     // comment.reply가 배열일 때만 replyList에 할당
-    if (Array.isArray(comment.reply)) {
-        replyList = comment.reply;
-        replyCount = comment.reply.length;
+    if (Array.isArray(comment.replies)) {
+        replyList = comment.replies;
+        replyCount = comment.replies.length;
     }
     return (
         <div className="comment-container">
