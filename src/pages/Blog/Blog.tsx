@@ -1,33 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import BlogComponent from '@/components/blog/Blog';
-import getUserPostAPI from '../../api/user/get/user.api';
-import { GetUserPostListItem } from '../../api/user/get/user.type';
-import { useParams, useSearchParams } from 'react-router-dom';
-import Pagination from '../../components/Pagination';
+import { GetUserPostListItem } from '@/api/user/get/user.type';
+import { useLoaderData, useSearchParams } from 'react-router-dom';
+import Pagination from '@/components/Pagination';
+import { LoaderData } from '@/routes/type';
+import { getUserPostLoader } from '@/routes/loader';
 
 export default function Blog() {
-    const [userPost, setUserPost] = useState<GetUserPostListItem>();
-    const { userId } = useParams();
-    const [searchParams] = useSearchParams();
+    const userPost: GetUserPostListItem = useLoaderData() as LoaderData<typeof getUserPostLoader>;
 
+    const [searchParams] = useSearchParams();
     const pageNo = parseInt(searchParams.get('pageNo') ?? '1', 10);
     const pageSize = parseInt(searchParams.get('pageSize') ?? '7', 10);
-
-    const params = searchParams.toString();
-    if (!userId) return null;
-    useEffect(() => {
-        const fetchUserPosts = async () => {
-            try {
-                const resp = await getUserPostAPI(userId, params);
-                if (resp.resultCd === 200) {
-                    setUserPost(resp.data);
-                }
-            } catch (e) {
-                console.error(e);
-            }
-        };
-        fetchUserPosts();
-    }, [params]);
 
     if (!userPost) return null;
 

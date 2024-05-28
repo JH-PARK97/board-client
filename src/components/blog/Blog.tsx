@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { GetUserPostListItem } from '../../api/user/get/user.type';
-import { createThumbnailSrc, dateConvert, removeHtmlTag } from '../../utils/utils';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { GetUserPostListItem } from '@/api/user/get/user.type';
+import { createThumbnailSrc, dateConvert, removeHtmlTag } from '@/utils/utils';
 import PageTitle from '../PageTitle';
 
 interface BlogComponentProps {
@@ -10,7 +10,6 @@ interface BlogComponentProps {
 export default function BlogComponent({ userPost }: BlogComponentProps) {
     const posts = userPost.posts;
     const navigator = useNavigate();
-
 
     function handleClickPost(postId: number) {
         navigator(`/post/${postId}`);

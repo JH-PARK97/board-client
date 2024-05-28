@@ -1,19 +1,20 @@
 import React, { useMemo } from 'react';
+
 import { createBrowserRouter, LoaderFunctionArgs, Outlet, redirect, RouterProvider } from 'react-router-dom';
+import { getPostDetailLoader, getUserPostLoader } from './loader';
 
 import NotFound from '@/pages/NotFound/NotFound';
-import Layout from '@/components/layout/Layout';
 import { SignUp, SignIn } from '@/pages/Auth';
 import { Github } from '@/pages/Oauth';
 import { Home } from '@/pages';
 import { Map1, Map2 } from '@/pages/Map';
 import { CreatePost } from '@/pages/Post';
+import DetailPost from '@/pages/Post/Detail/DetailPost';
+import Blog from '@/pages/Blog/Blog';
 
 import EditorProvider from '@/components/editor/EditorProvider';
-import DetailPost from '../pages/Post/Detail/DetailPost';
+import Layout from '@/components/layout/Layout';
 import PageTitle from '@/components/PageTitle';
-import Blog from '../pages/Blog/Blog';
-import { getPostDetailLoader } from './loader';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -71,6 +72,7 @@ export default function Router() {
                         ),
                     },
                     {
+                        id: 'detailPost',
                         path: '/post/:postId',
                         element: <DetailPost />,
                         loader: getPostDetailLoader,
@@ -88,8 +90,10 @@ export default function Router() {
                         element: <Map2 />,
                     },
                     {
+                        id: 'blog',
                         path: '/blog/:userId',
                         element: <Blog />,
+                        loader: getUserPostLoader,
                     },
                 ],
             },
