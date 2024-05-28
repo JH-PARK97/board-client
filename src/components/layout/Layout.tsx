@@ -6,8 +6,8 @@ import Header from './Header';
 export default function Layout() {
     return (
         <>
-            <Header title="Blog" />
-                <Content />
+            <Header />
+            <Content />
             <Footer description="fooooter" />
         </>
     );

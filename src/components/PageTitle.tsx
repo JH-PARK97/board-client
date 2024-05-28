@@ -1,11 +1,10 @@
-import React, { ReactNode, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface PageTitleProps {
     title?: string;
-    info?: any;
 }
-export default function PageTitle({ title = '', info }: PageTitleProps) {
+export default function PageTitle({ title = '' }: PageTitleProps) {
     const location = useLocation();
 
     useEffect(() => {
