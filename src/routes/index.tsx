@@ -13,6 +13,7 @@ import EditorProvider from '@/components/editor/EditorProvider';
 import DetailPost from '../pages/Post/Detail/DetailPost';
 import PageTitle from '@/components/PageTitle';
 import Blog from '../pages/Blog/Blog';
+import { getPostDetailLoader } from './loader';
 
 async function checkLogin(ctx: LoaderFunctionArgs) {
     const url = new URL(ctx.request.url);
@@ -72,8 +73,8 @@ export default function Router() {
                     {
                         path: '/post/:postId',
                         element: <DetailPost />,
+                        loader: getPostDetailLoader,
                     },
-
                     {
                         path: '/callback/github',
                         element: <Github />,

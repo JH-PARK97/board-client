@@ -3,7 +3,7 @@ import BlogComponent from '@/components/blog/Blog';
 import getUserPostAPI from '../../api/user/get/user.api';
 import { GetUserPostListItem } from '../../api/user/get/user.type';
 import { useParams, useSearchParams } from 'react-router-dom';
-import Pagination from '../../components/pagination';
+import Pagination from '../../components/Pagination';
 
 export default function Blog() {
     const [userPost, setUserPost] = useState<GetUserPostListItem>();
