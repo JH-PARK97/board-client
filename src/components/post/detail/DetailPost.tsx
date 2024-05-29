@@ -64,7 +64,7 @@ interface DetailPostTitleProps {
 }
 
 DetailPostComponent.Title = function Title({ children }: DetailPostTitleProps) {
-    return <div className="detailpost-title text-5xl/normal font-bold mb-5">{children}</div>;
+    return <div className="detailpost-title text-5xl/normal font-bold mb-5 break-words">{children}</div>;
 };
 
 interface DetailPostSubInfoProps {
