@@ -10,11 +10,11 @@ import { CategoryList } from '@/api/category/get/category.type';
 
 export default function Blog() {
     const userPost: GetUserPostListItem = useLoaderData() as LoaderData<typeof getUserPostLoader>;
+    const [categories, setCategories] = useState<CategoryList[]>([]);
 
     const [searchParams] = useSearchParams();
     const pageNo = parseInt(searchParams.get('pageNo') ?? '1', 10);
     const pageSize = parseInt(searchParams.get('pageSize') ?? '7', 10);
-    const [categories, setCategories] = useState<CategoryList[]>([]);
 
     if (!userPost) return null;
 
