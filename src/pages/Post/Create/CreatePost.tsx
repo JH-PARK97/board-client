@@ -161,9 +161,7 @@ function CategoryContainer({ newCategory, setNewCategory }: CategoryContainerPro
 
     const {
         register,
-        watch,
         setValue,
-        getValues,
         formState: { errors },
     } = useFormContext<FormValues>();
     const { id } = getUser();
